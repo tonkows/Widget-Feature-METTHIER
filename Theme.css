@@ -1,0 +1,9 @@
+:root[theme='black'] {
+    --color-100: #red;
+    --color-90: #black;
+  }
+
+  :root[theme='light'] {
+    --color-100: #blue;
+    --color-90: #black;
+  }
