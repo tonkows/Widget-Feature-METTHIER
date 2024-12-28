@@ -21,7 +21,7 @@ const App = () => {
         <div className="main-layout">
           {/* Sidebar */}
           <Sidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} />
-
+        <p>hallo</p>
           {/* Main Content */}
           <div className={`main-content ${isCollapsed ? "collapsed" : ""}`}>
             <div className="grid-container">
