@@ -3,11 +3,11 @@ import styled from "styled-components";
 import { BiEditAlt } from "react-icons/bi";
 import { GoArrowSwitch } from "react-icons/go";
 
-const Header = ({ toggleSidebar, isCollapsed }) => {
+const Header = ({ toggleSidebar, isCollapsed, toggleTheme }) => {
   return (
     <StyledHeader isCollapsed={isCollapsed}>
       <LeftSection>
-        {/* เว้นที่สำหรับโลโก้ หรือปุ่ม */}
+        <button onClick={toggleTheme}>Toggle Theme</button>
       </LeftSection>
       <RightSection>
         <Button><BiEditAlt className="icon-edit"/>Edit</Button>
@@ -25,15 +25,16 @@ const StyledHeader = styled.header`
   align-items: center;
   height: 60px;
   padding: 0 20px;
-  background-color: rgb(108, 101, 101);
+  background-color: var(--background-color); 
+  box-shadow: var(--box-shadow);
+  color: var(--header-color);
   position: fixed;
   top: 0;
-  left: ${(props) => (props.isCollapsed ? "54px" : "220px")}; /* ปรับตำแหน่งตาม Sidebar */
-  width: calc(100% - ${(props) => (props.isCollapsed ? "54px" : "220px")}); /* ปรับความกว้าง */
+  left: ${(props) => (props.isCollapsed ? "54px" : "220px")}; 
+  width: calc(100% - ${(props) => (props.isCollapsed ? "54px" : "220px")}); 
   z-index: 1000;
   transition: left 0.3s ease, width 0.3s ease;
 `;
-
 
 const LeftSection = styled.div`
   display: flex;
@@ -43,12 +44,12 @@ const LeftSection = styled.div`
 const RightSection = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px; 
+  gap: 10px;
   margin-right: 40px;
 `;
 
 const Button = styled.button`
-  background-color: #fd6e2b;
+  background-color: var(--button-color); /* ใช้ตัวแปรธีม */
   color: white;
   border: none;
   border-radius: 4px;
@@ -58,15 +59,15 @@ const Button = styled.button`
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #e65a12;
+    background-color: #e65a12; /* สีสำหรับ Hover */
   }
 
-  .icon-edit{
+  .icon-edit {
     margin-right: 5px;
-    Font-size: 15px;
+    font-size: 15px;
   }
-  .icon-switch{
+  .icon-switch {
     margin-right: 5px;
-    Font-size: 15px;
+    font-size: 15px;
   }
 `;

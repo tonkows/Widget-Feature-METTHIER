@@ -36,17 +36,18 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
 export default Sidebar;
 
 const StyledSidebar = styled.div`
-  background-color: #2c2c2c;
-  color: #fff;
+  background-color: var(--background-color); 
+  color: var(--text-color); 
   height: 100vh;
   overflow: hidden;
   transition: width 0.3s ease, padding 0.3s ease;
-  position: relative;
+  position: fixed; 
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   padding: 10px;
   width: 200px;
+  box-shadow: var(--box-shadow);
 
   &.collapsed {
     width: 34px;
@@ -59,7 +60,7 @@ const StyledSidebar = styled.div`
     z-index: 1000;
     background: none;
     border: none;
-    color: #fff;
+    color: var(--text-color); /* ใช้ตัวแปรธีม */
     font-size: 20px;
     cursor: pointer;
     transition: left 0.3s ease; 
@@ -68,6 +69,7 @@ const StyledSidebar = styled.div`
   &.collapsed .hamburger {
     left: 9px; 
   }
+
   .menu {
     list-style: none;
     padding: 0;
@@ -86,7 +88,7 @@ const StyledSidebar = styled.div`
     align-items: center;
     justify-content: flex-start;
     text-decoration: none;
-    color: #fff;
+    color: var(--text-color); /* ใช้ตัวแปรธีม */
     padding: 10px 15px;
     border-radius: 4px;
     transition: background-color 0.3s ease;
@@ -94,7 +96,7 @@ const StyledSidebar = styled.div`
 
   .menu-item a:hover,
   .menu-item a.active {
-    background-color: #fd6e2b;
+    background-color: var(--button-color); /* ใช้ตัวแปรธีม */
   }
 
   &.collapsed .menu-item a {
@@ -110,7 +112,9 @@ const StyledSidebar = styled.div`
     margin-left: 10px;
     font-size: 14px;
   }
-  .menu-icon{
+
+  .menu-icon {
     font-size: 20px;
   }
 `;
+
