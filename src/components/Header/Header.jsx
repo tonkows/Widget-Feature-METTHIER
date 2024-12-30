@@ -26,7 +26,6 @@ const StyledHeader = styled.header`
   height: 60px;
   padding: 0 20px;
   background-color: var(--background-color); 
-  box-shadow: var(--box-shadow);
   color: var(--header-color);
   position: fixed;
   top: 0;

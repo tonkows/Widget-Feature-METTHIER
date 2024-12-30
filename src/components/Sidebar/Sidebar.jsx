@@ -48,6 +48,7 @@ const StyledSidebar = styled.div`
   padding: 10px;
   width: 200px;
   box-shadow: var(--box-shadow);
+  z-index: 1100;
 
   &.collapsed {
     width: 34px;
@@ -57,7 +58,7 @@ const StyledSidebar = styled.div`
     position: absolute;
     top: 10px;
     left: calc(100% - 30px); 
-    z-index: 1000;
+    z-index: 1100;
     background: none;
     border: none;
     color: var(--text-color); /* ใช้ตัวแปรธีม */
@@ -67,7 +68,7 @@ const StyledSidebar = styled.div`
   }
 
   &.collapsed .hamburger {
-    left: 9px; 
+    left: 11px; 
   }
 
   .menu {
