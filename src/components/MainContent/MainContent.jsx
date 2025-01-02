@@ -83,7 +83,7 @@ const Container = styled.div`
   align-items: center; 
   background: var(--content-bg-color);
   overflow: hidden; 
-  padding-top: 30px;
+  padding-top: 20px;
 `;
 
 const StyledRow = styled(Row)`
@@ -101,7 +101,7 @@ const StyledCol = styled(Col)`
 
 const Block = styled.div`
   height: 100%;
-  color: #fff;
+  color: var(--text-color);
   border-radius: 4px;
   display: flex;
   justify-content: center;

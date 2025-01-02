@@ -23,14 +23,14 @@ const StyledHeader = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 60px;
-  padding: 0 20px;
-  background-color: var(--card-bg-color); 
+  height: 48px; 
+  padding: 0 16px; 
+  background-color: var(--card-bg-color);
   color: var(--header-color);
   position: fixed;
   top: 0;
-  left: ${(props) => (props.isCollapsed ? "54px" : "220px")}; 
-  width: calc(100% - ${(props) => (props.isCollapsed ? "54px" : "220px")}); 
+  left: ${(props) => (props.isCollapsed ? "54px" : "220px")};
+  width: calc(100% - ${(props) => (props.isCollapsed ? "54px" : "220px")});
   z-index: 1000;
   transition: left 0.3s ease, width 0.3s ease;
 `;
@@ -52,7 +52,7 @@ const Button = styled.button`
   color: white;
   border: none;
   border-radius: 4px;
-  padding: 8px 16px;
+  padding: 6px 14px;
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.3s ease;
