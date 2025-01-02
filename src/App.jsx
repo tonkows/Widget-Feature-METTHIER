@@ -28,13 +28,14 @@ const App = () => {
         <Header
           toggleSidebar={toggleSidebar}
           isCollapsed={isCollapsed}
-          toggleTheme={toggleTheme}
         />
 
         {/* Main Layout */}
         <div className="main-layout">
           {/* Sidebar */}
-          <Sidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} />
+          <Sidebar isCollapsed={isCollapsed} 
+          toggleSidebar={toggleSidebar}
+          toggleTheme={toggleTheme}/>
           
           {/* Routes */}
           <Routes>

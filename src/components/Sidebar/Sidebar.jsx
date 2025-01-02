@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { AiOutlineProduct } from "react-icons/ai";
 import styled from "styled-components";
 
-const Sidebar = ({ isCollapsed, toggleSidebar }) => {
+const Sidebar = ({ isCollapsed, toggleSidebar, toggleTheme }) => {
   const location = useLocation();
   const [activePath, setActivePath] = useState(location.pathname);
 
@@ -30,6 +30,10 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
           </MenuLink>
         </MenuItem>
       </Menu>
+
+      <ThemeButton onClick={toggleTheme} isCollapsed={isCollapsed}>
+        Theme
+      </ThemeButton>
     </StyledSidebar>
   );
 };
@@ -102,4 +106,22 @@ const MenuText = styled.span`
 const MenuIcon = styled(AiOutlineProduct)`
   font-size: 20px;
   color: var(--text-color);
+`;
+
+const ThemeButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: ${(props) => (props.isCollapsed ? "center" : "flex-start")};
+  background-color: var(--button-color);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  position: absolute;
+  bottom: 10px;
+  width: ${(props) => (props.isCollapsed ? "34px" : "calc(100% - 20px)")};
+  transition: width 0.3s ease;
+  margin-bottom:20px;
 `;

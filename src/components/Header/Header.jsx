@@ -3,11 +3,11 @@ import styled from "styled-components";
 import { BiEditAlt } from "react-icons/bi";
 import { GoArrowSwitch } from "react-icons/go";
 
-const Header = ({ toggleSidebar, isCollapsed, toggleTheme }) => {
+const Header = ({ toggleSidebar, isCollapsed }) => {
   return (
     <StyledHeader isCollapsed={isCollapsed}>
       <LeftSection>
-        <button onClick={toggleTheme}>Theme</button>
+        
       </LeftSection>
       <RightSection>
         <Button><BiEditAlt className="icon-edit"/>Edit</Button>
@@ -25,7 +25,7 @@ const StyledHeader = styled.header`
   align-items: center;
   height: 60px;
   padding: 0 20px;
-  background-color: var(--background-color); 
+  background-color: var(--card-bg-color); 
   color: var(--header-color);
   position: fixed;
   top: 0;
