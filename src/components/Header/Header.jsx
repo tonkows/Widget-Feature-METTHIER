@@ -7,7 +7,7 @@ const Header = ({ toggleSidebar, isCollapsed, toggleTheme }) => {
   return (
     <StyledHeader isCollapsed={isCollapsed}>
       <LeftSection>
-        <button onClick={toggleTheme}>Toggle Theme</button>
+        <button onClick={toggleTheme}>Theme</button>
       </LeftSection>
       <RightSection>
         <Button><BiEditAlt className="icon-edit"/>Edit</Button>
@@ -48,7 +48,7 @@ const RightSection = styled.div`
 `;
 
 const Button = styled.button`
-  background-color: var(--button-color); /* ใช้ตัวแปรธีม */
+  background-color: var(--button-color);
   color: white;
   border: none;
   border-radius: 4px;
@@ -56,10 +56,6 @@ const Button = styled.button`
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #e65a12; /* สีสำหรับ Hover */
-  }
 
   .icon-edit {
     margin-right: 5px;
