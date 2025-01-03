@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { AiOutlineProduct } from "react-icons/ai";
+import { AiOutlineProduct } from "react-icons/ai"
+import { CgDarkMode } from "react-icons/cg";
+import { Switch } from "antd";
 import styled from "styled-components";
 
 const Sidebar = ({ isCollapsed, toggleSidebar, toggleTheme }) => {
@@ -11,6 +13,11 @@ const Sidebar = ({ isCollapsed, toggleSidebar, toggleTheme }) => {
     setActivePath(path);
   };
 
+  const onThemeChange = (checked) => {
+    console.log(`Switch to ${checked}`);
+    toggleTheme(); // เรียกใช้ฟังก์ชัน toggleTheme ที่ส่งมาจาก props
+  };
+
   return (
     <StyledSidebar isCollapsed={isCollapsed}>
       <Hamburger onClick={toggleSidebar} isCollapsed={isCollapsed}>
@@ -19,26 +26,30 @@ const Sidebar = ({ isCollapsed, toggleSidebar, toggleTheme }) => {
 
       <Menu>
         <MenuItem>
-          <MenuLink
-            to="/"
-            isActive={activePath === "/"}
-            isCollapsed={isCollapsed}
-            onClick={() => handleMenuClick("/")}
-          >
-            <MenuIcon />
-            {!isCollapsed && <MenuText>Widget Management</MenuText>}
-          </MenuLink>
+        <MenuLink
+          to="/"
+          className={`${isCollapsed ? "collapsed" : "expanded"} ${
+            activePath === "/" ? "active" : ""
+          }`}
+          onClick={() => handleMenuClick("/")}
+        >
+          <MenuIcon />
+          {!isCollapsed && <MenuText>Widget Management</MenuText>}
+        </MenuLink>
         </MenuItem>
       </Menu>
 
-      <ThemeButton onClick={toggleTheme} isCollapsed={isCollapsed}>
-        Theme
-      </ThemeButton>
+      <SwitchWrapper className={isCollapsed ? "collapsed" : "expanded"}>
+        <Switch defaultChecked onChange={onThemeChange} />
+        {!isCollapsed && <SwitchLabel><CgDarkMode style={{ fontSize: '18px' }}/>Dark Mode</SwitchLabel>}
+      </SwitchWrapper>
     </StyledSidebar>
   );
 };
 
 export default Sidebar;
+
+// Styled components
 
 const StyledSidebar = styled.div`
   background-color: var(--background-color);
@@ -85,18 +96,30 @@ const MenuItem = styled.li`
 const MenuLink = styled(Link)`
   display: flex;
   align-items: center;
-  justify-content: ${(props) => (props.isCollapsed ? "center" : "flex-start")};
   text-decoration: none;
   color: var(--text-color);
-  padding: ${(props) => (props.isCollapsed ? "5px 0" : "10px 15px")};
   border-radius: 4px;
   transition: background-color 0.3s ease;
-  background-color: ${(props) => (props.isActive ? "var(--button-color)" : "transparent")};
+
+  &.collapsed {
+    justify-content: center;
+    padding: 5px 0;
+  }
+
+  &.expanded {
+    justify-content: flex-start;
+    padding: 10px 15px;
+  }
+
+  &.active {
+    background-color: var(--button-color);
+  }
 
   &:hover {
     background-color: var(--button-color);
   }
 `;
+
 
 const MenuText = styled.span`
   margin-left: 10px;
@@ -108,20 +131,43 @@ const MenuIcon = styled(AiOutlineProduct)`
   color: var(--text-color);
 `;
 
-const ThemeButton = styled.button`
+const SwitchWrapper = styled.div`
   display: flex;
   align-items: center;
-  justify-content: ${(props) => (props.isCollapsed ? "center" : "flex-start")};
-  background-color: var(--button-color);
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
   position: absolute;
   bottom: 10px;
-  width: ${(props) => (props.isCollapsed ? "34px" : "calc(100% - 20px)")};
-  transition: width 0.3s ease;
-  margin-bottom:20px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+
+  &.collapsed {
+    justify-content: center;
+    width: 34px;
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  &.expanded {
+    justify-content: flex-start;
+    width: calc(100% - 20px);
+    padding: 5px 10px;
+    border-radius: 8px;
+  }
+`;
+
+
+const SwitchLabel = styled.span`
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  font-size: 14px;
+  color: var(--text-color);
+  transition: opacity 0.3s ease;
+
+  svg {
+    margin-right: 5px;
+    font-size: 18px;
+    color: var(--text-color);
+  }
+
+  ${(props) => (props.isCollapsed ? "opacity: 0; pointer-events: none;" : "opacity: 1;")}
 `;

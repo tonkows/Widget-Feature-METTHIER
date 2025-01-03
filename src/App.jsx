@@ -39,7 +39,7 @@ const App = () => {
           
           {/* Routes */}
           <Routes>
-            <Route path="/" element={<MainContent />} />
+            <Route path="/" element={<MainContent isCollapsed={isCollapsed} />} />
             <Route path="/config" element={<ConfigForm />} />
           </Routes>
         </div>
