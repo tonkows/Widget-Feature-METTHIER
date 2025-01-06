@@ -1,0 +1,298 @@
+import React, { useState, useEffect } from "react";
+import { Select, Checkbox, Descriptions, Button } from "antd";
+import { Bar, Line, Pie } from "react-chartjs-2";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, PointElement, ArcElement, Title, Tooltip, Legend } from 'chart.js'; 
+import styled from "styled-components";
+import subjectData from '../subjectData.json'; 
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement, 
+  PointElement,
+  ArcElement, 
+  Title,
+  Tooltip,
+  Legend
+);
+
+const { Option } = Select;
+
+const MainContent = ({ isCollapsed }) => {
+  const [selectedRanges, setSelectedRanges] = useState([]);
+  const [subject, setSubject] = useState(null);
+  const [dataset, setDataset] = useState(null);
+  const [showGraphs, setShowGraphs] = useState(false); 
+  const [graphData, setGraphData] = useState(null);
+  const [graphType, setGraphType] = useState(null); 
+
+  useEffect(() => {
+    return () => {
+      // ทำลายกราฟเมื่อ component unmount
+      if (window.myChart) {
+        window.myChart.destroy();
+      }
+    };
+  }, []);
+
+  const handleSubjectChange = (value) => {
+    setSubject(value);
+    setDataset(null); // รีเซ็ต dataset เมื่อเลือก subject ใหม่
+    setSelectedRanges([]); // รีเซ็ต selectedRanges
+    setShowGraphs(false); // ซ่อนกราฟ
+    setGraphType(null); // รีเซ็ตกราฟที่เลือก
+  };
+
+  const handleDatasetChange = (value) => {
+    const selectedDataset = subjectData[subject].datasets.find(
+      (d) => d.name === value
+    );
+    setDataset(selectedDataset); // เก็บข้อมูล dataset ที่เลือก
+    setShowGraphs(false); // ซ่อนกราฟจนกว่าผู้ใช้จะกด Generate
+    setGraphType(null); // รีเซ็ตกราฟที่เลือก
+  };
+
+  const handleRangeChange = (checkedValues) => {
+    setSelectedRanges(checkedValues); // อัปเดตค่าช่วงเวลาที่เลือก
+    console.log("Selected Ranges:", checkedValues);
+  };
+
+  const handleGenerateClick = () => {
+    // เมื่อกดปุ่ม "Generate", ให้แสดงกราฟ
+    if (dataset && selectedRanges.length > 0) {
+      // เลือกข้อมูลตามช่วงเวลาที่เลือก
+      const selectedData = selectedRanges.reduce((acc, range) => {
+        if (dataset.data[range]) {
+          acc = [...acc, ...dataset.data[range]];
+        }
+        return acc;
+      }, []);
+
+      const data = {
+        labels: ["Label 1", "Label 2", "Label 3"],
+        datasets: [
+          {
+            label: `${dataset.name} - ${selectedRanges.join(", ")}`,
+            data: selectedData,
+            backgroundColor: "rgba(75,192,192,0.2)",
+            borderColor: "rgba(75,192,192,1)",
+            borderWidth: 1
+          }
+        ]
+      };
+      setGraphData(data);
+      setShowGraphs(true); // เมื่อกด "Generate", ให้แสดงกราฟทั้งหมด
+    } else {
+      alert("Please select subject, dataset, and range before generating the graph.");
+    }
+  };
+
+  // ฟังก์ชันสำหรับการแสดงกราฟ
+  const renderGraphs = () => {
+    if (!graphData || !dataset) return null;
+
+    return (
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
+        {/* แสดง Bar Chart ถ้ากราฟนั้นมีอยู่ใน Dataset */}
+        {dataset.graphs.includes("Bar Chart") && (
+          <div style={{ width: "300px", height: "200px" }}>
+            <Bar data={graphData} options={{ responsive: true }} />
+          </div>
+        )}
+        
+        {/* แสดง Line Chart ถ้ากราฟนั้นมีอยู่ใน Dataset */}
+        {dataset.graphs.includes("Line Chart") && (
+          <div style={{ width: "300px", height: "200px" }}>
+            <Line data={graphData} options={{ responsive: true }} />
+          </div>
+        )}
+        
+        {/* แสดง Pie Chart ถ้ากราฟนั้นมีอยู่ใน Dataset */}
+        {dataset.graphs.includes("Pie Chart") && (
+          <div style={{ width: "300px", height: "200px" }}>
+            <Pie data={graphData} options={{ responsive: true }} />
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <Container isCollapsed={isCollapsed}>
+      <WrapperDiv>
+        {/* เลือก Subject */}
+        <StyledSelect
+          placeholder="Select Subject"
+          onChange={handleSubjectChange}
+          value={subject}
+        >
+          <Option value="subject1">Device</Option>
+          <Option value="subject2">Asset</Option>
+        </StyledSelect>
+
+        {/* เลือก Dataset */}
+        <StyledSelect
+          placeholder="Select Dataset"
+          onChange={handleDatasetChange}
+          value={dataset ? dataset.name : null}
+        >
+          {subject &&
+            subjectData[subject].datasets.map((dataset, index) => (
+              <Option key={index} value={dataset.name}>
+                {dataset.name}
+              </Option>
+            ))}
+        </StyledSelect>
+
+        {/* เลือกช่วงเวลา (Range) */}
+        <CheckboxGroup>
+          <Checkbox
+            value="date"
+            checked={selectedRanges.includes("date")}
+            onChange={(e) =>
+              handleRangeChange(
+                e.target.checked
+                  ? [...selectedRanges, "date"]
+                  : selectedRanges.filter((r) => r !== "date")
+              )
+            }
+          >
+            Date
+          </Checkbox>
+          <Checkbox
+            value="week"
+            checked={selectedRanges.includes("week")}
+            onChange={(e) =>
+              handleRangeChange(
+                e.target.checked
+                  ? [...selectedRanges, "week"]
+                  : selectedRanges.filter((r) => r !== "week")
+              )
+            }
+          >
+            Week
+          </Checkbox>
+          <Checkbox
+            value="month"
+            checked={selectedRanges.includes("month")}
+            onChange={(e) =>
+              handleRangeChange(
+                e.target.checked
+                  ? [...selectedRanges, "month"]
+                  : selectedRanges.filter((r) => r !== "month")
+              )
+            }
+          >
+            Month
+          </Checkbox>
+          <Checkbox
+            value="year"
+            checked={selectedRanges.includes("year")}
+            onChange={(e) =>
+              handleRangeChange(
+                e.target.checked
+                  ? [...selectedRanges, "year"]
+                  : selectedRanges.filter((r) => r !== "year")
+              )
+            }
+          >
+            Year
+          </Checkbox>
+        </CheckboxGroup>
+
+        {/* ปุ่ม Generate เพื่อแสดงกราฟ */}
+        <Button onClick={handleGenerateClick}>Generate</Button>
+
+        {/* แสดงกราฟทั้งหมดเมื่อผู้ใช้กดปุ่ม Generate */}
+        {showGraphs && renderGraphs()}
+      </WrapperDiv>
+    </Container>
+  );
+};
+
+export default MainContent;
+
+const Container = styled.div`
+  padding: 20px;
+  background-color: var(--content-bg-color);
+  color: var(--text-color);
+  transition: margin-left 0.3s ease;
+  margin-left: ${(props) => (props.isCollapsed ? "60px" : "240px")};
+
+  label {
+    color: var(--text-color);
+  }
+`;
+
+const WrapperDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: var(--background-color);
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: var(--box-shadow);
+  border: 1px solid var(--border-color);
+  position: relative;
+  margin-top: 40px;
+`;
+
+const StyledSelect = styled(Select)`
+  .ant-select-selector {
+    background-color: var(--field-color) !important;
+    border: 0px solid var(--card-bg-color) !important;
+    border-radius: 8px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0px;
+  }
+
+  .ant-select-selection-placeholder {
+    color: var(--text-color);
+    opacity: 0.8;
+    background-color: var(--field-color);
+  }
+
+  .ant-select-selection-item {
+    color: var(--text-color);
+    background-color: var(--field-color);
+  }
+
+  .ant-select-arrow {
+    color: var(--text-color);
+  }
+
+  .ant-select-dropdown {
+    background-color: var(--field-color) !important;
+    border-radius: 8px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  .ant-select-item-option {
+    color: var(--text-color);
+  }
+
+  .ant-select-item-option:hover {
+    background-color: var(--button-color);
+    color: white;
+  }
+
+  &:hover .ant-select-selector {
+    border-color: var(--button-color);
+  }
+
+  &:focus .ant-select-selector {
+    border-color: var(--button-color);
+    box-shadow: 0 0 0 2px rgba(253, 110, 43, 0.3);
+  }
+`;
+
+const CheckboxGroup = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+  color: var(--text-color);
+`;

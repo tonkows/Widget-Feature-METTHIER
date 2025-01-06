@@ -1,36 +1,47 @@
 import React from "react";
 import { Row, Col } from "antd";
 import styled from "styled-components";
-import { FiPlus } from "react-icons/fi";
+import { BiEditAlt } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
 
 const MainContent = ({ isCollapsed }) => {
+  const navigate = useNavigate();
+
+  const handleClick = (blockId) => {
+    console.log(`clicked on Block ${blockId}`);
+    navigate(`/config-form?block=${blockId}`); 
+  };
+
+  const renderColumnContent = (columnId) => {
+
+    const blockNames = {
+      Left: ["TopLeft", "MiddleTopLeft", "MiddleBottomLeft", "BottomLeft"],
+      right: ["TopRight", "MiddleTopRight", "MiddleBottomRight", "BottomRight"],
+    };
+  
+    return blockNames[columnId]?.map((blockName) => {
+      const blockId = `${columnId}-${blockName}`;
+      return (
+        <SpacedRow key={blockId}>
+          <Col span={24}>
+            <Block>
+              <IconButton onClick={() => handleClick(blockId)}>
+                <LargeBiEditAlt />
+              </IconButton>
+            </Block>
+          </Col>
+        </SpacedRow>
+      );
+    });
+  };
+  
+
   return (
     <Container className={isCollapsed ? "isCollapsed" : "notCollapsed"}>
       <WrapperDiv>
         <StyledRow gutter={[8, 8]}>
           {/* Column 1 */}
-          <StyledCol span={6}>
-            <SpacedRow>
-              <Col span={24}>
-                <Block><LargeFiPlus /></Block>
-              </Col>
-            </SpacedRow>
-            <SpacedRow>
-              <Col span={24}>
-                <Block><LargeFiPlus /></Block>
-              </Col>
-            </SpacedRow>
-            <SpacedRow>
-              <Col span={24}>
-                <Block><LargeFiPlus /></Block>
-              </Col>
-            </SpacedRow>
-            <SpacedRow>
-              <Col span={24}>
-                <Block><LargeFiPlus /></Block>
-              </Col>
-            </SpacedRow>
-          </StyledCol>
+          <StyledCol span={6}>{renderColumnContent("Left")}</StyledCol>
 
           {/* Column 2 */}
           <StyledCol span={12}>
@@ -39,36 +50,26 @@ const MainContent = ({ isCollapsed }) => {
                 <Block>3D Model</Block>
               </Col>
             </SpacedRow>
-            <SpacedRow style={{ height: "30%" }}>
-              <Col span={24}>
-                <Block><LargeFiPlus /></Block>
-              </Col>
-            </SpacedRow>
+            <SpacedRow style={{ height: "30%" }} gutter={[6, 0]}>
+            <Col span={12}>
+              <Block gutter={[8, 8]}>
+                <IconButton onClick={() => handleClick("BottomCenter-Left")}>
+                  <LargeBiEditAlt />
+                </IconButton>
+              </Block>
+            </Col>
+            <Col span={12}>
+              <Block>
+                <IconButton onClick={() => handleClick("BottomCenter-Right")}>
+                  <LargeBiEditAlt />
+                </IconButton>
+              </Block>
+            </Col>
+          </SpacedRow>
           </StyledCol>
 
           {/* Column 3 */}
-          <StyledCol span={6}>
-            <SpacedRow>
-              <Col span={24}>
-                <Block><LargeFiPlus /></Block>
-              </Col>
-            </SpacedRow>
-            <SpacedRow>
-              <Col span={24}>
-                <Block><LargeFiPlus /></Block>
-              </Col>
-            </SpacedRow>
-            <SpacedRow>
-              <Col span={24}>
-                <Block><LargeFiPlus /></Block>
-              </Col>
-            </SpacedRow>
-            <SpacedRow>
-              <Col span={24}>
-                <Block><LargeFiPlus /></Block>
-              </Col>
-            </SpacedRow>
-          </StyledCol>
+          <StyledCol span={6}>{renderColumnContent("right")}</StyledCol>
         </StyledRow>
       </WrapperDiv>
     </Container>
@@ -77,8 +78,9 @@ const MainContent = ({ isCollapsed }) => {
 
 export default MainContent;
 
+// Styled components
 const Container = styled.div`
-  height: calc(100vh - 10px);
+  height: calc(100vh - 20px);
   width: calc(100% - 220px);
   display: flex;
   justify-content: center;
@@ -102,11 +104,9 @@ const Container = styled.div`
 const StyledRow = styled(Row)`
   height: calc(100% - 50px);
   width: 100%;
-  display: flex;
-  margin-top: 34px;
-  margin-left: 3px !important;
-  margin-right: 10px;
+  margin: 34px 10px 0 3px !important;
   row-gap: 8px;
+  display: flex;
   transition: all 0.3s ease;
 `;
 
@@ -130,6 +130,7 @@ const SpacedRow = styled(Row)`
   height: 25%;
   margin-bottom: 5px;
   transition: height 0.3s ease;
+
   &:last-child {
     margin-bottom: 0;
   }
@@ -141,6 +142,24 @@ const WrapperDiv = styled.div`
   transition: width 0.3s ease;
 `;
 
-const LargeFiPlus = styled(FiPlus)`
-  font-size: 24px;
+const IconButton = styled.button`
+  background: var(--button-bg-color);
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    background: var(--button-hover-bg-color);
+  }
+`;
+const LargeBiEditAlt = styled(BiEditAlt)`
+  font-size: 18px; 
+  color: var(--text-color);
+   position: absolute; 
+  top: 10px;
+  right: 10px; 
 `;

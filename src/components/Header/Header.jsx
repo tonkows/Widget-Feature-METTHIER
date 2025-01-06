@@ -1,17 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { BiEditAlt } from "react-icons/bi";
 import { GoArrowSwitch } from "react-icons/go";
+import { RiResetLeftFill } from "react-icons/ri";
+import { MdPublic } from "react-icons/md";
 
-const Header = ({ toggleSidebar, isCollapsed }) => {
+const Header = ({ toggleSidebar, isCollapsed, hasData }) => {
   return (
     <StyledHeader isCollapsed={isCollapsed}>
-      <LeftSection>
-        
-      </LeftSection>
+      <LeftSection></LeftSection>
       <RightSection>
-        <Button><BiEditAlt className="icon-edit"/>Edit</Button>
-        <Button><GoArrowSwitch className="icon-switch"/>Switch</Button>
+        <Button >
+          <BiEditAlt className="icon-edit" />
+          Edit
+        </Button>
+        <Button >
+          <GoArrowSwitch className="icon-switch" />
+          Switch
+        </Button>
+        <Button >
+          <MdPublic className="icon-public" />
+          Publish
+        </Button>
+        <Button >
+          <RiResetLeftFill className="icon-Reset" />
+          Reset Default
+        </Button>
       </RightSection>
     </StyledHeader>
   );
@@ -19,12 +33,13 @@ const Header = ({ toggleSidebar, isCollapsed }) => {
 
 export default Header;
 
+// Styled Components
 const StyledHeader = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 48px; 
-  padding: 0 16px; 
+  height: 48px;
+  padding: 0 16px;
   background-color: var(--card-bg-color);
   color: var(--header-color);
   position: fixed;
@@ -62,6 +77,20 @@ const Button = styled.button`
     font-size: 15px;
   }
   .icon-switch {
+    margin-right: 5px;
+    font-size: 15px;
+  }
+
+  &:disabled {
+    background-color: gray;
+    cursor: not-allowed;
+  }
+
+  .icon-public{
+    margin-right: 5px;
+    font-size: 15px;
+  }
+  .icon-Reset{
     margin-right: 5px;
     font-size: 15px;
   }

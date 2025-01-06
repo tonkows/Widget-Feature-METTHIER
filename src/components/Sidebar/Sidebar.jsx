@@ -15,7 +15,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar, toggleTheme }) => {
 
   const onThemeChange = (checked) => {
     console.log(`Switch to ${checked}`);
-    toggleTheme(); // เรียกใช้ฟังก์ชัน toggleTheme ที่ส่งมาจาก props
+    toggleTheme(); 
   };
 
   return (
