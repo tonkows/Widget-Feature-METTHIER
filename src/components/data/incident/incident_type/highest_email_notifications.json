@@ -3,40 +3,44 @@
   "dataset_label": "Highest Email Notifications",
   "charts": [
     {
-      "widget": "bar chart",
       "data": {
         "date": [
-          { "date": "1/1/2025", "value": 1000 },
-          { "date": "2/1/2025", "value": 15 },
-          { "date": "3/1/2025", "value": 12 },
-          { "date": "4/1/2025", "value": 18 },
-          { "date": "5/1/2025", "value": 20 },
-          { "date": "6/1/2025", "value": 22 },
-          { "date": "7/1/2025", "value": 25 }
+          { "date": "1/1/2025", "value": 12 },
+          { "date": "2/1/2025", "value": 18 },
+          { "date": "3/1/2025", "value": 25 },
+          { "date": "4/1/2025", "value": 22 },
+          { "date": "5/1/2025", "value": 28 },
+          { "date": "6/1/2025", "value": 15 },
+          { "date": "7/1/2025", "value": 35 }
         ],
         "week": [
-          { "week": "Mon", "value": 8 },
-          { "week": "Tue", "value": 12 },
-          { "week": "Wed", "value": 14 },
-          { "week": "Thu", "value": 17 },
-          { "week": "Fri", "value": 19 },
-          { "week": "Sat", "value": 21 },
-          { "week": "Sun", "value": 23 }
+          { "week": "Mon", "value": 12 },
+          { "week": "Tue", "value": 18 },
+          { "week": "Wed", "value": 25 },
+          { "week": "Thu", "value": 22 },
+          { "week": "Fri", "value": 28 },
+          { "week": "Sat", "value": 15 },
+          { "week": "Sun", "value": 35 }
         ],
         "month": [
-          { "month": "Jan", "value": 120 },
-          { "month": "Feb", "value": 130 },
-          { "month": "Mar", "value": 150 },
-          { "month": "Apr", "value": 160 },
+          { "month": "Jan", "value": 155 },
+          { "month": "Feb", "value": 170 },
+          { "month": "Mar", "value": 210 },
+          { "month": "Apr", "value": 190 },
           { "month": "May", "value": 180 },
-          { "month": "Jun", "value": 190 },
-          { "month": "Jul", "value": 210 }
+          { "month": "Jun", "value": 220 },
+          { "month": "Jul", "value": 260 },
+          { "month": "Aug", "value": 230 },
+          { "month": "Sep", "value": 250 },
+          { "month": "Oct", "value": 200 },
+          { "month": "Nov", "value": 270 },
+          { "month": "Dec", "value": 300 }
         ],
         "year": [
-          { "year": "2024", "value": 1200 },
-          { "year": "2025", "value": 1300 }
+          { "year": "2025", "value": 2635 }
         ]
       }
     }
   ]
 }
+

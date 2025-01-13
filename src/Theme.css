@@ -8,18 +8,45 @@
   --content-bg-color: #1a1d1e;
   --field-color:#424951;
   --Required-color: #e42a21;
-  }
+  --chart-color: #2980B9;
+  --chart-border-color:#35a2eb;
+  --chart-color-1: #22A7F0;
+  --chart-color-2: #00BCD4;
+  --chart-color-3: #76D7C4;
+  --chart-color-4: #4CAF50;
+  --chart-color-5: #009688;
+  --chart-color-6: #4DB6AC;
+  --chart-color-7: #B2EBF2;
+  --chart-color-8: #80DEEA;
+  --chart-color-9: #64B5F6;
+  --chart-color-10: #4FC3F7;
+  --chart-color-11: #29B6F6;
+  --chart-color-12: #039BE5;
+}
 
-  :root[theme='light'] {
-    --background-color: #ffffff;
-    --header-color: white;
-    --text-color: #2c2c2c;
-    --button-color: #fd6e2b;
-    --box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
-    --content-bg-color: #eff1f5;
-    --card-bg-color: #d4d9db;
-    --content-bg-color: #eff1f5;
-    --field-color:#cbcccd;
-    --Required-color: #b0120a;
-  }
-  
+:root[theme='light'] {
+  --background-color: #ffffff;
+  --header-color: white;
+  --text-color: #2c2c2c;
+  --button-color: #fd6e2b;
+  --box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+  --content-bg-color: #eff1f5;
+  --card-bg-color: #d4d9db;
+  --content-bg-color: #eff1f5;
+  --field-color:#cbcccd;
+  --Required-color: #b0120a;
+  --chart-color: #2980B9;
+  --chart-border-color:#35a2eb;
+  --chart-color-1: #22A7F0;
+  --chart-color-2: #00BCD4;
+  --chart-color-3: #76D7C4;
+  --chart-color-4: #4CAF50;
+  --chart-color-5: #009688;
+  --chart-color-6: #4DB6AC;
+  --chart-color-7: #B2EBF2;
+  --chart-color-8: #80DEEA;
+  --chart-color-9: #64B5F6;
+  --chart-color-10: #4FC3F7;
+  --chart-color-11: #29B6F6;
+  --chart-color-12: #039BE5;
+}

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Select, Button, Radio, DatePicker, Modal } from "antd";
 import styled from "styled-components";
 import moment from "moment";
-import { Bar, Line, Pie } from "react-chartjs-2";
+import { Bar, Line, Doughnut } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -41,6 +41,7 @@ const ConfigForm = ({ isCollapsed }) => {
   const [isDateVisible, setDateVisible] = useState(false);
   const [chartData, setChartData] = useState(null);
   const [datasetData, setDatasetData] = useState(null);
+  const [selectedChart, setSelectedChart] = useState(null);
 
   const loadDatasetData = async (subject, datatype, dataset) => {
     try {
@@ -54,16 +55,17 @@ const ConfigForm = ({ isCollapsed }) => {
 
   const handleButtonClick = (buttonType) => {
     if (selectedButton === buttonType) return;
-
+  
     const isSelected =
       (selectedButton === "custom" && (subject1 || datatype1 || dataset1)) ||
       (selectedButton === "default" && (subject1 || datatype1));
-
+  
     if (isSelected) {
       Modal.confirm({
         title: "Are you sure you want to switch?",
         content: "The selected data will be lost.",
         onOk: () => {
+          clearWidget(); 
           if (buttonType === "custom") {
             setSubject1(null);
             setDatatype1(null);
@@ -76,6 +78,7 @@ const ConfigForm = ({ isCollapsed }) => {
         },
       });
     } else {
+      clearWidget();
       if (buttonType === "custom") {
         setSubject1(null);
         setDatatype1(null);
@@ -87,6 +90,12 @@ const ConfigForm = ({ isCollapsed }) => {
       setSelectedButton(buttonType);
     }
   };
+  
+  const clearWidget = () => {
+    setSelectedChart(null); 
+    setChartData(null); 
+  };
+  
 
   const handleSubjectChange1 = (value) => {
     setSubject1(value);
@@ -135,8 +144,8 @@ const ConfigForm = ({ isCollapsed }) => {
         {
           label: dataset.dataset,
           data: [],
-          backgroundColor: "rgba(53, 162, 235, 0.5)",
-          borderColor: "rgba(53, 162, 235, 1)",
+          backgroundColor: "var(--chart-color)",
+          borderColor: "var(--chart-border-color)",
         },
       ],
     };
@@ -173,6 +182,25 @@ const ConfigForm = ({ isCollapsed }) => {
       setChartData(data);
     }
   }, [dataset1, selectedRanges, datasetData]);
+
+  const handleChartClick = (chartType) => {
+    setSelectedChart(chartType);
+  };
+
+  const chartStyle = (chartType) => ({
+    width: "30%", 
+    height: "250px", 
+    maxWidth: "500px", 
+    backgroundColor: "#fff", 
+    borderRadius: "8px", 
+    border: selectedChart === chartType ? "2px solid blue" : "1px solid #ddd", 
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", 
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center", 
+    justifyContent: "center", 
+    padding: "10px", 
+  });
   
 
   return (
@@ -195,7 +223,7 @@ const ConfigForm = ({ isCollapsed }) => {
       {selectedButton === "custom" && (
         <WrapperDiv1>
           <Label>Custom Content</Label>
-          <Label>Select Subject</Label>
+          <Label>Select Subject <Required>*</Required></Label>
           <StyledSelect
             placeholder="Select Subject"
             onChange={handleSubjectChange1}
@@ -211,7 +239,7 @@ const ConfigForm = ({ isCollapsed }) => {
             ))}
           </StyledSelect>
 
-          <Label>Select DataType</Label>
+          <Label>Select DataType <Required>*</Required></Label>
           <StyledSelect
             placeholder="Select Datatype"
             onChange={handleDatatypeChange1}
@@ -226,7 +254,7 @@ const ConfigForm = ({ isCollapsed }) => {
               ))}
           </StyledSelect>
 
-          <Label>Select Dataset</Label>
+          <Label>Select Dataset <Required>*</Required></Label>
           <StyledSelect
             placeholder="Select Dataset"
             onChange={handleDatasetChange1}
@@ -241,7 +269,7 @@ const ConfigForm = ({ isCollapsed }) => {
               ))}
           </StyledSelect>
 
-          <Label>Select Range</Label>
+          <Label>Select Range <Required>*</Required></Label>
           <Radio.Group
             value={selectedRanges[0]}
             onChange={(e) => handleRangeChange(e.target.value)}
@@ -255,74 +283,225 @@ const ConfigForm = ({ isCollapsed }) => {
 
           {isDateVisible && (
             <div style={{ marginTop: "16px" }}>
+              <Label style={{ color: "var(--text-color)" }}>
+                Select a date range<Required>*</Required>
+              </Label> 
+              <div style={{ width: "100%", marginTop: "1px" }}>
               <RangePicker
-                value={selectedRanges[1]} 
-                onChange={(dates) => setSelectedRanges(["date", dates])} 
-                disabledDate={(current) =>
-                  current && current > moment().endOf("day")
-                }
+                value={selectedRanges[1]}
+                onChange={(dates) => setSelectedRanges(["date", dates])}
+                disabledDate={(current) => current && current > moment().endOf("day")}
                 style={{ marginTop: "16px" }}
               />
+            </div>
             </div>
           )}
 
           {chartData && (
             <div
-              style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "10px",
+                justifyContent: "space-between",
+               
+              }}
             >
               {dataset1.widget.includes("bar chart") && (
-                <div style={{ width: "30%", maxWidth: "800px" }}>
-                  <h3>Bar Chart</h3>
-                  <Bar data={chartData} options={chartOptions} />
-                </div>
-              )}
+              <div
+                style={{
+                  ...chartStyle("bar chart"),
+                  flexBasis: "30%", 
+                }}
+                onClick={() => handleChartClick("bar chart")}
+              >
+                <Bar data={{
+        ...chartData,
+        datasets: [
+          {
+            ...chartData.datasets[0],
+            backgroundColor: [
+              '#22A7F0',
+              '#00BCD4',
+              '#76D7C4',
+              '#4CAF50',
+              '#009688',
+              '#4DB6AC',
+              '#B2EBF2',
+              '#80DEEA',
+              '#64B5F6',
+              '#4FC3F7',
+              '#29B6F6',
+              '#039BE5',
+            ],
+          },
+        ],
+      }}options={chartOptions} />
+              </div>
+            )}
 
-              {dataset1.widget.includes("line chart") && (
-                <div style={{ width: "30%", maxWidth: "800px" }}>
-                  <h3>Line Chart</h3>
-                  <Line data={chartData} options={chartOptions} />
-                </div>
-              )}
+  {dataset1.widget.includes("line chart") && (
+      <div
+        style={{
+          ...chartStyle("line chart"),
+          flexBasis: "30%", 
+        }}
+        onClick={() => handleChartClick("line chart")}
+      >
+        <Line data={{
+        ...chartData,
+        datasets: [
+          {
+            ...chartData.datasets[0],
+            backgroundColor: [
+              '#22A7F0',
+              '#00BCD4',
+              '#76D7C4',
+              '#4CAF50',
+              '#009688',
+              '#4DB6AC',
+              '#B2EBF2',
+              '#80DEEA',
+              '#64B5F6',
+              '#4FC3F7',
+              '#29B6F6',
+              '#039BE5',
+            ],
+          },
+        ],
+      }} options={chartOptions} />
+      </div>
+    )}
+{dataset1.widget.includes("doughnut chart") && (
+  <div
+    style={{
+      ...chartStyle("doughnut chart"),
+      flexBasis: "30%",
+      position: "relative", 
+    }}
+    onClick={() => handleChartClick("doughnut chart")}
+  >
+    
+    <Doughnut
+      data={{
+        ...chartData,
+        datasets: [
+          {
+            ...chartData.datasets[0],
+            backgroundColor: [
+              '#22A7F0',
+              '#00BCD4',
+              '#76D7C4',
+              '#4CAF50',
+              '#009688',
+              '#4DB6AC',
+              '#B2EBF2',
+              '#80DEEA',
+              '#64B5F6',
+              '#4FC3F7',
+              '#29B6F6',
+              '#039BE5',
+            ],
+          },
+        ],
+      }}
+      options={{
+        ...chartOptions,
+        plugins: {
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            enabled: true,
+          },
+          doughnutLabel: {
+            labels: [
+              {
+                text: "Total",
+                font: {
+                  size: 14,
+                  weight: "bold",
+                },
+                color: "var(--text-color)",
+              },
+              {
+                text: chartData.datasets[0].data.reduce((a, b) => a + b, 0),
+                font: {
+                  size: 18,
+                  weight: "bold",
+                },
+                color: "var(--text-color)",
+              },
+            ],
+          },
+        },
+      }}
+      plugins={[
+        {
+          id: "doughnutLabel",
+          beforeDraw(chart) {
+            const {
+              width,
+              height,
+              ctx,
+            } = chart;
+            const textCenter = chart.config.options.plugins.doughnutLabel.labels;
 
-              {dataset1.widget.includes("pie chart") && (
-                <div style={{ width: "30%", maxWidth: "800px" }}>
-                  <h3>Pie Chart</h3>
-                  <Pie
-                    data={{
-                      ...chartData,
-                      datasets: [
-                        {
-                          ...chartData.datasets[0],
-                          backgroundColor: [
-                            "rgba(255, 99, 132, 0.5)",
-                            "rgba(54, 162, 235, 0.5)",
-                            "rgba(255, 206, 86, 0.5)",
-                            "rgba(75, 192, 192, 0.5)",
-                            "rgba(153, 102, 255, 0.5)",
-                          ],
-                        },
-                      ],
-                    }}
-                    options={chartOptions}
-                  />
-                </div>
-              )}
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            const centerX = width / 2;
+            const centerY = height / 2;
 
-              {dataset1.widget.includes("gauge chart") && (
-                <div style={{ width: "30%", maxWidth: "800px" }}>
-                  <h3>Gauge Chart</h3>
-                  
-                </div>
-              )}
+            textCenter.forEach((label, index) => {
+              ctx.font = `${label.font.weight} ${label.font.size}px Arial`;
+              ctx.fillStyle = label.color;
+              ctx.fillText(label.text, centerX, centerY + index * 20);
+            });
+          },
+        },
+      ]}
+    />
+    {/* <div style={{ position: "absolute", top: "10px", left: "10px" }}>
+      <p style={{ color: "black" }}>Max Value: {Math.max(...chartData.datasets[0].data)}</p>
+    </div>
+    <div style={{ position: "absolute", top: "10px", right: "10px" }}>
+      <p style={{ color: "black" }}>Min Value: {Math.min(...chartData.datasets[0].data)}</p>
+    </div>
+    <div style={{ position: "absolute", bottom: "10px", left: "10px" }}>
+      <p style={{ color: "black" }}>Average Value: {(chartData.datasets[0].data.reduce((a, b) => a + b, 0) / chartData.datasets[0].data.length).toFixed(2)}</p>
+    </div>
+    <div style={{ position: "absolute", bottom: "10px", right: "10px" }}>
+      <p style={{ color: "black" }}>Total: {chartData.datasets[0].data.reduce((a, b) => a + b, 0)}</p>
+    </div> */}
+  </div>
+)}
 
-              {dataset1.widget.includes("number") && (
-                <div style={{ width: "30%", maxWidth: "800px" }}>
-                  <h3>Number Display</h3>
-                 
-                </div>
-              )}
-            </div>
-          )}
+
+    {/* {dataset1.widget.includes("gauge chart") && (
+      <div
+        style={{
+          ...chartStyle("gauge chart"),
+          flexBasis: "30%", 
+        }}
+        onClick={() => handleChartClick("gauge chart")}
+      >
+        <h3>Gauge Chart</h3>
+      </div>
+    )} */}
+
+    {/* {dataset1.widget.includes("number") && (
+      <div
+        style={{
+          ...chartStyle("number"),
+          flexBasis: "32%", 
+        }}
+        onClick={() => handleChartClick("number")}
+      >
+        <h3>Number Display</h3>
+      </div>
+    )} */}
+  </div>
+            )}
 
           <ButtonsContainer>
             <StyledButton style={{ width: "120px", marginRight: "10px" }}>
@@ -338,7 +517,7 @@ const ConfigForm = ({ isCollapsed }) => {
       {selectedButton === "default" && (
         <WrapperDiv2>
           <Label>Default Content</Label>
-          <Label>Select Subject</Label>
+          <Label>Select Subject <Required>*</Required></Label>
           <StyledSelect
             placeholder="Select Subject"
             onChange={handleSubjectChange1}
@@ -354,7 +533,7 @@ const ConfigForm = ({ isCollapsed }) => {
             ))}
           </StyledSelect>
 
-          <Label>Select DataType</Label>
+          <Label>Select DataType <Required>*</Required></Label>
           <StyledSelect
             placeholder="Select Datatype"
             onChange={handleDatatypeChange1}
