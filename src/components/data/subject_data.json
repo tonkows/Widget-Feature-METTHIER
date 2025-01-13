@@ -1,0 +1,207 @@
+{
+  "incident": {
+    "incident_type": [
+      {
+        "dataset": "highest_email_notifications",
+        "dataset_label": "Highest Email Notifications",
+        "subject": "incident",
+        "subject_label": "Incident",
+        "datatype": "incident_type",
+        "datatype_label": "Incident type",
+        "data_range": ["date", "week", "month", "year"],
+        "widget": [
+          "number",
+          "pie chart",
+          "bar chart",
+          "time dependence",
+          "time independence"
+        ]
+      },
+      {
+        "dataset": "highest_occurrence",
+        "dataset_label": "Highest Occurrence",
+        "subject": "incident",
+        "subject_label": "Incident",
+        "datatype": "incident_type",
+        "datatype_label": "Incident type",
+        "data_range": ["date", "week", "month", "year"],
+        "widget": [
+          "number",
+          "bar chart",
+          "time dependence",
+          "time independence"
+        ]
+      }
+    ],
+    "classification": [
+      {
+        "dataset": "Number of incident type as True and False",
+        "subject": "incident",
+        "subject_label": "Incident",
+        "datatype": "classification",
+        "datatype_label": "Classification",
+        "data_range": ["date", "week", "month", "year"],
+        "widget": [
+          "number",
+          "pie chart",
+          "bar chart",
+          "time dependence",
+          "time independence"
+        ]
+      }
+    ],
+    "incident_management": [
+      {
+        "dataset": "Archived and Unarchived incident",
+        "subject": "incident",
+        "subject_label": "Incident",
+        "datatype": "incident_management",
+        "datatype_label": "Incident management",
+        "data_range": ["date", "week", "month", "year"],
+        "widget": [
+          "number",
+          "bar chart",
+          "time dependence",
+          "time independence"
+        ]
+      }
+    ],
+    "incident_status": [
+      {
+        "dataset": "Incident New and Read",
+        "subject": "incident",
+        "subject_label": "Incident",
+        "datatype": "incident_status",
+        "datatype_label": "Incident status",
+        "data_range": ["date", "week", "month", "year"],
+        "widget": [
+          "number",
+          "bar chart",
+          "time dependence",
+          "time independence"
+        ]
+      }
+    ],
+    "device_name": [
+      {
+        "dataset": "Frequent Incident Device",
+        "subject": "incident",
+        "subject_label": "Incident",
+        "datatype": "device_name",
+        "datatype_label": "Device name",
+        "data_range": ["date", "week", "month", "year"],
+        "widget": ["bar chart", "time dependence", "time independence"]
+      }
+    ],
+    "namespace": [
+      {
+        "dataset": "Frequent Incident Location",
+        "subject": "incident",
+        "subject_label": "Incident",
+        "datatype": "namespace",
+        "datatype_label": "Namespace",
+        "data_range": ["date", "week", "month", "year"],
+        "widget": [
+          "number",
+          "bar chart",
+          "gauge chart",
+          "time dependence",
+          "time independence"
+        ]
+      }
+    ],
+    "severity_level": [
+      {
+        "dataset": "All Severity Level Count",
+        "subject": "incident",
+        "subject_label": "Incident",
+        "datatype": "severity_level",
+        "datatype_label": "Severity level",
+        "data_range": ["date", "week", "month", "year"],
+        "widget": [
+          "number",
+          "bar chart",
+          "gauge chart",
+          "time dependence",
+          "time independence"
+        ]
+      }
+    ]
+  },
+  "device": {
+    "device_type": [
+      {
+        "dataset": "Air Conditioner System",
+        "subject": "device",
+        "subject_label": "Device",
+        "datatype": "device_type",
+        "datatype_label": "Device Type",
+        "data_range": ["date", "week", "month", "year"],
+        "widget": [
+          "number",
+          "pie chart",
+          "bar chart",
+          "time dependence",
+          "time independence"
+        ]
+      }
+    ],
+    "device_status": [
+      {
+        "dataset": "Operational Status",
+        "subject": "device",
+        "subject_label": "Device",
+        "datatype": "device_status",
+        "datatype_label": "Device Status",
+        "data_range": ["date", "week", "month", "year"],
+        "widget": ["number", "pie chart", "bar chart", "time dependence"]
+      }
+    ],
+    "location_type": [
+      {
+        "dataset": "Indoor or Outdoor Device Count",
+        "subject": "device",
+        "subject_label": "Device",
+        "datatype": "location_type",
+        "datatype_label": "location_type",
+        "data_range": ["date", "week", "month", "year"],
+        "widget": ["number", "pie chart", "bar chart", "time Independence"]
+      }
+    ]
+  },
+  "asset": {
+    "asset_type": [
+      {
+        "dataset": "HVAC (Heating Ventilation and Air Conditioning)",
+        "subject": "asset",
+        "subject_label": "Asset",
+        "datatype": "asset_type",
+        "datatype_label": "Asset Type",
+        "data_range": ["date", "week", "month", "year"],
+        "widget": ["number", "pie chart", "bar chart", "time independence"]
+      }
+    ],
+    "warranty_status": [
+      {
+        "dataset": "Assets in Active Warranty and Expired Warranty",
+        "subject": "asset",
+        "subject_label": "Asset",
+        "datatype": "warranty_status",
+        "datatype_label": "Warranty Status",
+        "data_range": ["date", "week", "month", "year"],
+        "widget": ["number", "pie chart", "bar chart", "time dependence"]
+      }
+    ],
+    "asset_maitenance": [
+      {
+        "dataset": "Assets Maintenance",
+        "subject": "asset",
+        "subject_label": "Asset",
+        "datatype": "asset_maitenance",
+        "datatype_label": "Asset Maitenance",
+        "data_range": ["date", "week", "month", "year"],
+        "widget": ["number", "bar chart", "time dependence"]
+      }
+    ]
+  }
+}

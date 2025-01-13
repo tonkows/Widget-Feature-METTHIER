@@ -1,49 +1,93 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col } from "antd";
 import styled from "styled-components";
 import { BiEditAlt } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 
 const MainContent = ({ isCollapsed }) => {
+  const [selectedBlock, setSelectedBlock] = useState(null);
+  const [blocks, setBlocks] = useState({
+    "Left-TopLeft": { width: 6, id: "Left-TopLeft", label: "1" },
+    "Right-TopRight": { width: 6, id: "Right-TopRight", label: "2" },
+    "Left-MiddleTopLeft": { width: 6, id: "Left-MiddleTopLeft", label: "3" },
+    "Right-MiddleTopRight": { width: 6, id: "Right-MiddleTopRight", label: "4" },
+    "Left-MiddleBottomLeft": { width: 6, id: "Left-MiddleBottomLeft", label: "5" },
+    "Right-MiddleBottomRight": { width: 6, id: "Right-MiddleBottomRight", label: "6" },
+    "Left-BottomLeft": { width: 6, id: "Left-BottomLeft", label: "7" },
+    "Right-BottomRight": { width: 6, id: "Right-BottomRight", label: "8" },
+    "BottomCenter-Left": { width: 12, id: "BottomCenter-Left", label: "9" },
+    "BottomCenter-Right": { width: 12, id: "BottomCenter-Right", label: "10" },
+  });
+
   const navigate = useNavigate();
 
   const handleClick = (blockId) => {
     console.log(`clicked on Block ${blockId}`);
-    navigate(`/config-form?block=${blockId}`); 
+    navigate(`/config-form?block=${blockId}`);
+  };
+  
+
+  const handleSelectBlock = (blockId) => {
+    if (selectedBlock === null) {
+      setSelectedBlock(blockId);
+    } else {
+      const selectedBlockWidth = blocks[selectedBlock]?.width;
+      const clickedBlockWidth = blocks[blockId]?.width;
+
+      if (selectedBlockWidth === clickedBlockWidth) {
+        setBlocks((prevBlocks) => {
+          const newBlocks = { ...prevBlocks };
+        
+          const tempBlock = newBlocks[selectedBlock];
+          newBlocks[selectedBlock] = newBlocks[blockId];
+          newBlocks[blockId] = tempBlock;
+
+          return newBlocks;
+        });
+      }
+      setSelectedBlock(null); 
+    }
   };
 
-  const renderColumnContent = (columnId) => {
+  useEffect(() => {
+    console.log("Blocks after swap: ", blocks);
+  }, [blocks]);
 
+  const renderColumnContent = (columnId) => {
     const blockNames = {
       Left: ["TopLeft", "MiddleTopLeft", "MiddleBottomLeft", "BottomLeft"],
-      right: ["TopRight", "MiddleTopRight", "MiddleBottomRight", "BottomRight"],
+      Right: ["TopRight", "MiddleTopRight", "MiddleBottomRight", "BottomRight"],
     };
-  
+
     return blockNames[columnId]?.map((blockName) => {
       const blockId = `${columnId}-${blockName}`;
+      const isSelected = selectedBlock === blockId;
       return (
         <SpacedRow key={blockId}>
           <Col span={24}>
-            <Block>
-              <IconButton onClick={() => handleClick(blockId)}>
-                <LargeBiEditAlt />
-              </IconButton>
+            <Block
+              style={{
+                border: isSelected ? "2px solid var(--text-color)" : "none",
+              }}
+              onClick={() => handleSelectBlock(blockId)}
+            >
+              <IconButton onClick={() => handleClick(blockId)} aria-label={`Edit Block ${blockId}`}>
+              <LargeBiEditAlt />
+            </IconButton>
+
+              <BlockLabel>{blocks[blockId]?.label}</BlockLabel>
             </Block>
           </Col>
         </SpacedRow>
       );
     });
   };
-  
 
   return (
     <Container className={isCollapsed ? "isCollapsed" : "notCollapsed"}>
       <WrapperDiv>
         <StyledRow gutter={[8, 8]}>
-          {/* Column 1 */}
           <StyledCol span={6}>{renderColumnContent("Left")}</StyledCol>
-
-          {/* Column 2 */}
           <StyledCol span={12}>
             <SpacedRow style={{ height: "70%" }}>
               <Col span={24}>
@@ -51,25 +95,35 @@ const MainContent = ({ isCollapsed }) => {
               </Col>
             </SpacedRow>
             <SpacedRow style={{ height: "30%" }} gutter={[6, 0]}>
-            <Col span={12}>
-              <Block gutter={[8, 8]}>
-                <IconButton onClick={() => handleClick("BottomCenter-Left")}>
-                  <LargeBiEditAlt />
-                </IconButton>
-              </Block>
-            </Col>
-            <Col span={12}>
-              <Block>
-                <IconButton onClick={() => handleClick("BottomCenter-Right")}>
-                  <LargeBiEditAlt />
-                </IconButton>
-              </Block>
-            </Col>
-          </SpacedRow>
+              <Col span={12}>
+                <Block
+                  onClick={() => handleSelectBlock("BottomCenter-Left")}
+                  style={{
+                    border: selectedBlock === "BottomCenter-Left" ? "2px solid var(--text-color)" : "none",
+                  }}
+                >
+                  <IconButton aria-label="Edit Bottom Center Left">
+                    <LargeBiEditAlt />
+                  </IconButton>
+                  <BlockLabel>{blocks["BottomCenter-Left"].label}</BlockLabel>
+                </Block>
+              </Col>
+              <Col span={12}>
+                <Block
+                  onClick={() => handleSelectBlock("BottomCenter-Right")}
+                  style={{
+                    border: selectedBlock === "BottomCenter-Right" ? "2px solid var(--text-color)" : "none",
+                  }}
+                >
+                  <IconButton aria-label="Edit Bottom Center Right">
+                    <LargeBiEditAlt />
+                  </IconButton>
+                  <BlockLabel>{blocks["BottomCenter-Right"].label}</BlockLabel>
+                </Block>
+              </Col>
+            </SpacedRow>
           </StyledCol>
-
-          {/* Column 3 */}
-          <StyledCol span={6}>{renderColumnContent("right")}</StyledCol>
+          <StyledCol span={6}>{renderColumnContent("Right")}</StyledCol>
         </StyledRow>
       </WrapperDiv>
     </Container>
@@ -78,7 +132,6 @@ const MainContent = ({ isCollapsed }) => {
 
 export default MainContent;
 
-// Styled components
 const Container = styled.div`
   height: calc(100vh - 20px);
   width: calc(100% - 220px);
@@ -88,7 +141,6 @@ const Container = styled.div`
   background: var(--content-bg-color);
   padding-top: 20px;
   margin-left: 220px;
-  transition: margin-left 0.3s ease, width 0.3s ease;
 
   &.isCollapsed {
     width: calc(100% - 62px);
@@ -107,7 +159,6 @@ const StyledRow = styled(Row)`
   margin: 34px 10px 0 3px !important;
   row-gap: 8px;
   display: flex;
-  transition: all 0.3s ease;
 `;
 
 const StyledCol = styled(Col)`
@@ -124,12 +175,21 @@ const Block = styled.div`
   justify-content: center;
   align-items: center;
   background: var(--card-bg-color);
+  position: relative;
+`;
+
+const BlockLabel = styled.div`
+  font-size: 20px;
+  color: white;
+  font-weight: bold;
+  position: absolute;
+  top: 10px;
+  left: 10px;
 `;
 
 const SpacedRow = styled(Row)`
   height: 25%;
   margin-bottom: 5px;
-  transition: height 0.3s ease;
 
   &:last-child {
     margin-bottom: 0;
@@ -139,7 +199,6 @@ const SpacedRow = styled(Row)`
 const WrapperDiv = styled.div`
   width: 100%;
   height: 100%;
-  transition: width 0.3s ease;
 `;
 
 const IconButton = styled.button`
@@ -156,10 +215,11 @@ const IconButton = styled.button`
     background: var(--button-hover-bg-color);
   }
 `;
+
 const LargeBiEditAlt = styled(BiEditAlt)`
   font-size: 18px; 
   color: var(--text-color);
-   position: absolute; 
+  position: absolute; 
   top: 10px;
-  right: 10px; 
+  right: 10px;
 `;

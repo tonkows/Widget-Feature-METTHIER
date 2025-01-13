@@ -1,0 +1,42 @@
+{
+  "dataset": "highest_email_notifications",
+  "dataset_label": "Highest Email Notifications",
+  "charts": [
+    {
+      "widget": "bar chart",
+      "data": {
+        "date": [
+          { "date": "1/1/2025", "value": 1000 },
+          { "date": "2/1/2025", "value": 15 },
+          { "date": "3/1/2025", "value": 12 },
+          { "date": "4/1/2025", "value": 18 },
+          { "date": "5/1/2025", "value": 20 },
+          { "date": "6/1/2025", "value": 22 },
+          { "date": "7/1/2025", "value": 25 }
+        ],
+        "week": [
+          { "week": "Mon", "value": 8 },
+          { "week": "Tue", "value": 12 },
+          { "week": "Wed", "value": 14 },
+          { "week": "Thu", "value": 17 },
+          { "week": "Fri", "value": 19 },
+          { "week": "Sat", "value": 21 },
+          { "week": "Sun", "value": 23 }
+        ],
+        "month": [
+          { "month": "Jan", "value": 120 },
+          { "month": "Feb", "value": 130 },
+          { "month": "Mar", "value": 150 },
+          { "month": "Apr", "value": 160 },
+          { "month": "May", "value": 180 },
+          { "month": "Jun", "value": 190 },
+          { "month": "Jul", "value": 210 }
+        ],
+        "year": [
+          { "year": "2024", "value": 1200 },
+          { "year": "2025", "value": 1300 }
+        ]
+      }
+    }
+  ]
+}
