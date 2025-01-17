@@ -1,0 +1,82 @@
+{
+  "dataset" : "asset_maintenance",
+  "dataset_label": "Asset Maintenance",
+  "dataByRange": {
+      "date": {
+          "labels": ["1/1/2025", "2/1/2025", "3/1/2025", "4/1/2025", "5/1/2025"],
+          "datasets": [
+              {
+                  "label": "Dome Cameras",
+                  "data": [1, 1, 2, 1, 3],
+                  "backgroundColor": "rgba(75, 192, 192, 0.5)",
+                  "borderColor": "rgba(75, 192, 192, 1)",
+                  "borderWidth": 1
+              },
+              {
+                  "label": "Bullet Cameras",
+                  "data": [2, 1, 3, 1, 2],
+                  "backgroundColor": "rgba(255, 99, 132, 0.5)",
+                  "borderColor": "rgba(255, 99, 132, 1)",
+                  "borderWidth": 1
+              }
+          ]
+      },
+      "week": {
+          "labels": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+          "datasets": [
+              {
+                  "label": "Dome Cameras",
+                  "data": [5, 4, 6, 4, 7],
+                  "backgroundColor": "rgba(75, 192, 192, 0.5)",
+                  "borderColor": "rgba(75, 192, 192, 1)",
+                  "borderWidth": 1
+              },
+              {
+                  "label": "Bullet Cameras",
+                  "data": [6, 5, 7, 4, 8],
+                  "backgroundColor": "rgba(255, 99, 132, 0.5)",
+                  "borderColor": "rgba(255, 99, 132, 1)",
+                  "borderWidth": 1
+              }
+          ]
+      },
+      "month": {
+          "labels": ["January", "February", "March"],
+          "datasets": [
+              {
+                  "label": "Dome Cameras",
+                  "data": [20, 25, 30],
+                  "backgroundColor": "rgba(75, 192, 192, 0.5)",
+                  "borderColor": "rgba(75, 192, 192, 1)",
+                  "borderWidth": 1
+              },
+              {
+                  "label": "Bullet Cameras",
+                  "data": [25, 28, 35],
+                  "backgroundColor": "rgba(255, 99, 132, 0.5)",
+                  "borderColor": "rgba(255, 99, 132, 1)",
+                  "borderWidth": 1
+              }
+          ]
+      },
+      "year": {
+          "labels": ["2025"],
+          "datasets": [
+              {
+                  "label": "Dome Cameras",
+                  "data": [200],
+                  "backgroundColor": "rgba(75, 192, 192, 0.5)",
+                  "borderColor": "rgba(75, 192, 192, 1)",
+                  "borderWidth": 1
+              },
+              {
+                  "label": "Bullet Cameras",
+                  "data": [250],
+                  "backgroundColor": "rgba(255, 99, 132, 0.5)",
+                  "borderColor": "rgba(255, 99, 132, 1)",
+                  "borderWidth": 1
+              }
+          ]
+      }
+  }
+}

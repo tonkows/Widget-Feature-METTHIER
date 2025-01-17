@@ -1,28 +1,29 @@
+import React, { useState } from "react";
 import styled from "styled-components";
 import { BiEditAlt } from "react-icons/bi";
 import { GoArrowSwitch } from "react-icons/go";
 import { RiResetLeftFill } from "react-icons/ri";
 import { MdPublic } from "react-icons/md";
 
-const Header = ({ toggleSidebar, isCollapsed, hasData }) => {
+const Header = ({ toggleSidebar, isCollapsed, hasData, onEditToggle, isEditing, isSwitching, onSwitchToggle }) => {
   return (
     <StyledHeader isCollapsed={isCollapsed}>
       <LeftSection></LeftSection>
       <RightSection>
-        <Button >
+        <Button onClick={onEditToggle}>
           <BiEditAlt className="icon-edit" />
-          Edit
+          {isEditing ? "Cancel Edit" : "Edit"}
         </Button>
-        <Button >
+        <Button onClick={onSwitchToggle}>
           <GoArrowSwitch className="icon-switch" />
-          Switch
+          {isSwitching ? "Cancel Switch" : "Switch"}
         </Button>
-        <Button >
+        <Button>
           <MdPublic className="icon-public" />
           Publish
         </Button>
-        <Button >
-          <RiResetLeftFill className="icon-Reset" />
+        <Button>
+          <RiResetLeftFill className="icon-reset" />
           Reset Default
         </Button>
       </RightSection>
@@ -30,9 +31,10 @@ const Header = ({ toggleSidebar, isCollapsed, hasData }) => {
   );
 };
 
+
 export default Header;
 
-// Styled Components
+
 const StyledHeader = styled.header`
   display: flex;
   justify-content: space-between;

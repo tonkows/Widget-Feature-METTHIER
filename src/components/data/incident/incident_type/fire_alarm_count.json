@@ -1,6 +1,6 @@
 {
-  "dataset": "highest_email_notifications",
-  "dataset_label": "Highest Email Notifications",
+  "dataset": "fire_alarm_count",
+  "dataset_label": "Fire Alarm Count",
   "charts": [
     {
       "data": {

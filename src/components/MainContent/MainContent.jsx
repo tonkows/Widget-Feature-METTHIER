@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col } from "antd";
 import styled from "styled-components";
-import { BiEditAlt } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
+import { BiEditAlt } from "react-icons/bi";
 
-const MainContent = ({ isCollapsed }) => {
+const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
   const [selectedBlock, setSelectedBlock] = useState(null);
   const [blocks, setBlocks] = useState({
     "Left-TopLeft": { width: 6, id: "Left-TopLeft", label: "1" },
@@ -21,34 +21,39 @@ const MainContent = ({ isCollapsed }) => {
 
   const navigate = useNavigate();
 
+  
   const handleClick = (blockId) => {
     console.log(`clicked on Block ${blockId}`);
     navigate(`/config-form?block=${blockId}`);
   };
-  
 
   const handleSelectBlock = (blockId) => {
+    if (!isSwitching) {
+      console.warn("Switching mode is not enabled!");
+      return; 
+    }
+  
     if (selectedBlock === null) {
       setSelectedBlock(blockId);
     } else {
       const selectedBlockWidth = blocks[selectedBlock]?.width;
       const clickedBlockWidth = blocks[blockId]?.width;
-
+  
       if (selectedBlockWidth === clickedBlockWidth) {
         setBlocks((prevBlocks) => {
           const newBlocks = { ...prevBlocks };
-        
+  
           const tempBlock = newBlocks[selectedBlock];
           newBlocks[selectedBlock] = newBlocks[blockId];
           newBlocks[blockId] = tempBlock;
-
+  
           return newBlocks;
         });
       }
-      setSelectedBlock(null); 
+      setSelectedBlock(null);
     }
   };
-
+  
   useEffect(() => {
     console.log("Blocks after swap: ", blocks);
   }, [blocks]);
@@ -71,10 +76,12 @@ const MainContent = ({ isCollapsed }) => {
               }}
               onClick={() => handleSelectBlock(blockId)}
             >
-              <IconButton onClick={() => handleClick(blockId)} aria-label={`Edit Block ${blockId}`}>
-              <LargeBiEditAlt />
-            </IconButton>
-
+              {isEditing && (
+                <IconButton onClick={() => handleClick(blockId)} aria-label={`Edit Block ${blockId}`}>
+                  <LargeBiEditAlt />
+                </IconButton>
+              )}
+              
               <BlockLabel>{blocks[blockId]?.label}</BlockLabel>
             </Block>
           </Col>
@@ -102,9 +109,11 @@ const MainContent = ({ isCollapsed }) => {
                     border: selectedBlock === "BottomCenter-Left" ? "2px solid var(--text-color)" : "none",
                   }}
                 >
-                  <IconButton aria-label="Edit Bottom Center Left">
-                    <LargeBiEditAlt />
-                  </IconButton>
+                  {isEditing && (
+                    <IconButton aria-label="Edit Bottom Center Left">
+                      <LargeBiEditAlt />
+                    </IconButton>
+                  )}
                   <BlockLabel>{blocks["BottomCenter-Left"].label}</BlockLabel>
                 </Block>
               </Col>
@@ -115,9 +124,11 @@ const MainContent = ({ isCollapsed }) => {
                     border: selectedBlock === "BottomCenter-Right" ? "2px solid var(--text-color)" : "none",
                   }}
                 >
-                  <IconButton aria-label="Edit Bottom Center Right">
-                    <LargeBiEditAlt />
-                  </IconButton>
+                  {isEditing && (
+                    <IconButton aria-label="Edit Bottom Center Right">
+                      <LargeBiEditAlt />
+                    </IconButton>
+                  )}
                   <BlockLabel>{blocks["BottomCenter-Right"].label}</BlockLabel>
                 </Block>
               </Col>
@@ -132,6 +143,7 @@ const MainContent = ({ isCollapsed }) => {
 
 export default MainContent;
 
+
 const Container = styled.div`
   height: calc(100vh - 20px);
   width: calc(100% - 220px);
@@ -141,6 +153,7 @@ const Container = styled.div`
   background: var(--content-bg-color);
   padding-top: 20px;
   margin-left: 220px;
+  transition: all 0.3s ease;
 
   &.isCollapsed {
     width: calc(100% - 62px);
@@ -178,6 +191,7 @@ const Block = styled.div`
   position: relative;
 `;
 
+
 const BlockLabel = styled.div`
   font-size: 20px;
   color: white;
@@ -202,6 +216,9 @@ const WrapperDiv = styled.div`
 `;
 
 const IconButton = styled.button`
+  position: absolute; 
+  top: 10px;      
+  right: 10px;    
   background: var(--button-bg-color);
   border: none;
   padding: 10px;

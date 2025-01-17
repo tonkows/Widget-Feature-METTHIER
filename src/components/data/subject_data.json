@@ -2,8 +2,8 @@
   "incident": {
     "incident_type": [
       {
-        "dataset": "highest_email_notifications",
-        "dataset_label": "Highest Email Notifications",
+        "dataset": "fire_alarm_count",
+        "dataset_label": "Fire Alarm Count",
         "subject": "incident",
         "subject_label": "Incident",
         "datatype": "incident_type",
@@ -173,13 +173,21 @@
   "asset": {
     "asset_type": [
       {
-        "dataset": "HVAC (Heating Ventilation and Air Conditioning)",
+        "dataset": "heating_ventilation_and_air_conditioning",
+        "dataset_label": "HVAC (Heating Ventilation and Air Conditioning)",
         "subject": "asset",
         "subject_label": "Asset",
         "datatype": "asset_type",
         "datatype_label": "Asset Type",
         "data_range": ["date", "week", "month", "year"],
-        "widget": ["number", "pie chart", "bar chart", "time independence"]
+        "widget": [
+          "number",
+          "doughnut chart",
+          "line chart",
+          "bar chart",
+          "time dependence",
+          "time independence"
+        ]
       }
     ],
     "warranty_status": [
@@ -195,13 +203,18 @@
     ],
     "asset_maitenance": [
       {
-        "dataset": "Assets Maintenance",
+        "dataset": "asset_maintenance",
+        "dataset_label": "Asset Maitenance",
         "subject": "asset",
         "subject_label": "Asset",
         "datatype": "asset_maitenance",
         "datatype_label": "Asset Maitenance",
         "data_range": ["date", "week", "month", "year"],
-        "widget": ["number", "bar chart", "time dependence"]
+        "widget": ["number",
+          "line chart",
+          "bar chart",
+          "time dependence",
+          "time independence"]
       }
     ]
   }
