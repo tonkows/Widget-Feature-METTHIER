@@ -17,7 +17,6 @@ import {
   Legend,
 } from "chart.js";
 import subjectData from "../data/subject_data.json";
-import assetMaintenanceData from "../data/asset/asset_maitenance/asset_maintenance.json";
 
 ChartJS.register(
   CategoryScale,
@@ -140,7 +139,7 @@ const ConfigForm = ({ isCollapsed }) => {
     const selectedDataset = subjectData[subject1]?.[datatype1]?.find(
       (d) => d.dataset === value
     );
-    setDataset1(selectedDataset);
+    setDataset1(value);
   
     console.log("Subject:", subject1);
     console.log("Datatype:", datatype1);
@@ -152,7 +151,7 @@ const ConfigForm = ({ isCollapsed }) => {
 
   
     if (selectedDataset) {
-      loadDatasetData(subject1, datatype1, selectedDataset.dataset);
+      loadDatasetData(subject1, datatype1, value);
     }
   }; 
 
@@ -377,7 +376,7 @@ const ConfigForm = ({ isCollapsed }) => {
               </div>
             </div>
           )}
-         {chartData && (
+         {chartData && dataset1 && datasetData?.dataByRange && (
           <>
            <Label>Select Presentation<Required>*</Required></Label>
     <div
@@ -387,13 +386,12 @@ const ConfigForm = ({ isCollapsed }) => {
         gap: "20px",
         alignItems: "center",
         justifyContent: "center",
-        maxWidth: "100%", 
-        overflowX: "hidden", 
+        maxWidth: "100%",
+        overflowX: "hidden",
         overflowY: "auto",
-        
       }}
     >
-      {dataset1.widget.includes("bar chart") && (
+      {subjectData[subject1]?.[datatype1]?.find(d => d.dataset === dataset1)?.widget.includes("bar chart") && (
         <div
           style={{
             ...chartStyle("bar chart"),
@@ -410,7 +408,7 @@ const ConfigForm = ({ isCollapsed }) => {
         </div>
       )}
 
-      {dataset1.widget.includes("line chart") && (
+      {subjectData[subject1]?.[datatype1]?.find(d => d.dataset === dataset1)?.widget.includes("line chart") && (
         <div
           style={{
             ...chartStyle("line chart"),
@@ -426,7 +424,7 @@ const ConfigForm = ({ isCollapsed }) => {
           />
         </div>
       )}
-      {dataset1.widget.includes("doughnut chart") && (
+      {subjectData[subject1]?.[datatype1]?.find(d => d.dataset === dataset1)?.widget.includes("doughnut chart") && (
         <div
           style={{
             ...chartStyle("doughnut chart"),
