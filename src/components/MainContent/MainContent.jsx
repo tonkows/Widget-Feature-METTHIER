@@ -3,6 +3,31 @@ import { Row, Col } from "antd";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { BiEditAlt } from "react-icons/bi";
+import { Bar, Line, Doughnut } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
   const [selectedBlock, setSelectedBlock] = useState(null);
@@ -58,6 +83,29 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
     console.log("Blocks after swap: ", blocks);
   }, [blocks]);
 
+  const renderChart = (blockId) => {
+    const blockConfig = localStorage.getItem(`block-${blockId}`);
+    if (!blockConfig) return null;
+
+    const config = JSON.parse(blockConfig);
+    const ChartComponent = {
+      'bar chart': Bar,
+      'line chart': Line,
+      'doughnut chart': Doughnut
+    }[config.selectedChart];
+
+    if (!ChartComponent) return null;
+
+    return (
+      <div style={{ width: '100%', height: '100%', padding: '10px' }}>
+        <ChartComponent
+          data={config.chartData}
+          options={config.chartOptions}
+        />
+      </div>
+    );
+  };
+
   const renderColumnContent = (columnId) => {
     const blockNames = {
       Left: ["TopLeft", "MiddleTopLeft", "MiddleBottomLeft", "BottomLeft"],
@@ -81,8 +129,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
                   <LargeBiEditAlt />
                 </IconButton>
               )}
-              
-              <BlockLabel>{blocks[blockId]?.label}</BlockLabel>
+              {renderChart(blockId) || <BlockLabel>{blocks[blockId]?.label}</BlockLabel>}
             </Block>
           </Col>
         </SpacedRow>
@@ -114,7 +161,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
                       <LargeBiEditAlt />
                     </IconButton>
                   )}
-                  <BlockLabel>{blocks["BottomCenter-Left"].label}</BlockLabel>
+                  {renderChart("BottomCenter-Left") || <BlockLabel>{blocks["BottomCenter-Left"].label}</BlockLabel>}
                 </Block>
               </Col>
               <Col span={12}>
@@ -129,7 +176,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
                       <LargeBiEditAlt />
                     </IconButton>
                   )}
-                  <BlockLabel>{blocks["BottomCenter-Right"].label}</BlockLabel>
+                  {renderChart("BottomCenter-Right") || <BlockLabel>{blocks["BottomCenter-Right"].label}</BlockLabel>}
                 </Block>
               </Col>
             </SpacedRow>

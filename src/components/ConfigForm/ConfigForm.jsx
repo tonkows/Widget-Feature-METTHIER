@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Select, Button, Radio, DatePicker, Modal, Breadcrumb } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import moment from "moment";
 import { Bar, Line, Doughnut } from "react-chartjs-2";
@@ -44,10 +44,29 @@ const ConfigForm = ({ isCollapsed }) => {
   const [datasetData, setDatasetData] = useState(null);
   const [selectedChart, setSelectedChart] = useState(null);
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const blockId = searchParams.get('block');
 
   useEffect(() => {
     console.log("Set selected chart " + selectedChart);
   }, [selectedChart]);
+
+  useEffect(() => {
+    const savedData = localStorage.getItem('configFormData');
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      setSubject1(parsedData.subject);
+      setDatatype1(parsedData.datatype);
+      setDataset1(parsedData.dataset);
+      setSelectedRanges(parsedData.ranges);
+      setSelectedChart(parsedData.selectedChart);
+      
+      if (parsedData.subject && parsedData.datatype && parsedData.dataset) {
+        loadDatasetData(parsedData.subject, parsedData.datatype, parsedData.dataset);
+      }
+    }
+  }, []);
 
   const loadDatasetData = async (subject, datatype, dataset) => {
     if (!subject || !datatype || !dataset) {
@@ -111,6 +130,8 @@ const ConfigForm = ({ isCollapsed }) => {
     setDatatype1(null);
     setDataset1(null);
     setSelectedRanges([]);
+    
+    localStorage.removeItem('configFormData');
   };
   
 
@@ -123,6 +144,15 @@ const ConfigForm = ({ isCollapsed }) => {
     setDatasetData(null);
     setSelectedChart(null);
     setIsPreviewVisible(false);
+
+    const configData = {
+      subject: value,
+      datatype: null,
+      dataset: null,
+      ranges: [],
+      selectedChart: null
+    };
+    localStorage.setItem('configFormData', JSON.stringify(configData));
   };
 
   const handleDatatypeChange1 = (value) => {
@@ -133,6 +163,15 @@ const ConfigForm = ({ isCollapsed }) => {
     setDatasetData(null);
     setSelectedChart(null);
     setIsPreviewVisible(false);
+
+    const configData = {
+      subject: subject1,
+      datatype: value,
+      dataset: null,
+      ranges: [],
+      selectedChart: null
+    };
+    localStorage.setItem('configFormData', JSON.stringify(configData));
   };
 
   const handleDatasetChange1 = (value) => {
@@ -153,11 +192,29 @@ const ConfigForm = ({ isCollapsed }) => {
     if (selectedDataset) {
       loadDatasetData(subject1, datatype1, value);
     }
+
+    const configData = {
+      subject: subject1,
+      datatype: datatype1,
+      dataset: value,
+      ranges: selectedRanges,
+      selectedChart: selectedChart
+    };
+    localStorage.setItem('configFormData', JSON.stringify(configData));
   }; 
 
   const handleRangeChange = (value) => {
     setSelectedRanges([value]);
     setDateVisible(value === "date");
+
+    const configData = {
+      subject: subject1,
+      datatype: datatype1,
+      dataset: dataset1,
+      ranges: [value],
+      selectedChart: selectedChart
+    };
+    localStorage.setItem('configFormData', JSON.stringify(configData));
   };
 
   const chartOptions = {
@@ -228,6 +285,15 @@ const ConfigForm = ({ isCollapsed }) => {
 
   const handleChartClick = (chartType) => {
     setSelectedChart(chartType);
+
+    const configData = {
+      subject: subject1,
+      datatype: datatype1,
+      dataset: dataset1,
+      ranges: selectedRanges,
+      selectedChart: chartType
+    };
+    localStorage.setItem('configFormData', JSON.stringify(configData));
   };
 
   const chartStyle = (chartType) => ({
@@ -263,6 +329,36 @@ const ConfigForm = ({ isCollapsed }) => {
     "#29B6F6",
     "#039BE5",
   ];
+
+  const handleGenerate = () => {
+    if (!selectedChart || !chartData) {
+      Modal.error({
+        title: 'Error',
+        content: 'Please select a chart type and ensure data is loaded'
+      });
+      return;
+    }
+
+    const blockConfig = {
+      subject: subject1,
+      datatype: datatype1,
+      dataset: dataset1,
+      ranges: selectedRanges,
+      selectedChart: selectedChart,
+      chartData: chartData,
+      chartOptions: chartOptions
+    };
+
+    localStorage.setItem(`block-${blockId}`, JSON.stringify(blockConfig));
+
+    Modal.success({
+      title: 'Success',
+      content: 'Chart has been generated successfully',
+      onOk: () => {
+        navigate('/');
+      }
+    });
+  };
 
   return (
     <Container isCollapsed={isCollapsed}>
@@ -584,7 +680,11 @@ const ConfigForm = ({ isCollapsed }) => {
             >
               Preview
             </StyledButton>
-            <StyledButton style={{ width: "120px", marginLeft: "10px" }}>
+            <StyledButton 
+              onClick={handleGenerate}
+              style={{ width: "120px", marginLeft: "10px" }}
+              disabled={!selectedChart || !chartData}
+            >
               Generate
             </StyledButton>
           </ButtonsContainer>
