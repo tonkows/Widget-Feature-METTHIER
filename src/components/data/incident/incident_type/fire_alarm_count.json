@@ -1,46 +1,55 @@
 {
   "dataset": "fire_alarm_count",
   "dataset_label": "Fire Alarm Count",
-  "charts": [
-    {
-      "data": {
-        "date": [
-          { "date": "1/1/2025", "value": 12 },
-          { "date": "2/1/2025", "value": 18 },
-          { "date": "3/1/2025", "value": 25 },
-          { "date": "4/1/2025", "value": 22 },
-          { "date": "5/1/2025", "value": 28 },
-          { "date": "6/1/2025", "value": 15 },
-          { "date": "7/1/2025", "value": 35 }
-        ],
-        "week": [
-          { "week": "Mon", "value": 12 },
-          { "week": "Tue", "value": 18 },
-          { "week": "Wed", "value": 25 },
-          { "week": "Thu", "value": 22 },
-          { "week": "Fri", "value": 28 },
-          { "week": "Sat", "value": 15 },
-          { "week": "Sun", "value": 35 }
-        ],
-        "month": [
-          { "month": "Jan", "value": 155 },
-          { "month": "Feb", "value": 170 },
-          { "month": "Mar", "value": 210 },
-          { "month": "Apr", "value": 190 },
-          { "month": "May", "value": 180 },
-          { "month": "Jun", "value": 220 },
-          { "month": "Jul", "value": 260 },
-          { "month": "Aug", "value": 230 },
-          { "month": "Sep", "value": 250 },
-          { "month": "Oct", "value": 200 },
-          { "month": "Nov", "value": 270 },
-          { "month": "Dec", "value": 300 }
-        ],
-        "year": [
-          { "year": "2025", "value": 2635 }
-        ]
-      }
+  "dataByRange": {
+    "date": {
+      "labels": ["1/1/2025", "2/1/2025", "3/1/2025", "4/1/2025", "5/1/2025", "6/1/2025", "7/1/2025"],
+      "datasets": [
+        {
+          "label": "Fire Alarms",
+          "data": [12, 18, 25, 22, 28, 15, 35],
+          "backgroundColor": "rgba(255, 159, 64, 0.5)",
+          "borderColor": "rgba(255, 159, 64, 1)",
+          "borderWidth": 1
+        }
+      ]
+    },
+    "week": {
+      "labels": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      "datasets": [
+        {
+          "label": "Fire Alarms",
+          "data": [12, 18, 25, 22, 28, 15, 35],
+          "backgroundColor": "rgba(255, 159, 64, 0.5)",
+          "borderColor": "rgba(255, 159, 64, 1)",
+          "borderWidth": 1
+        }
+      ]
+    },
+    "month": {
+      "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+      "datasets": [
+        {
+          "label": "Fire Alarms",
+          "data": [155, 170, 210, 190, 180, 220, 260, 230, 250, 200, 270, 300],
+          "backgroundColor": "rgba(255, 159, 64, 0.5)",
+          "borderColor": "rgba(255, 159, 64, 1)",
+          "borderWidth": 1
+        }
+      ]
+    },
+    "year": {
+      "labels": ["2025"],
+      "datasets": [
+        {
+          "label": "Fire Alarms",
+          "data": [2635],
+          "backgroundColor": "rgba(255, 159, 64, 0.5)",
+          "borderColor": "rgba(255, 159, 64, 1)",
+          "borderWidth": 1
+        }
+      ]
     }
-  ]
+  }
 }
 

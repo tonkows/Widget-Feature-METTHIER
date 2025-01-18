@@ -17,6 +17,7 @@ import {
   Legend,
 } from "chart.js";
 import subjectData from "../data/subject_data.json";
+import assetMaintenanceData from "../data/asset/asset_maitenance/asset_maintenance.json";
 
 ChartJS.register(
   CategoryScale,
@@ -118,12 +119,23 @@ const ConfigForm = ({ isCollapsed }) => {
     setSubject1(value);
     setDatatype1(null);
     setDataset1(null);
+    setSelectedRanges([]);
+    setChartData(null);
+    setDatasetData(null);
+    setSelectedChart(null);
+    setIsPreviewVisible(false);
   };
 
   const handleDatatypeChange1 = (value) => {
     setDatatype1(value);
     setDataset1(null);
+    setSelectedRanges([]);
+    setChartData(null);
+    setDatasetData(null);
+    setSelectedChart(null);
+    setIsPreviewVisible(false);
   };
+
   const handleDatasetChange1 = (value) => {
     const selectedDataset = subjectData[subject1]?.[datatype1]?.find(
       (d) => d.dataset === value
@@ -165,47 +177,55 @@ const ConfigForm = ({ isCollapsed }) => {
   const generateChartData = (dataset, range) => {
     const chartData = {
       labels: [],
-      datasets: [
-        {
-          label: dataset.dataset,
-          data: [],
-          backgroundColor: "var(--chart-color)",
-          borderColor: "var(--chart-border-color)",
-        },
-      ],
+      datasets: []
     };
-
+  
     if (!datasetData) return chartData;
-
-    const data = datasetData.charts[0].data;
-
+  
+    const data = datasetData.dataByRange[range];
+  
     if (range === "date" && selectedRanges[1]) {
       const selectedStartDate = selectedRanges[1][0]?.toDate();
       const selectedEndDate = selectedRanges[1][1]?.toDate();
-
-      data[range].forEach((item) => {
-        const date = moment(item.date, "D/M/YYYY");
-        if (date.isBetween(selectedStartDate, selectedEndDate, null, "[]")) {
-          chartData.labels.push(item.date);
-          chartData.datasets[0].data.push(item.value);
+  
+      data.labels.forEach((label, index) => {
+        const date = moment(label, "D/M/YYYY").toDate();
+        if (date >= selectedStartDate && date <= selectedEndDate) {
+          chartData.labels.push(label);
+          data.datasets.forEach((ds, dsIndex) => {
+            if (!chartData.datasets[dsIndex]) {
+              chartData.datasets[dsIndex] = {
+                label: ds.label,
+                data: [],
+                backgroundColor: ds.backgroundColor,
+                borderColor: ds.borderColor,
+                borderWidth: ds.borderWidth
+              };
+            }
+            chartData.datasets[dsIndex].data.push(ds.data[index]);
+          });
         }
       });
     } else {
-      data[range].forEach((item) => {
-        chartData.labels.push(item[range]);
-        chartData.datasets[0].data.push(item.value);
-      });
+      chartData.labels = data.labels;
+      chartData.datasets = data.datasets.map((ds) => ({
+        ...ds,
+        backgroundColor: ds.backgroundColor,
+        borderColor: ds.borderColor,
+        borderWidth: ds.borderWidth
+      }));
     }
-
+  
     return chartData;
   };
-
+  
   useEffect(() => {
     if (dataset1 && selectedRanges.length > 0 && datasetData) {
-        const data = generateChartData(dataset1, selectedRanges[0]);
-        setChartData(data);
+      const data = generateChartData(dataset1, selectedRanges[0]);
+      setChartData(data);
     }
-}, [dataset1, selectedRanges, datasetData]);
+  }, [dataset1, selectedRanges, datasetData]);
+  
 
   const handleChartClick = (chartType) => {
     setSelectedChart(chartType);
@@ -384,28 +404,7 @@ const ConfigForm = ({ isCollapsed }) => {
           onClick={() => handleChartClick("bar chart")}
         >
           <Bar
-            data={{
-              ...chartData,
-              datasets: [
-                {
-                  ...chartData.datasets[0],
-                  backgroundColor: [
-                    "#22A7F0",
-                    "#00BCD4",
-                    "#76D7C4",
-                    "#4CAF50",
-                    "#009688",
-                    "#4DB6AC",
-                    "#B2EBF2",
-                    "#80DEEA",
-                    "#64B5F6",
-                    "#4FC3F7",
-                    "#29B6F6",
-                    "#039BE5",
-                  ],
-                },
-              ],
-            }}
+            data={chartData}
             options={chartOptions}
           />
         </div>
@@ -422,28 +421,7 @@ const ConfigForm = ({ isCollapsed }) => {
           onClick={() => handleChartClick("line chart")}
         >
           <Line
-            data={{
-              ...chartData,
-              datasets: [
-                {
-                  ...chartData.datasets[0],
-                  backgroundColor: [
-                    "#22A7F0",
-                    "#00BCD4",
-                    "#76D7C4",
-                    "#4CAF50",
-                    "#009688",
-                    "#4DB6AC",
-                    "#B2EBF2",
-                    "#80DEEA",
-                    "#64B5F6",
-                    "#4FC3F7",
-                    "#29B6F6",
-                    "#039BE5",
-                  ],
-                },
-              ],
-            }}
+            data={chartData}
             options={chartOptions}
           />
         </div>
@@ -460,28 +438,7 @@ const ConfigForm = ({ isCollapsed }) => {
           }}
         >
           <Doughnut
-            data={{
-              ...chartData,
-              datasets: [
-                {
-                  ...chartData.datasets[0],
-                  backgroundColor: [
-                    "#22A7F0",
-                    "#00BCD4",
-                    "#76D7C4",
-                    "#4CAF50",
-                    "#009688",
-                    "#4DB6AC",
-                    "#B2EBF2",
-                    "#80DEEA",
-                    "#64B5F6",
-                    "#4FC3F7",
-                    "#29B6F6",
-                    "#039BE5",
-                  ],
-                },
-              ],
-            }}
+            data={chartData}
             options={{
               ...chartOptions,
               plugins: {

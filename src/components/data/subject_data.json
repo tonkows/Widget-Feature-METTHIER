@@ -212,6 +212,7 @@
         "data_range": ["date", "week", "month", "year"],
         "widget": ["number",
           "line chart",
+          "doughnut chart",
           "bar chart",
           "time dependence",
           "time independence"]
