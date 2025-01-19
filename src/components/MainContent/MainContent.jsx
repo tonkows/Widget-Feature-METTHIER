@@ -65,13 +65,26 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
       const clickedBlockWidth = blocks[blockId]?.width;
   
       if (selectedBlockWidth === clickedBlockWidth) {
+        const firstBlockData = localStorage.getItem(`block-${selectedBlock}`);
+        const secondBlockData = localStorage.getItem(`block-${blockId}`);
+        
+        if (firstBlockData) {
+          localStorage.setItem(`block-${blockId}`, firstBlockData);
+        } else {
+          localStorage.removeItem(`block-${blockId}`);
+        }
+        
+        if (secondBlockData) {
+          localStorage.setItem(`block-${selectedBlock}`, secondBlockData);
+        } else {
+          localStorage.removeItem(`block-${selectedBlock}`);
+        }
+
         setBlocks((prevBlocks) => {
           const newBlocks = { ...prevBlocks };
-  
           const tempBlock = newBlocks[selectedBlock];
           newBlocks[selectedBlock] = newBlocks[blockId];
           newBlocks[blockId] = tempBlock;
-  
           return newBlocks;
         });
       }
