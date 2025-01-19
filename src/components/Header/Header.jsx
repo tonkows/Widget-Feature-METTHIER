@@ -4,36 +4,67 @@ import { BiEditAlt } from "react-icons/bi";
 import { GoArrowSwitch } from "react-icons/go";
 import { RiResetLeftFill } from "react-icons/ri";
 import { MdPublic } from "react-icons/md";
+import { Button as AntButton, Modal } from "antd";
 
 const Header = ({ toggleSidebar, isCollapsed, hasData, onEditToggle, isEditing, isSwitching, onSwitchToggle }) => {
+  const handleResetDefault = () => {
+    Modal.confirm({
+      title: 'Reset All Blocks',
+      content: 'Are you sure you want to reset all blocks to default? This action cannot be undone.',
+      okText: 'Reset',
+      okButtonProps: {
+        danger: true,
+      },
+      onOk: () => {
+        const blockIds = [
+          "Left-TopLeft",
+          "Right-TopRight",
+          "Left-MiddleTopLeft",
+          "Right-MiddleTopRight",
+          "Left-MiddleBottomLeft",
+          "Right-MiddleBottomRight",
+          "Left-BottomLeft",
+          "Right-BottomRight",
+          "BottomCenter-Left",
+          "BottomCenter-Right"
+        ];
+
+        blockIds.forEach(blockId => {
+          localStorage.removeItem(`block-${blockId}`);
+        });
+
+        localStorage.removeItem('configFormData');
+        window.location.reload();
+      }
+    });
+  };
+
   return (
     <StyledHeader isCollapsed={isCollapsed}>
       <LeftSection></LeftSection>
       <RightSection>
-        <Button onClick={onEditToggle}>
+        <StyledButton onClick={onEditToggle}>
           <BiEditAlt className="icon-edit" />
           {isEditing ? "Cancel Edit" : "Edit"}
-        </Button>
-        <Button onClick={onSwitchToggle}>
+        </StyledButton>
+        <StyledButton onClick={onSwitchToggle}>
           <GoArrowSwitch className="icon-switch" />
           {isSwitching ? "Cancel Switch" : "Switch"}
-        </Button>
-        <Button>
+        </StyledButton>
+        <StyledButton>
           <MdPublic className="icon-public" />
           Publish
-        </Button>
-        <Button>
+        </StyledButton>
+        <StyledButton onClick={handleResetDefault}>
           <RiResetLeftFill className="icon-reset" />
           Reset Default
-        </Button>
+        </StyledButton>
       </RightSection>
     </StyledHeader>
   );
 };
 
-
 export default Header;
-
 
 const StyledHeader = styled.header`
   display: flex;
@@ -63,7 +94,7 @@ const RightSection = styled.div`
   margin-right: 40px;
 `;
 
-const Button = styled.button`
+const StyledButton = styled.button`
   background-color: var(--button-color);
   color: white;
   border: none;

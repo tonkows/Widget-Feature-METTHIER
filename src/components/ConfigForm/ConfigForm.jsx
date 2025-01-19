@@ -350,14 +350,7 @@ const ConfigForm = ({ isCollapsed }) => {
     };
 
     localStorage.setItem(`block-${blockId}`, JSON.stringify(blockConfig));
-
-    Modal.success({
-      title: 'Success',
-      content: 'Chart has been generated successfully',
-      onOk: () => {
-        navigate('/');
-      }
-    });
+    navigate('/');
   };
 
   return (
