@@ -53,20 +53,39 @@ const ConfigForm = ({ isCollapsed }) => {
   }, [selectedChart]);
 
   useEffect(() => {
-    const savedData = localStorage.getItem('configFormData');
-    if (savedData) {
-      const parsedData = JSON.parse(savedData);
-      setSubject1(parsedData.subject);
-      setDatatype1(parsedData.datatype);
-      setDataset1(parsedData.dataset);
-      setSelectedRanges(parsedData.ranges);
-      setSelectedChart(parsedData.selectedChart);
-      
-      if (parsedData.subject && parsedData.datatype && parsedData.dataset) {
-        loadDatasetData(parsedData.subject, parsedData.datatype, parsedData.dataset);
+    const loadInitialData = async () => {
+      if (blockId) {
+        const blockConfig = localStorage.getItem(`block-${blockId}`);
+        if (blockConfig) {
+          const config = JSON.parse(blockConfig);
+          
+          if (config.dataset) {
+            setSelectedButton("custom");
+          } else {
+            setSelectedButton("default");
+          }
+          
+          setSubject1(config.subject);
+          setDatatype1(config.datatype);
+          setDataset1(config.dataset);
+          setSelectedRanges(config.ranges || []);
+          setSelectedChart(config.selectedChart);
+          setChartData(config.chartData);
+          
+          if (config.subject && config.datatype && config.dataset) {
+            try {
+              const response = await import(`../data/${config.subject}/${config.datatype}/${config.dataset}.json`);
+              setDatasetData(response.default);
+            } catch (error) {
+              console.error("Error loading dataset:", error);
+            }
+          }
+        }
       }
-    }
-  }, []);
+    };
+
+    loadInitialData();
+  }, [blockId]);
 
   const loadDatasetData = async (subject, datatype, dataset) => {
     if (!subject || !datatype || !dataset) {
@@ -81,7 +100,6 @@ const ConfigForm = ({ isCollapsed }) => {
       console.error("Error loading dataset:", error);
     }
   };
-  
 
   const handleButtonClick = (buttonType) => {
     if (selectedButton === buttonType) return;
@@ -100,25 +118,46 @@ const ConfigForm = ({ isCollapsed }) => {
             setSubject1(null);
             setDatatype1(null);
             setDataset1(null);
+            setSelectedRanges([]);
           } else {
-            setSubject1(null);
-            setDatatype1(null);
+            setDataset1(null);
+            setSelectedRanges([]);
           }
-          setSelectedRanges([]);
           setSelectedButton(buttonType);
         },
       });
     } else {
       clearWidget();
       if (buttonType === "custom") {
-        setSubject1(null);
-        setDatatype1(null);
-        setDataset1(null);
+        const blockConfig = localStorage.getItem(`block-${blockId}`);
+        if (blockConfig) {
+          const config = JSON.parse(blockConfig);
+          setSubject1(config.subject);
+          setDatatype1(config.datatype);
+          setDataset1(config.dataset);
+          setSelectedRanges(config.ranges || []);
+          if (config.subject && config.datatype && config.dataset) {
+            loadDatasetData(config.subject, config.datatype, config.dataset);
+          }
+        } else {
+          setSubject1(null);
+          setDatatype1(null);
+          setDataset1(null);
+          setSelectedRanges([]);
+        }
       } else {
-        setSubject1(null);
-        setDatatype1(null);
+        const blockConfig = localStorage.getItem(`block-${blockId}`);
+        if (blockConfig) {
+          const config = JSON.parse(blockConfig);
+          setSubject1(config.subject);
+          setDatatype1(config.datatype);
+        } else {
+          setSubject1(null);
+          setDatatype1(null);
+        }
+        setDataset1(null);
+        setSelectedRanges([]);
       }
-      setSelectedRanges([]);
       setSelectedButton(buttonType);
     }
   };
@@ -480,112 +519,30 @@ const ConfigForm = ({ isCollapsed }) => {
         overflowY: "auto",
       }}
     >
-      {subjectData[subject1]?.[datatype1]?.find(d => d.dataset === dataset1)?.widget.includes("bar chart") && (
+      {subjectData[subject1]?.[datatype1]?.find(d => d.dataset === dataset1)?.widget.includes("bar chart") && chartData?.datasets && (
         <div
-          style={{
-            ...chartStyle("bar chart"),
-            width: "100%",
-            
-            overflow: "hidden", 
-          }}
+          style={chartStyle("bar chart")}
           onClick={() => handleChartClick("bar chart")}
         >
-          <Bar
-            data={chartData}
-            options={chartOptions}
-          />
+          <Bar data={chartData} options={chartOptions} />
         </div>
       )}
 
-      {subjectData[subject1]?.[datatype1]?.find(d => d.dataset === dataset1)?.widget.includes("line chart") && (
+      {subjectData[subject1]?.[datatype1]?.find(d => d.dataset === dataset1)?.widget.includes("line chart") && chartData?.datasets && (
         <div
-          style={{
-            ...chartStyle("line chart"),
-            width: "100%",
-            
-            overflow: "hidden",
-          }}
+          style={chartStyle("line chart")}
           onClick={() => handleChartClick("line chart")}
         >
-          <Line
-            data={chartData}
-            options={chartOptions}
-          />
+          <Line data={chartData} options={chartOptions} />
         </div>
       )}
-      {subjectData[subject1]?.[datatype1]?.find(d => d.dataset === dataset1)?.widget.includes("doughnut chart") && (
+
+      {subjectData[subject1]?.[datatype1]?.find(d => d.dataset === dataset1)?.widget.includes("doughnut chart") && chartData?.datasets && (
         <div
-          style={{
-            ...chartStyle("doughnut chart"),
-            width: "100%",
-            
-          }}
-          onClick={() => {
-            handleChartClick("doughnut chart");
-          }}
+          style={chartStyle("doughnut chart")}
+          onClick={() => handleChartClick("doughnut chart")}
         >
-          <Doughnut
-            data={chartData}
-            options={{
-              ...chartOptions,
-              plugins: {
-                legend: {
-                  display: false,
-                },
-                tooltip: {
-                  enabled: true,
-                },
-                doughnutLabel: {
-                  labels: [
-                    {
-                      text: "Total",
-                      font: {
-                        size: 14,
-                        weight: "bold",
-                      },
-                      color: "var(--text-color)",
-                    },
-                    {
-                      text: chartData.datasets[0].data.reduce(
-                        (a, b) => a + b,
-                        0
-                      ),
-                      font: {
-                        size: 18,
-                        weight: "bold",
-                      },
-                      color: "var(--text-color)",
-                    },
-                  ],
-                },
-              },
-            }}
-            plugins={[
-              {
-                id: "doughnutLabel",
-                beforeDraw(chart) {
-                  const { width, height, ctx } = chart;
-                  const textCenter =
-                    chart.config.options.plugins.doughnutLabel.labels;
-
-                  ctx.textAlign = "center";
-                  ctx.textBaseline = "middle";
-                  const centerX = width / 2;
-                  const centerY = height / 2;
-
-                  textCenter.forEach((label, index) => {
-                    ctx.font = `${label.font.weight} ${label.font.size}px Arial`;
-                    ctx.fillStyle = label.color;
-                    ctx.fillText(
-                      label.text,
-                      centerX,
-                      centerY + index * 20
-                    );
-                  });
-                },
-              },
-            ]}
-          />
+          <Doughnut data={chartData} options={chartOptions} />
         </div>
       )}
     </div>
