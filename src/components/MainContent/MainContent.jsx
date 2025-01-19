@@ -157,7 +157,13 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
                   }}
                 >
                   {isEditing && (
-                    <IconButton aria-label="Edit Bottom Center Left">
+                    <IconButton 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleClick("BottomCenter-Left");
+                      }} 
+                      aria-label="Edit Bottom Center Left"
+                    >
                       <LargeBiEditAlt />
                     </IconButton>
                   )}
@@ -172,7 +178,13 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
                   }}
                 >
                   {isEditing && (
-                    <IconButton aria-label="Edit Bottom Center Right">
+                    <IconButton 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleClick("BottomCenter-Right");
+                      }} 
+                      aria-label="Edit Bottom Center Right"
+                    >
                       <LargeBiEditAlt />
                     </IconButton>
                   )}
