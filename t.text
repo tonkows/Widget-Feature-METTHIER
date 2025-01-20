@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Select, Button, Radio, DatePicker, Modal, Breadcrumb } from "antd";
-import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import { Select, Button, Radio, DatePicker, Modal } from "antd";
 import styled from "styled-components";
 import moment from "moment";
 import { Bar, Line, Doughnut } from "react-chartjs-2";
@@ -44,63 +43,26 @@ const ConfigForm = ({ isCollapsed }) => {
   const [datasetData, setDatasetData] = useState(null);
   const [selectedChart, setSelectedChart] = useState(null);
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const blockId = searchParams.get('block');
 
   useEffect(() => {
     console.log("Set selected chart " + selectedChart);
   }, [selectedChart]);
-
+  
   useEffect(() => {
-    const loadInitialData = async () => {
-      if (blockId) {
-        const blockConfig = localStorage.getItem(`block-${blockId}`);
-        if (blockConfig) {
-          const config = JSON.parse(blockConfig);
-          
-          if (config.dataset) {
-            setSelectedButton("custom");
-          } else {
-            setSelectedButton("default");
-          }
-          
-          setSubject1(config.subject);
-          setDatatype1(config.datatype);
-          setDataset1(config.dataset);
-          setSelectedRanges(config.ranges || []);
-          setSelectedChart(config.selectedChart);
-          setChartData(config.chartData);
-          
-          if (config.subject && config.datatype && config.dataset) {
-            try {
-              const response = await import(`../data/${config.subject}/${config.datatype}/${config.dataset}.json`);
-              setDatasetData(response.default);
-            } catch (error) {
-              console.error("Error loading dataset:", error);
-            }
-          }
-        }
-      }
-    };
-
-    loadInitialData();
-  }, [blockId]);
+    console.log("Set selected chart " + selectedChart);
+  }, [selectedChart]);
 
   const loadDatasetData = async (subject, datatype, dataset) => {
-    if (!subject || !datatype || !dataset) {
-      console.error("Invalid subject, datatype, or dataset");
-      return;
-    }
-    
     try {
-      const response = await import(`../data/${subject}/${datatype}/${dataset}.json`);
+      const response = await import(
+        `../data/${subject}/${datatype}/${dataset}.json`
+      );
       setDatasetData(response.default);
+      console.log("Loaded dataset data:", response.default); 
     } catch (error) {
       console.error("Error loading dataset:", error);
     }
   };
-
   const handleButtonClick = (buttonType) => {
     if (selectedButton === buttonType) return;
 
@@ -118,46 +80,25 @@ const ConfigForm = ({ isCollapsed }) => {
             setSubject1(null);
             setDatatype1(null);
             setDataset1(null);
-            setSelectedRanges([]);
           } else {
-            setDataset1(null);
-            setSelectedRanges([]);
+            setSubject1(null);
+            setDatatype1(null);
           }
+          setSelectedRanges([]);
           setSelectedButton(buttonType);
         },
       });
     } else {
       clearWidget();
       if (buttonType === "custom") {
-        const blockConfig = localStorage.getItem(`block-${blockId}`);
-        if (blockConfig) {
-          const config = JSON.parse(blockConfig);
-          setSubject1(config.subject);
-          setDatatype1(config.datatype);
-          setDataset1(config.dataset);
-          setSelectedRanges(config.ranges || []);
-          if (config.subject && config.datatype && config.dataset) {
-            loadDatasetData(config.subject, config.datatype, config.dataset);
-          }
-        } else {
-          setSubject1(null);
-          setDatatype1(null);
-          setDataset1(null);
-          setSelectedRanges([]);
-        }
-      } else {
-        const blockConfig = localStorage.getItem(`block-${blockId}`);
-        if (blockConfig) {
-          const config = JSON.parse(blockConfig);
-          setSubject1(config.subject);
-          setDatatype1(config.datatype);
-        } else {
-          setSubject1(null);
-          setDatatype1(null);
-        }
+        setSubject1(null);
+        setDatatype1(null);
         setDataset1(null);
-        setSelectedRanges([]);
+      } else {
+        setSubject1(null);
+        setDatatype1(null);
       }
+      setSelectedRanges([]);
       setSelectedButton(buttonType);
     }
   };
@@ -169,210 +110,105 @@ const ConfigForm = ({ isCollapsed }) => {
     setDatatype1(null);
     setDataset1(null);
     setSelectedRanges([]);
-    
-    localStorage.removeItem('configFormData');
   };
-  
 
   const handleSubjectChange1 = (value) => {
     setSubject1(value);
     setDatatype1(null);
     setDataset1(null);
-    setSelectedRanges([]);
-    setChartData(null);
-    setDatasetData(null);
-    setSelectedChart(null);
-    setIsPreviewVisible(false);
-
-    const configData = {
-      subject: value,
-      datatype: null,
-      dataset: null,
-      ranges: [],
-      selectedChart: null
-    };
-    localStorage.setItem('configFormData', JSON.stringify(configData));
   };
 
   const handleDatatypeChange1 = (value) => {
     setDatatype1(value);
     setDataset1(null);
-    setSelectedRanges([]);
-    setChartData(null);
-    setDatasetData(null);
-    setSelectedChart(null);
-    setIsPreviewVisible(false);
-
-    const configData = {
-      subject: subject1,
-      datatype: value,
-      dataset: null,
-      ranges: [],
-      selectedChart: null
-    };
-    localStorage.setItem('configFormData', JSON.stringify(configData));
   };
-
   const handleDatasetChange1 = (value) => {
     const selectedDataset = subjectData[subject1]?.[datatype1]?.find(
       (d) => d.dataset === value
     );
-    setDataset1(value);
+    setDataset1(selectedDataset);
   
     console.log("Subject:", subject1);
     console.log("Datatype:", datatype1);
     console.log("Available Datasets:", subjectData[subject1]?.[datatype1]);
     console.log("Selected Dataset:", selectedDataset);
-
     console.log("Value:", value);
     console.log("Dataset Found:", selectedDataset);
 
   
     if (selectedDataset) {
-      loadDatasetData(subject1, datatype1, value);
+      loadDatasetData(subject1, datatype1, selectedDataset.dataset);
     }
-
-    const configData = {
-      subject: subject1,
-      datatype: datatype1,
-      dataset: value,
-      ranges: selectedRanges,
-      selectedChart: selectedChart
-    };
-    localStorage.setItem('configFormData', JSON.stringify(configData));
   }; 
 
   const handleRangeChange = (value) => {
     setSelectedRanges([value]);
     setDateVisible(value === "date");
-
-    const configData = {
-      subject: subject1,
-      datatype: datatype1,
-      dataset: dataset1,
-      ranges: [value],
-      selectedChart: selectedChart
-    };
-    localStorage.setItem('configFormData', JSON.stringify(configData));
   };
 
   const chartOptions = {
     responsive: true,
-    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "top",
-        display: true,
-        labels: {
-          boxWidth: 12,
-          padding: 8,
-          font: {
-            size: 10
-          }
-        }
       },
       title: {
         display: true,
         text: dataset1?.dataset || "",
-        font: {
-          size: 12
-        }
       },
     },
-    scales: {
-      y: {
-        beginAtZero: true,
-        ticks: {
-          font: { size: 10 }
-        }
-      },
-      x: {
-        ticks: {
-          font: { size: 10 }
-        }
-      }
-    }
   };
 
   const generateChartData = (dataset, range) => {
     const chartData = {
       labels: [],
-      datasets: []
+      datasets: [
+        {
+          label: dataset.dataset,
+          data: [],
+          backgroundColor: "var(--chart-color)",
+          borderColor: "var(--chart-border-color)",
+        },
+      ],
     };
-  
-    if (!datasetData) return chartData;
-  
-    const data = datasetData.dataByRange[range];
-  
-    if (range === "date") {
-      if (!selectedRanges[1] || !selectedRanges[1][0] || !selectedRanges[1][1]) {
-        return chartData;
-      }
 
+    if (!datasetData) return chartData;
+
+    const data = datasetData.charts[0].data;
+
+    if (range === "date" && selectedRanges[1]) {
       const selectedStartDate = selectedRanges[1][0]?.toDate();
       const selectedEndDate = selectedRanges[1][1]?.toDate();
-  
-      data.labels.forEach((label, index) => {
-        const date = moment(label, "D/M/YYYY").toDate();
-        if (date >= selectedStartDate && date <= selectedEndDate) {
-          chartData.labels.push(label);
-          data.datasets.forEach((ds, dsIndex) => {
-            if (!chartData.datasets[dsIndex]) {
-              chartData.datasets[dsIndex] = {
-                label: ds.label,
-                data: [],
-                backgroundColor: ds.backgroundColor,
-                borderColor: ds.borderColor,
-                borderWidth: ds.borderWidth
-              };
-            }
-            chartData.datasets[dsIndex].data.push(ds.data[index]);
-          });
+
+      data[range].forEach((item) => {
+        const date = moment(item.date, "D/M/YYYY");
+        if (date.isBetween(selectedStartDate, selectedEndDate, null, "[]")) {
+          chartData.labels.push(item.date);
+          chartData.datasets[0].data.push(item.value);
         }
       });
     } else {
-      chartData.labels = data.labels;
-      chartData.datasets = data.datasets.map((ds) => ({
-        ...ds,
-        backgroundColor: ds.backgroundColor,
-        borderColor: ds.borderColor,
-        borderWidth: ds.borderWidth
-      }));
+      data[range].forEach((item) => {
+        chartData.labels.push(item[range]);
+        chartData.datasets[0].data.push(item.value);
+      });
     }
-  
+
     return chartData;
   };
-  
+
   useEffect(() => {
     if (dataset1 && selectedRanges.length > 0 && datasetData) {
-      if (selectedRanges[0] === "date") {
-        if (!selectedRanges[1] || !selectedRanges[1][0] || !selectedRanges[1][1]) {
-          setChartData(null);
-          setSelectedChart(null);
-          return;
-        }
-      }
-      const data = generateChartData(dataset1, selectedRanges[0]);
-      setChartData(data);
+        const data = generateChartData(dataset1, selectedRanges[0]);
+        setChartData(data);
     }
-  }, [dataset1, selectedRanges, datasetData]);
-  
+}, [dataset1, selectedRanges, datasetData]);
 
   const handleChartClick = (chartType) => {
     setSelectedChart(chartType);
-
-    const configData = {
-      subject: subject1,
-      datatype: datatype1,
-      dataset: dataset1,
-      ranges: selectedRanges,
-      selectedChart: chartType
-    };
-    localStorage.setItem('configFormData', JSON.stringify(configData));
   };
 
   const chartStyle = (chartType) => ({
-    
     width: "30%",
     height: "250px",
     maxWidth: "500px",
@@ -405,32 +241,8 @@ const ConfigForm = ({ isCollapsed }) => {
     "#039BE5",
   ];
 
-  const handleGenerate = () => {
-    if (!selectedChart || !chartData) {
-      Modal.error({
-        title: 'Error',
-        content: 'Please select a chart type and ensure data is loaded'
-      });
-      return;
-    }
-
-    const blockConfig = {
-      subject: subject1,
-      datatype: datatype1,
-      dataset: dataset1,
-      ranges: selectedRanges,
-      selectedChart: selectedChart,
-      chartData: chartData,
-      chartOptions: chartOptions
-    };
-
-    localStorage.setItem(`block-${blockId}`, JSON.stringify(blockConfig));
-    navigate('/');
-  };
-
   return (
     <Container isCollapsed={isCollapsed}>
-     
       <ButtonWrapper>
         <StyledButton
           type={selectedButton === "default" ? "primary" : "default"}
@@ -448,14 +260,6 @@ const ConfigForm = ({ isCollapsed }) => {
 
       {selectedButton === "custom" && (
         <WrapperDiv1>
-           <Breadcrumb style={{ color: 'var(--text--color)' }}>
-        <Breadcrumb.Item>
-          <Link to="/">Home</Link>
-        </Breadcrumb.Item>
-        <Breadcrumb.Item>
-          {selectedButton === "default" ? "Default" : "Custom"}
-        </Breadcrumb.Item>
-      </Breadcrumb>
           <Label>Custom Content</Label>
           <Label>
             Select Subject <Required>*</Required>
@@ -531,35 +335,16 @@ const ConfigForm = ({ isCollapsed }) => {
               <div style={{ width: "100%", marginTop: "1px" }}>
                 <RangePicker
                   value={selectedRanges[1]}
-                  onChange={(dates) => {
-                    setSelectedRanges(["date", dates]);
-                    setSelectedChart(null);
-                  }}
+                  onChange={(dates) => setSelectedRanges(["date", dates])}
                   disabledDate={(current) =>
                     current && current > moment().endOf("day")
                   }
                   style={{ marginTop: "16px" }}
                 />
               </div>
-              {selectedRanges[0] === "date" && 
-               (!selectedRanges[1] || !selectedRanges[1][0] || !selectedRanges[1][1]) && (
-                <div style={{ 
-                  color: "var(--Required-color)", 
-                  fontSize: "12px",
-                  marginTop: "4px" 
-                }}>
-                  Please select both start and end dates to view charts
-                </div>
-              )}
             </div>
           )}
-         {chartData && dataset1 && datasetData?.dataByRange && (
-          selectedRanges[0] !== "date" || (
-            selectedRanges[1] && 
-            selectedRanges[1][0] && 
-            selectedRanges[1][1]
-          )
-        ) && (
+         {chartData && (
           <>
            <Label>Select Presentation<Required>*</Required></Label>
     <div
@@ -569,64 +354,225 @@ const ConfigForm = ({ isCollapsed }) => {
         gap: "20px",
         alignItems: "center",
         justifyContent: "center",
-        maxWidth: "100%",
-        overflowX: "hidden",
+        maxWidth: "100%", 
+        overflowX: "hidden", 
         overflowY: "auto",
+        
       }}
     >
-      {subjectData[subject1]?.[datatype1]?.find(d => d.dataset === dataset1)?.widget.includes("bar chart") && chartData?.datasets && (
+      {dataset1.widget.includes("bar chart") && (
         <div
-          style={chartStyle("bar chart")}
+          style={{
+            ...chartStyle("bar chart"),
+            width: "100%",
+            
+            overflow: "hidden", 
+          }}
           onClick={() => handleChartClick("bar chart")}
         >
-          <Bar data={chartData} options={chartOptions} />
+          <Bar
+            data={{
+              ...chartData,
+              datasets: [
+                {
+                  ...chartData.datasets[0],
+                  backgroundColor: [
+                    "#22A7F0",
+                    "#00BCD4",
+                    "#76D7C4",
+                    "#4CAF50",
+                    "#009688",
+                    "#4DB6AC",
+                    "#B2EBF2",
+                    "#80DEEA",
+                    "#64B5F6",
+                    "#4FC3F7",
+                    "#29B6F6",
+                    "#039BE5",
+                  ],
+                },
+              ],
+            }}
+            options={chartOptions}
+          />
         </div>
       )}
 
-      {subjectData[subject1]?.[datatype1]?.find(d => d.dataset === dataset1)?.widget.includes("line chart") && chartData?.datasets && (
+      {dataset1.widget.includes("line chart") && (
         <div
-          style={chartStyle("line chart")}
+          style={{
+            ...chartStyle("line chart"),
+            width: "100%",
+            
+            overflow: "hidden",
+          }}
           onClick={() => handleChartClick("line chart")}
         >
-          <Line data={chartData} options={chartOptions} />
+          <Line
+            data={{
+              ...chartData,
+              datasets: [
+                {
+                  ...chartData.datasets[0],
+                  backgroundColor: [
+                    "#22A7F0",
+                    "#00BCD4",
+                    "#76D7C4",
+                    "#4CAF50",
+                    "#009688",
+                    "#4DB6AC",
+                    "#B2EBF2",
+                    "#80DEEA",
+                    "#64B5F6",
+                    "#4FC3F7",
+                    "#29B6F6",
+                    "#039BE5",
+                  ],
+                },
+              ],
+            }}
+            options={chartOptions}
+          />
         </div>
       )}
-
-      {subjectData[subject1]?.[datatype1]?.find(d => d.dataset === dataset1)?.widget.includes("doughnut chart") && chartData?.datasets && (
+      {dataset1.widget.includes("doughnut chart") && (
         <div
-          style={chartStyle("doughnut chart")}
-          onClick={() => handleChartClick("doughnut chart")}
+          style={{
+            ...chartStyle("doughnut chart"),
+            width: "100%",
+            
+          }}
+          onClick={() => {
+            handleChartClick("doughnut chart");
+          }}
         >
-          <Doughnut data={chartData} options={chartOptions} />
+          <Doughnut
+            data={{
+              ...chartData,
+              datasets: [
+                {
+                  ...chartData.datasets[0],
+                  backgroundColor: [
+                    "#22A7F0",
+                    "#00BCD4",
+                    "#76D7C4",
+                    "#4CAF50",
+                    "#009688",
+                    "#4DB6AC",
+                    "#B2EBF2",
+                    "#80DEEA",
+                    "#64B5F6",
+                    "#4FC3F7",
+                    "#29B6F6",
+                    "#039BE5",
+                  ],
+                },
+              ],
+            }}
+            options={{
+              ...chartOptions,
+              plugins: {
+                legend: {
+                  display: false,
+                },
+                tooltip: {
+                  enabled: true,
+                },
+                doughnutLabel: {
+                  labels: [
+                    {
+                      text: "Total",
+                      font: {
+                        size: 14,
+                        weight: "bold",
+                      },
+                      color: "var(--text-color)",
+                    },
+                    {
+                      text: chartData.datasets[0].data.reduce(
+                        (a, b) => a + b,
+                        0
+                      ),
+                      font: {
+                        size: 18,
+                        weight: "bold",
+                      },
+                      color: "var(--text-color)",
+                    },
+                  ],
+                },
+              },
+            }}
+            plugins={[
+              {
+                id: "doughnutLabel",
+                beforeDraw(chart) {
+                  const { width, height, ctx } = chart;
+                  const textCenter =
+                    chart.config.options.plugins.doughnutLabel.labels;
+
+                  ctx.textAlign = "center";
+                  ctx.textBaseline = "middle";
+                  const centerX = width / 2;
+                  const centerY = height / 2;
+
+                  textCenter.forEach((label, index) => {
+                    ctx.font = `${label.font.weight} ${label.font.size}px Arial`;
+                    ctx.fillStyle = label.color;
+                    ctx.fillText(
+                      label.text,
+                      centerX,
+                      centerY + index * 20
+                    );
+                  });
+                },
+              },
+            ]}
+          />
         </div>
       )}
     </div>
   </>
 )}
           <Modal
-            title="Chart Preview"
+            maskClosable={false}
             visible={isPreviewVisible}
-            onCancel={() => setIsPreviewVisible(false)}
-            width="80%"
-            style={{ maxWidth: '1000px' }}
-            bodyStyle={{ 
-              height: '60vh',
-              padding: '20px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
+            onOk={(e) => {
+              console.log(e);
+              setIsPreviewVisible(false);
+              e.preventDefault();
+              return;
             }}
-            footer={null}
+            onCancel={(e) => {
+              console.log(e);
+              setIsPreviewVisible(false);
+              e.preventDefault();
+              return;
+            }}
+            footer={[
+              <Button
+                key="back"
+                onClick={(e) => {
+                  console.log(e);
+                  setIsPreviewVisible(false);
+                  e.preventDefault();
+                  return;
+                }}
+              >
+                Close
+              </Button>,
+            ]}
           >
             {selectedChart && (
-              <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+              <>
                 {selectedChart === "bar chart" && (
                   <Bar
                     data={{
                       ...chartData,
                       datasets: chartData.datasets.map((dataset, index) => ({
                         ...dataset,
-                        backgroundColor: djvodfColors[index % djvodfColors.length],
+                        backgroundColor:
+                          djvodfColors[index % djvodfColors.length],
                         borderColor: djvodfColors[index % djvodfColors.length],
                       })),
                     }}
@@ -640,7 +586,8 @@ const ConfigForm = ({ isCollapsed }) => {
                       datasets: chartData.datasets.map((dataset, index) => ({
                         ...dataset,
                         borderColor: djvodfColors[index % djvodfColors.length],
-                        pointBackgroundColor: djvodfColors[index % djvodfColors.length],
+                        pointBackgroundColor:
+                          djvodfColors[index % djvodfColors.length],
                       })),
                     }}
                     options={chartOptions}
@@ -650,18 +597,15 @@ const ConfigForm = ({ isCollapsed }) => {
                   <Doughnut
                     data={{
                       ...chartData,
-                      datasets: chartData.datasets.map((dataset) => ({
+                      datasets: chartData.datasets.map((dataset, index) => ({
                         ...dataset,
                         backgroundColor: djvodfColors,
                       })),
                     }}
-                    options={{
-                      ...chartOptions,
-                      scales: undefined // Remove scales for doughnut chart
-                    }}
+                    options={chartOptions}
                   />
                 )}
-              </div>
+              </>
             )}
           </Modal>
           <ButtonsContainer>
@@ -672,11 +616,7 @@ const ConfigForm = ({ isCollapsed }) => {
             >
               Preview
             </StyledButton>
-            <StyledButton 
-              onClick={handleGenerate}
-              style={{ width: "120px", marginLeft: "10px" }}
-              disabled={!selectedChart || !chartData}
-            >
+            <StyledButton style={{ width: "120px", marginLeft: "10px" }}>
               Generate
             </StyledButton>
           </ButtonsContainer>
@@ -685,14 +625,6 @@ const ConfigForm = ({ isCollapsed }) => {
 
       {selectedButton === "default" && (
         <WrapperDiv2>
-           <Breadcrumb>
-        <Breadcrumb.Item>
-          <Link to="/">Home</Link>
-        </Breadcrumb.Item>
-        <Breadcrumb.Item>
-          {selectedButton === "default" ? "Default" : "Custom"}
-        </Breadcrumb.Item>
-      </Breadcrumb>
           <Label>Default Content</Label>
           <Label>
             Select Subject <Required>*</Required>
@@ -764,8 +696,8 @@ const WrapperDiv1 = styled.div`
   border: 1px solid var(--border-color);
   position: relative;
   margin-top: 20px;
-  min-height: 1000px;
-  height: 1000px;
+  min-height: 800px;
+  height: 800px;
   label {
     color: var(--text-color);
   }
@@ -782,8 +714,8 @@ const WrapperDiv2 = styled.div`
   border: 1px solid var(--border-color);
   position: relative;
   margin-top: 20px;
-  min-height: 1000px;
-  height: 1000px;
+  min-height: 900px;
+  height: 900px;
   label {
     color: var(--text-color);
   }
@@ -866,30 +798,4 @@ const ButtonsContainer = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
-`;
-
-const ChartPreviewContainer = styled.div`
-  width: 100%;
-  height: 300px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  background: var(--card-bg-color);
-  border-radius: 8px;
-  margin: 20px 0;
-  position: relative;
-
-  & > div {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  canvas {
-    max-width: 100% !important;
-    max-height: 100% !important;
-  }
 `;

@@ -50,6 +50,10 @@ export default MainContent;
 const Container = styled.div`
   height: calc(100vh - 20px);
   width: calc(100% - 220px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--content-bg-color);
   padding-top: 20px;
   margin-left: 220px;
   transition: all 0.3s ease;
@@ -58,12 +62,19 @@ const Container = styled.div`
     width: calc(100% - 62px);
     margin-left: 55px;
   }
+
+  &.notCollapsed {
+    width: calc(100% - 229px);
+    margin-left: 222px;
+  }
 `;
 
 const StyledRow = styled(Row)`
   height: calc(100% - 50px);
   width: 100%;
-  margin: 34px 10px 0 3px;
+  margin: 34px 10px 0 3px !important;
+  row-gap: 8px;
+  display: flex;
 `;
 
 const StyledCol = styled(Col)`
@@ -74,9 +85,34 @@ const StyledCol = styled(Col)`
 
 const Block = styled.div`
   height: 100%;
-  background: #ececec;
+  color: var(--text-color);
   border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--card-bg-color);
+  position: relative;
+  overflow: hidden;
+  cursor: ${props => props.onClick ? 'pointer' : 'default'};
+
+  & > div {
+    width: 100%;
+    height: 100%;
+    max-height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+  }
+
+  canvas {
+    max-width: 100% !important;
+    max-height: 100% !important;
+  }
 `;
+
+
+
 
 const SpacedRow = styled(Row)`
   height: 25%;
@@ -91,3 +127,6 @@ const WrapperDiv = styled.div`
   width: 100%;
   height: 100%;
 `;
+
+
+
