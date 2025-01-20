@@ -32,16 +32,16 @@ ChartJS.register(
 const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
   const [selectedBlock, setSelectedBlock] = useState(null);
   const [blocks, setBlocks] = useState({
-    "Left-TopLeft": { width: 6, id: "Left-TopLeft", label: "1" },
-    "Right-TopRight": { width: 6, id: "Right-TopRight", label: "2" },
-    "Left-MiddleTopLeft": { width: 6, id: "Left-MiddleTopLeft", label: "3" },
-    "Right-MiddleTopRight": { width: 6, id: "Right-MiddleTopRight", label: "4" },
-    "Left-MiddleBottomLeft": { width: 6, id: "Left-MiddleBottomLeft", label: "5" },
-    "Right-MiddleBottomRight": { width: 6, id: "Right-MiddleBottomRight", label: "6" },
-    "Left-BottomLeft": { width: 6, id: "Left-BottomLeft", label: "7" },
-    "Right-BottomRight": { width: 6, id: "Right-BottomRight", label: "8" },
-    "BottomCenter-Left": { width: 12, id: "BottomCenter-Left", label: "9" },
-    "BottomCenter-Right": { width: 12, id: "BottomCenter-Right", label: "10" },
+    "Left-TopLeft": { width: 6, id: "Left-TopLeft"  },
+    "Right-TopRight": { width: 6, id: "Right-TopRight"},
+    "Left-MiddleTopLeft": { width: 6, id: "Left-MiddleTopLeft" },
+    "Right-MiddleTopRight": { width: 6, id: "Right-MiddleTopRight" },
+    "Left-MiddleBottomLeft": { width: 6, id: "Left-MiddleBottomLeft" },
+    "Right-MiddleBottomRight": { width: 6, id: "Right-MiddleBottomRight" },
+    "Left-BottomLeft": { width: 6, id: "Left-BottomLeft" },
+    "Right-BottomRight": { width: 6, id: "Right-BottomRight" },
+    "BottomCenter-Left": { width: 12, id: "BottomCenter-Left" },
+    "BottomCenter-Right": { width: 12, id: "BottomCenter-Right" },
   });
 
   const navigate = useNavigate();
@@ -96,6 +96,12 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
     console.log("Blocks after swap: ", blocks);
   }, [blocks]);
 
+  useEffect(() => {
+    if (!isSwitching) {
+      setSelectedBlock(null);
+    }
+  }, [isSwitching]);
+
   const renderChart = (blockId) => {
     const blockConfig = localStorage.getItem(`block-${blockId}`);
     if (!blockConfig) return null;
@@ -108,6 +114,26 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
     }[config.selectedChart];
 
     if (!ChartComponent) return null;
+
+    const responsiveOptions = {
+      ...config.chartOptions,
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        ...config.chartOptions.plugins,
+        legend: {
+          display: true,
+          position: 'top',
+          labels: {
+            boxWidth: 10,
+            padding: 5,
+            font: {
+              size: 8
+            }
+          }
+        }
+      }
+    };
 
     return (
       <div style={{ width: '100%', height: '100%', padding: '10px' }}>
@@ -127,7 +153,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
 
     return blockNames[columnId]?.map((blockName) => {
       const blockId = `${columnId}-${blockName}`;
-      const isSelected = selectedBlock === blockId;
+      const isSelected = selectedBlock === blockId && isSwitching;
       return (
         <SpacedRow key={blockId}>
           <Col span={24}>
@@ -135,11 +161,17 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
               style={{
                 border: isSelected ? "2px solid var(--text-color)" : "none",
               }}
-              onClick={() => handleSelectBlock(blockId)}
+              onClick={() => isSwitching && handleSelectBlock(blockId)}
             >
               {isEditing && (
-                <IconButton onClick={() => handleClick(blockId)} aria-label={`Edit Block ${blockId}`}>
-                  <LargeBiEditAlt />
+                <IconButton 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleClick(blockId);
+                  }}
+                  aria-label={`Edit Block ${blockId}`}
+                >
+                  <EditIcon />
                 </IconButton>
               )}
               {renderChart(blockId) || <BlockLabel>{blocks[blockId]?.label}</BlockLabel>}
@@ -164,9 +196,9 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
             <SpacedRow style={{ height: "30%" }} gutter={[6, 0]}>
               <Col span={12}>
                 <Block
-                  onClick={() => handleSelectBlock("BottomCenter-Left")}
+                  onClick={() => isSwitching && handleSelectBlock("BottomCenter-Left")}
                   style={{
-                    border: selectedBlock === "BottomCenter-Left" ? "2px solid var(--text-color)" : "none",
+                    border: selectedBlock === "BottomCenter-Left" && isSwitching ? "2px solid var(--text-color)" : "none",
                   }}
                 >
                   {isEditing && (
@@ -177,7 +209,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
                       }} 
                       aria-label="Edit Bottom Center Left"
                     >
-                      <LargeBiEditAlt />
+                      <EditIcon />
                     </IconButton>
                   )}
                   {renderChart("BottomCenter-Left") || <BlockLabel>{blocks["BottomCenter-Left"].label}</BlockLabel>}
@@ -185,9 +217,9 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
               </Col>
               <Col span={12}>
                 <Block
-                  onClick={() => handleSelectBlock("BottomCenter-Right")}
+                  onClick={() => isSwitching && handleSelectBlock("BottomCenter-Right")}
                   style={{
-                    border: selectedBlock === "BottomCenter-Right" ? "2px solid var(--text-color)" : "none",
+                    border: selectedBlock === "BottomCenter-Right" && isSwitching ? "2px solid var(--text-color)" : "none",
                   }}
                 >
                   {isEditing && (
@@ -198,7 +230,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
                       }} 
                       aria-label="Edit Bottom Center Right"
                     >
-                      <LargeBiEditAlt />
+                      <EditIcon />
                     </IconButton>
                   )}
                   {renderChart("BottomCenter-Right") || <BlockLabel>{blocks["BottomCenter-Right"].label}</BlockLabel>}
@@ -261,6 +293,23 @@ const Block = styled.div`
   align-items: center;
   background: var(--card-bg-color);
   position: relative;
+  overflow: hidden;
+  cursor: ${props => props.onClick ? 'pointer' : 'default'};
+
+  & > div {
+    width: 100%;
+    height: 100%;
+    max-height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+  }
+
+  canvas {
+    max-width: 100% !important;
+    max-height: 100% !important;
+  }
 `;
 
 
@@ -293,22 +342,28 @@ const IconButton = styled.button`
   right: 10px;    
   background: var(--button-bg-color);
   border: none;
-  padding: 10px;
+  padding: 8px;
   border-radius: 4px;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 10;
+  transition: all 0.2s ease;
 
   &:hover {
     background: var(--button-hover-bg-color);
+    transform: scale(1.05);
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+    color: var(--text-color);
   }
 `;
 
-const LargeBiEditAlt = styled(BiEditAlt)`
-  font-size: 18px; 
+const EditIcon = styled(BiEditAlt)`
+  font-size: 18px;
   color: var(--text-color);
-  position: absolute; 
-  top: 10px;
-  right: 10px;
 `;

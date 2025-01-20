@@ -258,15 +258,40 @@ const ConfigForm = ({ isCollapsed }) => {
 
   const chartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "top",
+        display: true,
+        labels: {
+          boxWidth: 12,
+          padding: 8,
+          font: {
+            size: 10
+          }
+        }
       },
       title: {
         display: true,
         text: dataset1?.dataset || "",
+        font: {
+          size: 12
+        }
       },
     },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          font: { size: 10 }
+        }
+      },
+      x: {
+        ticks: {
+          font: { size: 10 }
+        }
+      }
+    }
   };
 
   const generateChartData = (dataset, range) => {
@@ -549,44 +574,29 @@ const ConfigForm = ({ isCollapsed }) => {
   </>
 )}
           <Modal
-            maskClosable={false}
+            title="Chart Preview"
             visible={isPreviewVisible}
-            onOk={(e) => {
-              console.log(e);
-              setIsPreviewVisible(false);
-              e.preventDefault();
-              return;
+            onCancel={() => setIsPreviewVisible(false)}
+            width="80%"
+            style={{ maxWidth: '1000px' }}
+            bodyStyle={{ 
+              height: '60vh',
+              padding: '20px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
             }}
-            onCancel={(e) => {
-              console.log(e);
-              setIsPreviewVisible(false);
-              e.preventDefault();
-              return;
-            }}
-            footer={[
-              <Button
-                key="back"
-                onClick={(e) => {
-                  console.log(e);
-                  setIsPreviewVisible(false);
-                  e.preventDefault();
-                  return;
-                }}
-              >
-                Close
-              </Button>,
-            ]}
+            footer={null}
           >
             {selectedChart && (
-              <>
+              <div style={{ width: '100%', height: '100%', position: 'relative' }}>
                 {selectedChart === "bar chart" && (
                   <Bar
                     data={{
                       ...chartData,
                       datasets: chartData.datasets.map((dataset, index) => ({
                         ...dataset,
-                        backgroundColor:
-                          djvodfColors[index % djvodfColors.length],
+                        backgroundColor: djvodfColors[index % djvodfColors.length],
                         borderColor: djvodfColors[index % djvodfColors.length],
                       })),
                     }}
@@ -600,8 +610,7 @@ const ConfigForm = ({ isCollapsed }) => {
                       datasets: chartData.datasets.map((dataset, index) => ({
                         ...dataset,
                         borderColor: djvodfColors[index % djvodfColors.length],
-                        pointBackgroundColor:
-                          djvodfColors[index % djvodfColors.length],
+                        pointBackgroundColor: djvodfColors[index % djvodfColors.length],
                       })),
                     }}
                     options={chartOptions}
@@ -611,15 +620,18 @@ const ConfigForm = ({ isCollapsed }) => {
                   <Doughnut
                     data={{
                       ...chartData,
-                      datasets: chartData.datasets.map((dataset, index) => ({
+                      datasets: chartData.datasets.map((dataset) => ({
                         ...dataset,
                         backgroundColor: djvodfColors,
                       })),
                     }}
-                    options={chartOptions}
+                    options={{
+                      ...chartOptions,
+                      scales: undefined // Remove scales for doughnut chart
+                    }}
                   />
                 )}
-              </>
+              </div>
             )}
           </Modal>
           <ButtonsContainer>
@@ -826,5 +838,28 @@ const ButtonsContainer = styled.div`
   margin-top: 20px;
 `;
 
+const ChartPreviewContainer = styled.div`
+  width: 100%;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: var(--card-bg-color);
+  border-radius: 8px;
+  margin: 20px 0;
+  position: relative;
 
+  & > div {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
+  canvas {
+    max-width: 100% !important;
+    max-height: 100% !important;
+  }
+`;
