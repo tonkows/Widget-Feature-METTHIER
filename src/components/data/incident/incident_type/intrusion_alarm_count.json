@@ -1,0 +1,55 @@
+{
+    "dataset": "intrusion_alarm_count",
+    "dataset_label": "Intrusion Alarm Count",
+    "dataByRange": {
+      "date": {
+        "labels": ["1/1/2025", "2/1/2025", "3/1/2025", "4/1/2025", "5/1/2025"],
+        "datasets": [
+          {
+            "label": "Intrusion Alarm",
+            "data": [9, 7, 12, 15, 6],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "week": {
+        "labels": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+        "datasets": [
+          {
+            "label": "Intrusion Alarm",
+            "data": [5, 8, 10, 6, 9],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "month": {
+        "labels": ["January", "February", "March"],
+        "datasets": [
+          {
+            "label": "Intrusion Alarm",
+            "data": [32, 28, 35],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "year": {
+        "labels": ["2025"],
+        "datasets": [
+          {
+            "label": "Intrusion Alarm",
+            "data": [412],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          }
+        ]
+      }
+    }
+  }
+  

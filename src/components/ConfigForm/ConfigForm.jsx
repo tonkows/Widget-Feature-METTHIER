@@ -645,7 +645,10 @@ const ConfigForm = ({ isCollapsed }) => {
                 ...(chartOptions?.plugins || defaultChartOptions.plugins),
                 title: {
                   display: true,
-                  text: subject1,
+                  text: [
+                    subjectData[subject1]?.[datatype1]?.[0]?.subject_label || subject1,
+                    subjectData[subject1]?.[datatype1]?.find(d => d.dataset === dataset1)?.dataset_label || dataset1
+                  ],
                   position: 'top',
                   align: 'start',
                   font: {
@@ -676,7 +679,10 @@ const ConfigForm = ({ isCollapsed }) => {
                 ...(chartOptions?.plugins || defaultChartOptions.plugins),
                 title: {
                   display: true,
-                  text: subject1,
+                  text: [
+                    subjectData[subject1]?.[datatype1]?.[0]?.subject_label || subject1,
+                    subjectData[subject1]?.[datatype1]?.find(d => d.dataset === dataset1)?.dataset_label || dataset1
+                  ],
                   position: 'top',
                   align: 'start',
                   font: {
@@ -707,7 +713,10 @@ const ConfigForm = ({ isCollapsed }) => {
                 ...(chartOptions?.plugins || defaultChartOptions.plugins),
                 title: {
                   display: true,
-                  text: subject1,
+                  text: [
+                    subjectData[subject1]?.[datatype1]?.[0]?.subject_label || subject1,
+                    subjectData[subject1]?.[datatype1]?.find(d => d.dataset === dataset1)?.dataset_label || dataset1
+                  ],
                   position: 'top',
                   align: 'start',
                   font: {

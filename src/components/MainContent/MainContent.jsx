@@ -325,8 +325,6 @@ const Block = styled.div`
     max-height: 100% !important;
   }
 `;
-
-
 const BlockLabel = styled.div`
   font-size: 20px;
   color: white;

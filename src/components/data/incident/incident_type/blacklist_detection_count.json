@@ -1,0 +1,55 @@
+{
+    "dataset": "blacklist_detection_count",
+    "dataset_label": "Blacklist Detection Count",
+    "dataByRange": {
+      "date": {
+        "labels": ["1/1/2025", "2/1/2025", "3/1/2025", "4/1/2025", "5/1/2025"],
+        "datasets": [
+          {
+            "label": "Blacklist Detection",
+            "data": [4, 7, 5, 6, 9],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "week": {
+        "labels": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+        "datasets": [
+          {
+            "label": "Blacklist Detection",
+            "data": [8, 11, 9, 6, 7],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "month": {
+        "labels": ["January", "February", "March"],
+        "datasets": [
+          {
+            "label": "Blacklist Detection",
+            "data": [28, 35, 40],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "year": {
+        "labels": ["2025"],
+        "datasets": [
+          {
+            "label": "Blacklist Detection",
+            "data": [365],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          }
+        ]
+      }
+    }
+  }
+  

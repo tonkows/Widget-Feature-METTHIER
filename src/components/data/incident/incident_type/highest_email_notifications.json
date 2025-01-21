@@ -1,0 +1,139 @@
+{
+    "dataset": "highest_email_notifications",
+    "dataset_label": "Highest Email Notifications",
+    "dataByRange": {
+      "date": {
+        "labels": ["1/1/2025", "2/1/2025", "3/1/2025", "4/1/2025", "5/1/2025"],
+        "datasets": [
+          {
+            "label": "Fire Alarm",
+            "data": [5, 6, 8, 7, 10],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Intrusion Alarm",
+            "data": [3, 4, 6, 5, 8],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Blacklist Recognition",
+            "data": [2, 3, 5, 4, 6],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "VIP Recognition",
+            "data": [1, 2, 3, 2, 4],
+            "backgroundColor": "rgba(153, 102, 255, 0.5)",
+            "borderColor": "rgba(153, 102, 255, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "week": {
+        "labels": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+        "datasets": [
+          {
+            "label": "Fire Alarm",
+            "data": [10, 12, 15, 13, 17],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Intrusion Alarm",
+            "data": [8, 9, 12, 10, 14],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Blacklist Recognition",
+            "data": [6, 7, 9, 8, 11],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "VIP Recognition",
+            "data": [3, 4, 6, 5, 8],
+            "backgroundColor": "rgba(153, 102, 255, 0.5)",
+            "borderColor": "rgba(153, 102, 255, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "month": {
+        "labels": ["January", "February", "March"],
+        "datasets": [
+          {
+            "label": "Fire Alarm",
+            "data": [30, 35, 40],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Intrusion Alarm",
+            "data": [25, 30, 35],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Blacklist Recognition",
+            "data": [20, 25, 30],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "VIP Recognition",
+            "data": [15, 20, 25],
+            "backgroundColor": "rgba(153, 102, 255, 0.5)",
+            "borderColor": "rgba(153, 102, 255, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "year": {
+        "labels": ["2025"],
+        "datasets": [
+          {
+            "label": "Fire Alarm",
+            "data": [500],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Intrusion Alarm",
+            "data": [400],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Blacklist Recognition",
+            "data": [300],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "VIP Recognition",
+            "data": [250],
+            "backgroundColor": "rgba(153, 102, 255, 0.5)",
+            "borderColor": "rgba(153, 102, 255, 1)",
+            "borderWidth": 1
+          }
+        ]
+      }
+    }
+  }
+  

@@ -1,6 +1,3 @@
-
-Data
-
 {
   "incident": {
     "incident_type": [
@@ -12,28 +9,31 @@ Data
         "datatype": "incident_type",
         "datatype_label": "Incident type",
         "datarange": ["date", "week", "month", "year"],
-        "widget": ["number", "pie chart", "bar chart", "time dependence", "time independence"]
+        "widget": ["number", "doughnut chart", "bar chart", "time dependence", "time independence"]
       },
       {
-        "dataset": "Highest Occurrence",
+        "dataset": "highest_occurrence",
+        "dataset_label": "Highest Occurrence",
         "subject": "incident",
         "subject_label": "Incident",
         "datatype": "incident_type",
         "datatype_label": "Incident type",
         "datarange": ["date", "week", "month", "year"],
-        "widget": ["pie chart", "bar chart", "time dependence", "time independence"]
+        "widget": ["doughnut chart", "bar chart", "time dependence", "time independence"]
       },
       {
-        "dataset": "Total Incident Type",
+        "dataset": "total_incident_type",
+	      "dataset_label": "Total Incident Type",
         "subject": "incident",
         "subject_label": "Incident",
         "datatype": "incident_type",
         "datatype_label": "Incident type",
         "datarange": ["date", "week", "month", "year"],
-        "widget": ["number", "pie chart", "bar chart", "time dependence", "time independence"]
+        "widget": ["number", "doughnut chart", "bar chart", "time dependence", "time independence"]
       },
       {
-        "dataset": "Total All Incident Type",
+        "dataset": "total_all_incident_type",
+	      "dataset_label": "Total All Incident Type",
         "subject": "incident",
         "subject_label": "Incident",
         "datatype": "incident_type",
@@ -42,7 +42,8 @@ Data
         "widget": ["number", "bar chart", "time dependence", "time independence"]
       },
       {
-        "dataset": "Highest Resolution Time",
+        "dataset": "highest_resolution_time",
+	      "dataset_label": "Highest Resolution Time",
         "subject": "incident",
         "subject_label": "Incident",
         "datatype": "incident_type",
@@ -51,7 +52,18 @@ Data
         "widget": ["bar chart", "time dependence", "time independence"]
       },
       {
-        "dataset": "Fire Alarm Count",
+        "dataset": "fire_alarm_count",
+	      "dataset_label": "Fire Alarm Count",
+        "subject": "incident",
+        "subject_label": "Incident",
+        "datatype": "incident_type",
+        "datatype_label": "Incident type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "line chart","time dependence", "time independence"]
+      },
+      {
+        "dataset": "intrusion_alarm_count",
+	      "dataset_label": "Intrusion Alarm Count",
         "subject": "incident",
         "subject_label": "Incident",
         "datatype": "incident_type",
@@ -60,7 +72,8 @@ Data
         "widget": ["number", "time dependence", "time independence"]
       },
       {
-        "dataset": "Intrusion Alarm Count",
+        "dataset": "blacklist_detection_count",
+	      "dataset_label": "Blacklist Detection Count",
         "subject": "incident",
         "subject_label": "Incident",
         "datatype": "incident_type",
@@ -69,16 +82,8 @@ Data
         "widget": ["number", "time dependence", "time independence"]
       },
       {
-        "dataset": "Blacklist Detection Count",
-        "subject": "incident",
-        "subject_label": "Incident",
-        "datatype": "incident_type",
-        "datatype_label": "Incident type",
-        "datarange": ["date", "week", "month", "year"],
-        "widget": ["number", "time dependence", "time independence"]
-      },
-      {
-        "dataset": "Vip Detection Count",
+        "dataset": "vip_detection_count",
+	      "dataset_label": "Vip Detection Count",
         "subject": "incident",
         "subject_label": "Incident",
         "datatype": "incident_type",
@@ -89,16 +94,18 @@ Data
     ],
     "classification": [
       {
-        "dataset": "Number of incident type as True and False",
+        "dataset": "number_of_incident_type_as_true_and_false",
+	      "dataset_label": "Number of incident type as True and False",
         "subject": "incident",
         "subject_label": "Incident",
         "datatype": "classification",
         "datatype_label": "Classification",
         "datarange": ["date", "week", "month", "year"],
-        "widget": ["number", "pie chart", "bar chart", "time dependence", "time independence"]
+        "widget": ["number", "doughnut chart", "bar chart", "time dependence", "time independence"]
       },
       {
-        "dataset": "Incident Type as False",
+        "dataset": "incident_type_as_false",
+	      "dataset_label": "Incident Type as False",
         "subject": "incident",
         "subject_label": "Incident",
         "datatype": "classification",
@@ -107,7 +114,8 @@ Data
         "widget": ["number", "time dependence", "time independence"]
       },
       {
-        "dataset": "Top Incident Recipient Group",
+        "dataset": "top_incident_recipient_group",
+	      "dataset_label": "Top Incident Recipient Group",
         "subject": "incident",
         "subject_label": "Incident",
         "datatype": "classification",
@@ -118,7 +126,8 @@ Data
     ],
     "incident_management": [
       {
-        "dataset": "Archived and Unarchived incident",
+        "dataset": "archive_and_unarchived_incident",
+	      "dataset_label": "Archived and Unarchived incident",
         "subject": "incident",
         "subject_label": "Incident",
         "datatype": "incident_management",
@@ -129,7 +138,8 @@ Data
     ],
     "incident_status": [
       {
-        "dataset": "Incident New and Read",
+        "dataset": "incident_new_and_read",
+	      "dataset_label": "Incident New and Read",
         "subject": "incident",
         "subject_label": "Incident",
         "datatype": "incident_status",
@@ -145,13 +155,14 @@ Data
         "subject_label": "Incident",
         "datatype": "device_name",
         "datatype_label": "Device name",
-        "datarange": ["date", "week", "month", "year"],
+        "data_range": ["date", "week", "month", "year"],
         "widget": ["bar chart", "time dependence", "time independence"]
       }
     ],
     "namespace": [
       {
-        "dataset": "Frequent Incident Location",
+        "dataset": "frequent_incident_location",
+	      "dataset_label": "Frequent Incident Location",
         "subject": "incident",
         "subject_label": "Incident",
         "datatype": "namespace",
@@ -162,7 +173,8 @@ Data
     ],
     "severity_level": [
       {
-        "dataset": "All Severity Level Count",
+        "dataset": "all_severity_level_count",
+	      "dataset_label": "All Severity Level Count",
         "subject": "incident",
         "subject_label": "Incident",
         "datatype": "severity_level",
@@ -171,7 +183,8 @@ Data
         "widget": ["number", "bar chart", "gauge chart", "time dependence", "time independence"]
       },
       {
-        "dataset": "Critical Severity Level Count",
+        "dataset": "critical_severity_level_count",
+	      "dataset_label": "Critical Severity Level Count",
         "subject": "incident",
         "subject_label": "Incident",
         "datatype": "severity_level",
@@ -180,7 +193,8 @@ Data
         "widget": ["number", "bar chart", "gauge chart", "time dependence", "time independence"]
       },
       {
-        "dataset": "VIP Severity Level Count",
+        "dataset": "vip_ severity_level_count",
+	      "dataset_label": "VIP Severity Level Count",
         "subject": "incident",
         "subject_label": "Incident",
         "datatype": "severity_level",
@@ -189,7 +203,8 @@ Data
         "widget": ["number", "bar chart", "gauge chart", "time dependence", "time independence"]
       },
       {
-        "dataset": "High Severity Level Count",
+        "dataset": "high_severity_level_count",
+	      "dataset_label": "High Severity Level Count",
         "subject": "incident",
         "subject_label": "Incident",
         "datatype": "severity_level",
@@ -200,150 +215,154 @@ Data
     ]
   },
   "device": {
-  "device_type": [
-    {
-      "dataset": "Air Conditioner System",
-      "subject": "device",
-      "subject_label": "Device",
-      "datatype": "device_type",
-      "datatype_label": "Device Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time dependence", "time independence"]
-    },
-    {
-      "dataset": "Ventilation System",
-      "subject": "device",
-      "subject_label": "Device",
-      "datatype": "device_type",
-      "datatype_label": "Device Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time dependence", "time independence"]
-    },
-    {
-      "dataset": "Environmental Monitoring System",
-      "subject": "device",
-      "subject_label": "Device",
-      "datatype": "device_type",
-      "datatype_label": "Device Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time dependence", "time independence"]
-    },
-    {
-      "dataset": "CCTV System",
-      "subject": "device",
-      "subject_label": "Device",
-      "datatype": "device_type",
-      "datatype_label": "Device Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time dependence", "time independence"]
-    },
-    {
-      "dataset": "Access Control System",
-      "subject": "device",
-      "subject_label": "Device",
-      "datatype": "device_type",
-      "datatype_label": "Device Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time dependence", "time independence"]
-    },
-    {
-      "dataset": "Lighting Control System",
-      "subject": "device",
-      "subject_label": "Device",
-      "datatype": "device_type",
-      "datatype_label": "Device Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time dependence", "time independence"]
-    },
-    {
-      "dataset": "Fire Detection and Protection System",
-      "subject": "device",
-      "subject_label": "Device",
-      "datatype": "device_type",
-      "datatype_label": "Device Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time dependence", "time independence"]
-    },
-    {
-      "dataset": "Transportation System",
-      "subject": "device",
-      "subject_label": "Device",
-      "datatype": "device_type",
-      "datatype_label": "Device Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time dependence", "time independence"]
-    },
-    {
-      "dataset": "Electrical System",
-      "subject": "device",
-      "subject_label": "Device",
-      "datatype": "device_type",
-      "datatype_label": "Device Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time dependence", "time independence"]
-    },
-    {
-      "dataset": "Sanitary System",
-      "subject": "device",
-      "subject_label": "Device",
-      "datatype": "device_type",
-      "datatype_label": "Device Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time dependence", "time independence"]
-    },
-    {
-      "dataset": "Networking System",
-      "subject": "device",
-      "subject_label": "Device",
-      "datatype": "device_type",
-      "datatype_label": "Device Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time dependence", "time independence"]
-    }
-  ],
-  "device_status": [
-    {
-      "dataset": "Operational Status",
-      "subject": "device",
-      "subject_label": "Device",
-      "datatype": "device_status",
-      "datatype_label": "Device Status",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time dependence"]
-    },
-    {
-      "dataset": "Maintenance Status",
-      "subject": "device",
-      "subject_label": "Device",
-      "datatype": "device_status",
-      "datatype_label": "Device Status",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "bar chart", "time dependence"]
-    },
-    {
-      "dataset": "Frequent Online to Offline or Repairing or Warning",
-      "subject": "device",
-      "subject_label": "Device",
-      "datatype": "device_status",
-      "datatype_label": "Device Status",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "bar chart", "time dependence"]  
-    }
-  ],
-  "location_type": [
-    {
-      "dataset": "Indoor or Outdoor Device Count",
-      "subject": "device",
-      "subject_label": "Device",
-      "datatype": "location_type",
-      "datatype_label": "location_type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time Independence"]  
-    }
-  ],
+    "device_type": [
+      {
+        "dataset": "air_conditioner_system",
+        "dataset_label": "Air Conditioner System",
+        "subject": "device",
+        "subject_label": "Device",
+        "datatype": "device_type",
+        "datatype_label": "Device Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time dependence", "time independence"]
+      },
+      {
+        "dataset": "ventilation_system",
+        "dataset_label": "Ventilation System",
+        "subject": "device",
+        "subject_label": "Device",
+        "datatype": "device_type",
+        "datatype_label": "Device Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time dependence", "time independence"]
+      },
+      {
+        "dataset": "environmental_monitoring_system",
+        "dataset_label": "Environmental Monitoring System",
+        "subject": "device",
+        "subject_label": "Device",
+        "datatype": "device_type",
+        "datatype_label": "Device Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time dependence", "time independence"]
+      },
+      {
+        "dataset": "cctv_system",
+        "dataset_label": "CCTV System",
+        "subject": "device",
+        "subject_label": "Device",
+        "datatype": "device_type",
+        "datatype_label": "Device Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time dependence", "time independence"]
+      },
+      {
+        "dataset": "access_control_system",
+        "dataset_label": "Access Control System",
+        "subject": "device",
+        "subject_label": "Device",
+        "datatype": "device_type",
+        "datatype_label": "Device Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time dependence", "time independence"]
+      },
+      {
+        "dataset": "lighting_control_system",
+        "dataset_label": "Lighting Control System",
+        "subject": "device",
+        "subject_label": "Device",
+        "datatype": "device_type",
+        "datatype_label": "Device Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time dependence", "time independence"]
+      },
+      {
+        "dataset": "fire_detection_and_protection_system",
+        "dataset_label": "Fire Detection and Protection System",
+        "subject": "device",
+        "subject_label": "Device",
+        "datatype": "device_type",
+        "datatype_label": "Device Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time dependence", "time independence"]
+      },
+      {
+        "dataset": "transportation_system",
+        "dataset_label": "Transportation System",
+        "subject": "device",
+        "subject_label": "Device",
+        "datatype": "device_type",
+        "datatype_label": "Device Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time dependence", "time independence"]
+      },
+      {
+        "dataset": "electrical_system",
+        "dataset_label": "Electrical System",
+        "subject": "device",
+        "subject_label": "Device",
+        "datatype": "device_type",
+        "datatype_label": "Device Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time dependence", "time independence"]
+      },
+      {
+        "dataset": "sanitary_system",
+        "dataset_label": "Sanitary System",
+        "subject": "device",
+        "subject_label": "Device",
+        "datatype": "device_type",
+        "datatype_label": "Device Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time dependence", "time independence"]
+      },
+      {
+        "dataset": "networking_system",
+        "dataset_label": "Networking System",
+        "subject": "device",
+        "subject_label": "Device",
+        "datatype": "device_type",
+        "datatype_label": "Device Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time dependence", "time independence"]
+      }
+    ],
+    "device_status": [
+      {
+        "dataset": "operational_status",
+        "dataset_label": "Operational Status",
+        "subject": "device",
+        "subject_label": "Device",
+        "datatype": "device_status",
+        "datatype_label": "Device Status",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time dependence"]
+      },
+      {
+        "dataset": "maintenance_status",
+        "dataset_label": "Maintenance Status",
+        "subject": "device",
+        "subject_label": "Device",
+        "datatype": "device_status",
+        "datatype_label": "Device Status",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "bar chart", "time dependence"]
+      },
+      {
+        "dataset": "frequent_online_to_offline_or_repairing_or_warning",
+        "dataset_label": "Frequent Online to Offline or Repairing or Warning",
+        "subject": "device",
+        "subject_label": "Device",
+        "datatype": "device_status",
+        "datatype_label": "Device Status",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "bar chart", "time dependence"]  
+      }
+    ],
     "device_number": [
     {
-      "dataset": "Total Device Count",
+      "dataset": "total_device_count",
+      "dataset_label": "Total Device Count",
       "subject": "device",
       "subject_label": "Device",
       "datatype": "device_status",
@@ -352,7 +371,8 @@ Data
       "widget": ["number"]
     },
     {
-      "dataset": "Devices Added",
+      "dataset": "devices_added",
+      "dataset_label": "Devices Added",
       "subject": "device",
       "subject_label": "Device",
       "datatype": "device_number",
@@ -363,7 +383,8 @@ Data
   ],
     "warranty_expiration_date": [
     {
-      "dataset": "Devices Expiring Warranty",
+      "dataset": "devices_expiring_warranty",
+      "dataset_label": "Devices Expiring Warranty",
       "subject": "device",
       "subject_label": "Device",
       "datatype": "warranty_expiration_date",
@@ -373,169 +394,187 @@ Data
     }
   ]
 },
-"asset": {
-"asset_type": [
-    {
-      "dataset": "HVAC (Heating Ventilation and Air Conditioning)",
-      "subject": "asset",
-      "subject_label": "Asset",
-      "datatype": "asset_type",
-      "datatype_label": "Asset Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time independence"]
-    },
-    {
-      "dataset": "Sensors and Environmental Monitoring Devices",
-      "subject": "asset",
-      "subject_label": "Asset",
-      "datatype": "asset_type",
-      "datatype_label": "Asset Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time independence"]
-    },
-    {
-      "dataset": "CCTV and Security Systems",
-      "subject": "asset",
-      "subject_label": "Asset",
-      "datatype": "asset_type",
-      "datatype_label": "Asset Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time independence"]
-    },
-    {
-      "dataset": "Access Control Systems",
-      "subject": "asset",
-      "subject_label": "Asset",
-      "datatype": "asset_type",
-      "datatype_label": "Asset Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time independence"]
-    },
-    {
-      "dataset": "Lighting Systems",
-      "subject": "asset",
-      "subject_label": "Asset",
-      "datatype": "asset_type",
-      "datatype_label": "Asset Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time independence"]
-    },
-    {
-      "dataset": "Fire and Notification Systems",
-      "subject": "asset",
-      "subject_label": "Asset",
-      "datatype": "asset_type",
-      "datatype_label": "Asset Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time independence"]
-    },
-    {
-      "dataset": "Elevators and Transportation Systems",
-      "subject": "asset",
-      "subject_label": "Asset",
-      "datatype": "asset_type",
-      "datatype_label": "Asset Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time independence"]
-    },
-    {
-      "dataset": "Electrical and Power Systems",
-      "subject": "asset",
-      "subject_label": "Asset",
-      "datatype": "asset_type",
-      "datatype_label": "Asset Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time independence"]
-    },
-    {
-      "dataset": "Water and Pump Systems",
-      "subject": "asset",
-      "subject_label": "Asset",
-      "datatype": "asset_type",
-      "datatype_label": "Asset Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time independence"]
-    },
-    {
-      "dataset": "Water Treatment Systems",
-      "subject": "asset",
-      "subject_label": "Asset",
-      "datatype": "asset_type",
-      "datatype_label": "Asset Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time independence"]
-    },
-    {
-      "dataset": "Flood Control Systems",
-      "subject": "asset",
-      "subject_label": "Asset",
-      "datatype": "asset_type",
-      "datatype_label": "Asset Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time independence"]
-    },
-    {
-      "dataset": "Solar Systems",
-      "subject": "asset",
-      "subject_label": "Asset",
-      "datatype": "asset_type",
-      "datatype_label": "Asset Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time independence"]
-    },
-    {
-      "dataset": "Networking and Communication Systems",
-      "subject": "asset",
-      "subject_label": "Asset",
-      "datatype": "asset_type",
-      "datatype_label": "Asset Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time independence"]
-    },
-    {
-      "dataset": "Internal Communication Systems",
-      "subject": "asset",
-      "subject_label": "Asset",
-      "datatype": "asset_type",
-      "datatype_label": "Asset Type",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time independence"]
-    }
+  "asset": {
+    "asset_type": [
+      {
+        "dataset": "hvac_(heating_ventilation_and_air_conditioning)",
+        "dataset_label": "HVAC (Heating Ventilation and Air Conditioning)",
+        "subject": "asset",
+        "subject_label": "Asset",
+        "datatype": "asset_type",
+        "datatype_label": "Asset Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
+      },
+      {
+        "dataset": "sensors_and_environmental_monitoring_devices",
+        "dataset_label": "Sensors and Environmental Monitoring Devices",
+        "subject": "asset",
+        "subject_label": "Asset",
+        "datatype": "asset_type",
+        "datatype_label": "Asset Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
+      },
+      {
+        "dataset": "cctv_and_security_systems",
+        "dataset_label": "CCTV and Security Systems",
+        "subject": "asset",
+        "subject_label": "Asset",
+        "datatype": "asset_type",
+        "datatype_label": "Asset Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
+      },
+      {
+        "dataset": "access_control_systems",
+        "dataset_label": "Access Control Systems",
+        "subject": "asset",
+        "subject_label": "Asset",
+        "datatype": "asset_type",
+        "datatype_label": "Asset Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
+      },
+      {
+        "dataset": "lighting_systems",
+        "dataset_label": "Lighting Systems",
+        "subject": "asset",
+        "subject_label": "Asset",
+        "datatype": "asset_type",
+        "datatype_label": "Asset Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
+      },
+      {
+        "dataset": "fire_and_notification_systems",
+        "dataset_label": "Fire and Notification Systems",
+        "subject": "asset",
+        "subject_label": "Asset",
+        "datatype": "asset_type",
+        "datatype_label": "Asset Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
+      },
+      {
+        "dataset": "elevators_and_transportation_systems",
+        "dataset_label": "Elevators and Transportation Systems",
+        "subject": "asset",
+        "subject_label": "Asset",
+        "datatype": "asset_type",
+        "datatype_label": "Asset Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
+      },
+      {
+        "dataset": "electrical_and_power_systems",
+        "dataset_label": "Electrical and Power Systems",
+        "subject": "asset",
+        "subject_label": "Asset",
+        "datatype": "asset_type",
+        "datatype_label": "Asset Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
+      },
+      {
+        "dataset": "water_and_pump_systems",
+        "dataset_label": "Water and Pump Systems",
+        "subject": "asset",
+        "subject_label": "Asset",
+        "datatype": "asset_type",
+        "datatype_label": "Asset Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
+      },
+      {
+        "dataset": "water_treatment_systems",
+        "dataset_label": "Water Treatment Systems",
+        "subject": "asset",
+        "subject_label": "Asset",
+        "datatype": "asset_type",
+        "datatype_label": "Asset Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
+      },
+      {
+        "dataset": "flood_control_systems",
+        "dataset_label": "Flood Control Systems",
+        "subject": "asset",
+        "subject_label": "Asset",
+        "datatype": "asset_type",
+        "datatype_label": "Asset Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
+      },
+      {
+        "dataset": "solar_systems",
+        "dataset_label": "Solar Systems",
+        "subject": "asset",
+        "subject_label": "Asset",
+        "datatype": "asset_type",
+        "datatype_label": "Asset Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
+      },
+      {
+        "dataset": "networking_and_communication_systems",
+        "dataset_label": "Networking and Communication Systems",
+        "subject": "asset",
+        "subject_label": "Asset",
+        "datatype": "asset_type",
+        "datatype_label": "Asset Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
+      },
+      {
+        "dataset": "internal_communication_systems",
+        "dataset_label": "Internal Communication Systems",
+        "subject": "asset",
+        "subject_label": "Asset",
+        "datatype": "asset_type",
+        "datatype_label": "Asset Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
+      }
     ],
     "warranty_status": [
-    {
-      "dataset": "Assets in Active Warranty and Expired Warranty",
-      "subject": "asset",
-      "subject_label": "Asset",
-      "datatype": "warranty_status",
-      "datatype_label": "Warranty Status",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time dependence"]
-    }
+      {
+        "dataset": "assets_in_active_warranty_and_expired_warranty",
+        "dataset_label": "Assets in Active Warranty and Expired Warranty",
+        "subject": "asset",
+        "subject_label": "Asset",
+        "datatype": "warranty_status",
+        "datatype_label": "Warranty Status",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time dependence"]
+      }
     ],
     "asset_maitenance": [
-    {
-      "dataset": "Assets Maintenance",
-      "subject": "asset",
-      "subject_label": "Asset",
-      "datatype": "asset_maitenance",
-      "datatype_label": "Asset Maitenance",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "bar chart", "time dependence"]
-    }
+      {
+        "dataset": "assets_maintenance",
+        "dataset_label": "Assets Maintenance",
+        "subject": "asset",
+        "subject_label": "Asset",
+        "datatype": "asset_maitenance",
+        "datatype_label": "Asset Maitenance",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "bar chart", "time dependence"]
+      }
     ],
     "asset_status" : [
     {
-      "dataset": "Asset Status Count",
+      "dataset": "asset_status_count",
+      "dataset_label": "Asset Status Count",
       "subject": "asset",
       "subject_label": "Asset",
       "datatype": "asset_status",
       "datatype_label": "Asset Status",
       "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time dependence", "time independence"]
+      "widget": ["number", "doughnut chart", "bar chart", "time dependence", "time independence"]
     },
     {
-      "dataset": "Device Status Trend (e.g., Instock → InUse → In Repair)",
+      "dataset": "device_status_trend",
+      "dataset_label": "Device Status Trend (e.g., Instock → InUse → In Repair)",
       "subject": "asset",
       "subject_label": "Asset",
       "datatype": "asset_status",
@@ -546,18 +585,20 @@ Data
     ],
     "usage_status" : [
     {
-      "dataset": "Asset Usage Status Count",
+      "dataset": "asset_usage_status_count",
+      "dataset_label": "Asset Usage Status Count",
       "subject": "asset",
       "subject_label": "Asset",
       "datatype": "usage_status",
       "datatype_label": "Usage Status",
       "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "pie chart", "bar chart", "time dependence", "time independence"]
+      "widget": ["number", "doughnut chart", "bar chart", "time dependence", "time independence"]
     }
     ],
     "import_asset" : [
     {
-      "dataset": "Imported Asset Count",
+      "dataset": "imported_asset_count",
+      "dataset_label": "Imported Asset Count",
       "subject": "asset",
       "subject_label": "Asset",
       "datatype": "import_asset",
@@ -565,40 +606,33 @@ Data
       "datarange": ["date", "week", "month", "year"],
       "widget": ["number","time independence"]
     }
-    ]
-  },
-"videowall": {
-"video_wall_status": [
-    {
-      "dataset": "Camera Category Count (e.g., Public , Private)",
-      "subject": "video_wall",
-      "subject_label": "Video Wall",
-      "datatype": "video_wall_status",
-      "datatype_label": "Video Wall Status",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number","pie chart","bar chart", "time dependence", "time independence"]
+    ]},
+    "videowall": {
+    "video_wall_status": [
+        {
+          "dataset": "camera_category_count",
+          "dataset_label": "Camera Category Count (e.g., Public , Private)",
+          "subject": "video_wall",
+          "subject_label": "Video Wall",
+          "datatype": "video_wall_status",
+          "datatype_label": "Video Wall Status",
+          "datarange": ["date", "week", "month", "year"],
+          "widget": ["number","doughnut chart","bar chart", "time dependence", "time independence"]
+        }
+      ],
+      "video_wall_Favorite": [
+        {
+          "dataset": "favorite_video_count",
+          "dataset_label": "Favorite Video Count",
+          "subject": "video_wall",
+          "subject_label": "Video Wall",
+          "datatype": "favorite",
+          "datatype_label": "Favorite Videos",
+          "datarange": ["date", "week", "month", "year"],
+          "widget": ["number", "time dependence", "time independence"]
+        }
+        ]
+      }
+     
     }
-  ],
-  "video_wall_Favorite": [
-    {
-      "dataset": "Favorite Video Count",
-      "subject": "video_wall",
-      "subject_label": "Video Wall",
-      "datatype": "favorite",
-      "datatype_label": "Favorite Videos",
-      "datarange": ["date", "week", "month", "year"],
-      "widget": ["number", "time dependence", "time independence"]
-    }
-    ]
-  },
-  "BAS": {
-  }
-  ,
-  "Energy": {
-  }
-}
 
-    
-
-
-   
