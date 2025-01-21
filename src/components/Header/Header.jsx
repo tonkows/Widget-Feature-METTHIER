@@ -43,19 +43,32 @@ const Header = ({ toggleSidebar, isCollapsed, hasData, onEditToggle, isEditing, 
     <StyledHeader isCollapsed={isCollapsed}>
       <LeftSection></LeftSection>
       <RightSection>
-        <StyledButton onClick={onEditToggle}>
+        <StyledButton 
+          onClick={onEditToggle}
+          disabled={isSwitching}
+          className={isEditing ? 'active' : ''}
+        >
           <BiEditAlt className="icon-edit" />
           {isEditing ? "Cancel Edit" : "Edit"}
         </StyledButton>
-        <StyledButton onClick={onSwitchToggle}>
+        <StyledButton 
+          onClick={onSwitchToggle}
+          disabled={isEditing}
+          className={isSwitching ? 'active' : ''}
+        >
           <GoArrowSwitch className="icon-switch" />
           {isSwitching ? "Cancel Switch" : "Switch"}
         </StyledButton>
-        <StyledButton>
+        <StyledButton
+          disabled={isEditing || isSwitching}
+        >
           <MdPublic className="icon-public" />
           Publish
         </StyledButton>
-        <StyledButton onClick={handleResetDefault}>
+        <StyledButton 
+          onClick={handleResetDefault}
+          disabled={isEditing || isSwitching}
+        >
           <RiResetLeftFill className="icon-reset" />
           Reset Default
         </StyledButton>
@@ -102,27 +115,33 @@ const StyledButton = styled.button`
   padding: 6px 14px;
   font-size: 14px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 
-  .icon-edit {
-    margin-right: 5px;
-    font-size: 15px;
-  }
-  .icon-switch {
-    margin-right: 5px;
-    font-size: 15px;
+  &.active {
+    background-color: var(--button-hover-bg-color);
+    box-shadow: 0 0 0 2px var(--text-color);
   }
 
   &:disabled {
-    background-color: gray;
+    background-color: #ccc;
     cursor: not-allowed;
+    opacity: 0.7;
+    
+    &:hover {
+      transform: none;
+      background-color: #ccc;
+    }
   }
 
-  .icon-public{
-    margin-right: 5px;
-    font-size: 15px;
+  &:hover:not(:disabled) {
+    background-color: var(--button-hover-bg-color);
+    transform: scale(1.05);
   }
-  .icon-Reset{
+
+  .icon-edit, .icon-switch, .icon-public, .icon-reset {
     margin-right: 5px;
     font-size: 15px;
   }

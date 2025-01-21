@@ -131,17 +131,31 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
               size: 8
             }
           }
+        },
+        title: {
+          display: true,
+          text: config.subject,
+          position: 'top',
+          align: 'start',
+          font: {
+            size: 10,
+            weight: 'bold'
+          },
+          padding: {
+            top: 5,
+            bottom: 5
+          }
         }
       }
     };
 
     return (
-      <div style={{ width: '100%', height: '100%', padding: '10px' }}>
+      <ChartContainer>
         <ChartComponent
           data={config.chartData}
-          options={config.chartOptions}
+          options={responsiveOptions}
         />
-      </div>
+      </ChartContainer>
     );
   };
 
@@ -366,4 +380,13 @@ const IconButton = styled.button`
 const EditIcon = styled(BiEditAlt)`
   font-size: 18px;
   color: var(--text-color);
+`;
+
+const ChartContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
 `;

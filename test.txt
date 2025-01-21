@@ -5,7 +5,8 @@ Data
   "incident": {
     "incident_type": [
       {
-        "dataset": "Highest Email Notifications",
+        "dataset": "highest_email_notifications",
+        "dataset_label": "Highest Email Notifications",
         "subject": "incident",
         "subject_label": "Incident",
         "datatype": "incident_type",

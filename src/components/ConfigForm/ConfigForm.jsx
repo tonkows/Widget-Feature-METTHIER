@@ -195,7 +195,7 @@ const ConfigForm = ({ isCollapsed }) => {
   };
 
   const handleDatatypeChange1 = (value) => {
-    setDatatype1(value);
+    setDatatype1(value);        
     setDataset1(null);
     setSelectedRanges([]);
     setChartData(null);
@@ -428,6 +428,29 @@ const ConfigForm = ({ isCollapsed }) => {
     navigate('/');
   };
 
+  const handlePreview = () => {
+    if (!selectedChart || !chartData) {
+      Modal.error({
+        title: 'Error',
+        content: 'Please select a chart type and ensure data is loaded'
+      });
+      return;
+    }
+
+    const previewData = {
+      subject: subject1,
+      datatype: datatype1,
+      dataset: dataset1,
+      ranges: selectedRanges,
+      selectedChart: selectedChart,
+      chartData: chartData,
+      chartOptions: chartOptions
+    };
+    localStorage.setItem('previewData', JSON.stringify(previewData));
+    
+    navigate(`/preview?block=${blockId}`);
+  };
+
   return (
     <Container isCollapsed={isCollapsed}>
      
@@ -579,7 +602,29 @@ const ConfigForm = ({ isCollapsed }) => {
           style={chartStyle("bar chart")}
           onClick={() => handleChartClick("bar chart")}
         >
-          <Bar data={chartData} options={chartOptions} />
+          <Bar 
+            data={chartData} 
+            options={{
+              ...chartOptions,
+              plugins: {
+                ...chartOptions.plugins,
+                title: {
+                  display: true,
+                  text: subject1,
+                  position: 'top',
+                  align: 'start',
+                  font: {
+                    size: 14,
+                    weight: 'bold'
+                  },
+                  padding: {
+                    top: 5,
+                    bottom: 5
+                  }
+                }
+              }
+            }} 
+          />
         </div>
       )}
 
@@ -588,7 +633,29 @@ const ConfigForm = ({ isCollapsed }) => {
           style={chartStyle("line chart")}
           onClick={() => handleChartClick("line chart")}
         >
-          <Line data={chartData} options={chartOptions} />
+          <Line 
+            data={chartData} 
+            options={{
+              ...chartOptions,
+              plugins: {
+                ...chartOptions.plugins,
+                title: {
+                  display: true,
+                  text: subject1,
+                  position: 'top',
+                  align: 'start',
+                  font: {
+                    size: 14,
+                    weight: 'bold'
+                  },
+                  padding: {
+                    top: 5,
+                    bottom: 5
+                  }
+                }
+              }
+            }}
+          />
         </div>
       )}
 
@@ -597,76 +664,37 @@ const ConfigForm = ({ isCollapsed }) => {
           style={chartStyle("doughnut chart")}
           onClick={() => handleChartClick("doughnut chart")}
         >
-          <Doughnut data={chartData} options={chartOptions} />
+          <Doughnut 
+            data={chartData} 
+            options={{
+              ...chartOptions,
+              plugins: {
+                ...chartOptions.plugins,
+                title: {
+                  display: true,
+                  text: subject1,
+                  position: 'top',
+                  align: 'start',
+                  font: {
+                    size: 14,
+                    weight: 'bold'
+                  },
+                  padding: {
+                    top: 5,
+                    bottom: 5
+                  }
+                }
+              }
+            }}
+          />
         </div>
       )}
     </div>
   </>
 )}
-          <Modal
-            title="Chart Preview"
-            visible={isPreviewVisible}
-            onCancel={() => setIsPreviewVisible(false)}
-            width="80%"
-            style={{ maxWidth: '1000px' }}
-            bodyStyle={{ 
-              height: '60vh',
-              padding: '20px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-            footer={null}
-          >
-            {selectedChart && (
-              <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-                {selectedChart === "bar chart" && (
-                  <Bar
-                    data={{
-                      ...chartData,
-                      datasets: chartData.datasets.map((dataset, index) => ({
-                        ...dataset,
-                        backgroundColor: djvodfColors[index % djvodfColors.length],
-                        borderColor: djvodfColors[index % djvodfColors.length],
-                      })),
-                    }}
-                    options={chartOptions}
-                  />
-                )}
-                {selectedChart === "line chart" && (
-                  <Line
-                    data={{
-                      ...chartData,
-                      datasets: chartData.datasets.map((dataset, index) => ({
-                        ...dataset,
-                        borderColor: djvodfColors[index % djvodfColors.length],
-                        pointBackgroundColor: djvodfColors[index % djvodfColors.length],
-                      })),
-                    }}
-                    options={chartOptions}
-                  />
-                )}
-                {selectedChart === "doughnut chart" && (
-                  <Doughnut
-                    data={{
-                      ...chartData,
-                      datasets: chartData.datasets.map((dataset) => ({
-                        ...dataset,
-                        backgroundColor: djvodfColors,
-                      })),
-                    }}
-                    options={{
-                      ...chartOptions,
-                      scales: undefined // Remove scales for doughnut chart
-                    }}
-                  />
-                )}
-              </div>
-            )}
-          </Modal>
           <ButtonsContainer>
             <StyledButton
-              onClick={() => setIsPreviewVisible(!isPreviewVisible)}
+              onClick={handlePreview}
               style={{ width: "120px", marginRight: "10px" }}
               disabled={!selectedChart} 
             >
