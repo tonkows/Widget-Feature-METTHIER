@@ -47,6 +47,7 @@ const ConfigForm = ({ isCollapsed }) => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const blockId = searchParams.get('block');
+  const [chartOptions, setChartOptions] = useState(null);
 
   useEffect(() => {
     console.log("Set selected chart " + selectedChart);
@@ -55,6 +56,31 @@ const ConfigForm = ({ isCollapsed }) => {
   useEffect(() => {
     const loadInitialData = async () => {
       if (blockId) {
+        const savedConfig = localStorage.getItem(`block-config-${blockId}`);
+        if (savedConfig) {
+          const config = JSON.parse(savedConfig);
+          setSelectedButton(config.selectedButton);
+          setSubject1(config.subject);
+          setDatatype1(config.datatype);
+          setDataset1(config.dataset);
+          setSelectedRanges(config.ranges);
+          setSelectedChart(config.selectedChart);
+          setChartData(config.chartData);
+          setChartOptions(config.chartOptions);
+
+          if (config.subject && config.datatype && config.dataset) {
+            try {
+              const response = await import(`../data/${config.subject}/${config.datatype}/${config.dataset}.json`);
+              setDatasetData(response.default);
+            } catch (error) {
+              console.error("Error loading dataset:", error);
+            }
+          }
+
+          localStorage.removeItem(`block-config-${blockId}`);
+          return;
+        }
+
         const blockConfig = localStorage.getItem(`block-${blockId}`);
         if (blockConfig) {
           const config = JSON.parse(blockConfig);
@@ -71,7 +97,8 @@ const ConfigForm = ({ isCollapsed }) => {
           setSelectedRanges(config.ranges || []);
           setSelectedChart(config.selectedChart);
           setChartData(config.chartData);
-          
+          setChartOptions(config.chartOptions);
+
           if (config.subject && config.datatype && config.dataset) {
             try {
               const response = await import(`../data/${config.subject}/${config.datatype}/${config.dataset}.json`);
@@ -85,6 +112,14 @@ const ConfigForm = ({ isCollapsed }) => {
     };
 
     loadInitialData();
+  }, [blockId]);
+
+  useEffect(() => {
+    return () => {
+      if (blockId) {
+        localStorage.removeItem(`block-config-${blockId}`);
+      }
+    };
   }, [blockId]);
 
   const loadDatasetData = async (subject, datatype, dataset) => {
@@ -256,18 +291,18 @@ const ConfigForm = ({ isCollapsed }) => {
     localStorage.setItem('configFormData', JSON.stringify(configData));
   };
 
-  const chartOptions = {
+  const defaultChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: "top",
         display: true,
+        position: 'top',
         labels: {
-          boxWidth: 12,
-          padding: 8,
+          boxWidth: 10,
+          padding: 5,
           font: {
-            size: 10
+            size: 8
           }
         }
       },
@@ -421,7 +456,7 @@ const ConfigForm = ({ isCollapsed }) => {
       ranges: selectedRanges,
       selectedChart: selectedChart,
       chartData: chartData,
-      chartOptions: chartOptions
+      chartOptions: chartOptions || defaultChartOptions
     };
 
     localStorage.setItem(`block-${blockId}`, JSON.stringify(blockConfig));
@@ -444,7 +479,7 @@ const ConfigForm = ({ isCollapsed }) => {
       ranges: selectedRanges,
       selectedChart: selectedChart,
       chartData: chartData,
-      chartOptions: chartOptions
+      chartOptions: chartOptions || defaultChartOptions
     };
     localStorage.setItem('previewData', JSON.stringify(previewData));
     
@@ -605,9 +640,9 @@ const ConfigForm = ({ isCollapsed }) => {
           <Bar 
             data={chartData} 
             options={{
-              ...chartOptions,
+              ...(chartOptions || defaultChartOptions),
               plugins: {
-                ...chartOptions.plugins,
+                ...(chartOptions?.plugins || defaultChartOptions.plugins),
                 title: {
                   display: true,
                   text: subject1,
@@ -636,9 +671,9 @@ const ConfigForm = ({ isCollapsed }) => {
           <Line 
             data={chartData} 
             options={{
-              ...chartOptions,
+              ...(chartOptions || defaultChartOptions),
               plugins: {
-                ...chartOptions.plugins,
+                ...(chartOptions?.plugins || defaultChartOptions.plugins),
                 title: {
                   display: true,
                   text: subject1,
@@ -667,9 +702,9 @@ const ConfigForm = ({ isCollapsed }) => {
           <Doughnut 
             data={chartData} 
             options={{
-              ...chartOptions,
+              ...(chartOptions || defaultChartOptions),
               plugins: {
-                ...chartOptions.plugins,
+                ...(chartOptions?.plugins || defaultChartOptions.plugins),
                 title: {
                   display: true,
                   text: subject1,

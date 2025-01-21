@@ -18,23 +18,78 @@ const Preview = ({ isCollapsed }) => {
     }
   }, []);
 
-  const renderChart = () => {
-    if (!previewConfig) return null;
+  const renderChart = (blockId) => {
+    if (blockId === searchParams.get('block') && previewConfig) {
+      const ChartComponent = {
+        'bar chart': Bar,
+        'line chart': Line,
+        'doughnut chart': Doughnut
+      }[previewConfig.selectedChart];
 
+      if (!ChartComponent) return null;
+
+      const chartOptions = {
+        ...previewConfig.chartOptions,
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          ...previewConfig.chartOptions.plugins,
+          legend: {
+            display: true,
+            position: 'top',
+            labels: {
+              boxWidth: 10,
+              padding: 5,
+              font: {
+                size: 8
+              }
+            }
+          },
+          title: {
+            display: true,
+            text: previewConfig.subject,
+            position: 'top',
+            align: 'start',
+            font: {
+              size: 10,
+              weight: 'bold'
+            },
+            padding: {
+              top: 5,
+              bottom: 5
+            }
+          }
+        }
+      };
+
+      return (
+        <ChartWrapper>
+          <ChartComponent
+            data={previewConfig.chartData}
+            options={chartOptions}
+          />
+        </ChartWrapper>
+      );
+    }
+
+    const blockConfig = localStorage.getItem(`block-${blockId}`);
+    if (!blockConfig) return null;
+
+    const config = JSON.parse(blockConfig);
     const ChartComponent = {
       'bar chart': Bar,
       'line chart': Line,
       'doughnut chart': Doughnut
-    }[previewConfig.selectedChart];
+    }[config.selectedChart];
 
     if (!ChartComponent) return null;
 
     const chartOptions = {
-      ...previewConfig.chartOptions,
+      ...config.chartOptions,
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        ...previewConfig.chartOptions.plugins,
+        ...config.chartOptions.plugins,
         legend: {
           display: true,
           position: 'top',
@@ -48,7 +103,7 @@ const Preview = ({ isCollapsed }) => {
         },
         title: {
           display: true,
-          text: previewConfig.subject,
+          text: config.subject,
           position: 'top',
           align: 'start',
           font: {
@@ -66,7 +121,7 @@ const Preview = ({ isCollapsed }) => {
     return (
       <ChartWrapper>
         <ChartComponent
-          data={previewConfig.chartData}
+          data={config.chartData}
           options={chartOptions}
         />
       </ChartWrapper>
@@ -85,7 +140,7 @@ const Preview = ({ isCollapsed }) => {
         <SpacedRow key={fullBlockId}>
           <Col span={24}>
             <Block>
-              {fullBlockId === blockId && renderChart()}
+              {renderChart(fullBlockId)}
             </Block>
           </Col>
         </SpacedRow>
@@ -94,7 +149,21 @@ const Preview = ({ isCollapsed }) => {
   };
 
   const handleBack = () => {
-    navigate(-1);
+    if (previewConfig) {
+      const savedConfig = {
+        selectedButton: "custom",
+        subject: previewConfig.subject,
+        datatype: previewConfig.datatype,
+        dataset: previewConfig.dataset,
+        ranges: previewConfig.ranges,
+        selectedChart: previewConfig.selectedChart,
+        chartData: previewConfig.chartData,
+        chartOptions: previewConfig.chartOptions
+      };
+      localStorage.setItem(`block-config-${blockId}`, JSON.stringify(savedConfig));
+    }
+    
+    navigate(`/config-form?block=${blockId}`);
   };
 
   return (
@@ -117,12 +186,12 @@ const Preview = ({ isCollapsed }) => {
             <SpacedRow style={{ height: "30%" }} gutter={[6, 0]}>
               <Col span={12}>
                 <Block>
-                  {"BottomCenter-Left" === blockId && renderChart()}
+                  {renderChart("BottomCenter-Left")}
                 </Block>
               </Col>
               <Col span={12}>
                 <Block>
-                  {"BottomCenter-Right" === blockId && renderChart()}
+                  {renderChart("BottomCenter-Right")}
                 </Block>
               </Col>
             </SpacedRow>
