@@ -114,14 +114,6 @@ const ConfigForm = ({ isCollapsed }) => {
     loadInitialData();
   }, [blockId]);
 
-  useEffect(() => {
-    return () => {
-      if (blockId) {
-        localStorage.removeItem(`block-config-${blockId}`);
-      }
-    };
-  }, [blockId]);
-
   const loadDatasetData = async (subject, datatype, dataset) => {
     if (!subject || !datatype || !dataset) {
       console.error("Invalid subject, datatype, or dataset");
@@ -425,20 +417,6 @@ const ConfigForm = ({ isCollapsed }) => {
     padding: "10px",
   });
 
-  const djvodfColors = [
-    "#22A7F0",
-    "#00BCD4",
-    "#76D7C4",
-    "#4CAF50",
-    "#009688",
-    "#4DB6AC",
-    "#B2EBF2",
-    "#80DEEA",
-    "#64B5F6",
-    "#4FC3F7",
-    "#29B6F6",
-    "#039BE5",
-  ];
 
   const handleGenerate = () => {
     if (!selectedChart || !chartData) {
@@ -484,6 +462,41 @@ const ConfigForm = ({ isCollapsed }) => {
     localStorage.setItem('previewData', JSON.stringify(previewData));
     
     navigate(`/preview?block=${blockId}`);
+  };
+
+  const defaultContent = {
+    subject: "asset",
+    datatype: "asset_type",
+    chartType: "bar chart",
+    chartData: {
+      labels: ["2019", "2020", "2021", "2022", "2023"],
+      datasets: [{
+        label: 'DJSI Score',
+        data: [75, 78, 82, 85, 88],
+        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      }]
+    },
+    chartOptions: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+        },
+        title: {
+          display: true,
+          position: 'top',
+          align: 'start',
+          font: {
+            size: 14,
+            weight: 'bold'
+          }
+        }
+      }
+    }
   };
 
   return (
@@ -761,51 +774,58 @@ const ConfigForm = ({ isCollapsed }) => {
         <Breadcrumb.Item>
           <Link to="/">Home</Link>
         </Breadcrumb.Item>
-        <Breadcrumb.Item>
-          {selectedButton === "default" ? "Default" : "Custom"}
-        </Breadcrumb.Item>
+        <Breadcrumb.Item>Default</Breadcrumb.Item>
       </Breadcrumb>
           <Label>Default Content</Label>
           <Label>
-            Select Subject <Required>*</Required>
+            Subject: {defaultContent.subject}
           </Label>
-          <StyledSelect
-            placeholder="Select Subject"
-            onChange={handleSubjectChange1}
-            value={subject1}
-          >
-            {Object.keys(subjectData).map((key) => (
-              <Option key={key} value={key}>
-                {
-                  subjectData[key][Object.keys(subjectData[key])[0]][0]
-                    .subject_label
-                }
-              </Option>
-            ))}
-          </StyledSelect>
-
           <Label>
-            Select DataType <Required>*</Required>
+            DataType: {defaultContent.datatype}
           </Label>
-          <StyledSelect
-            placeholder="Select Datatype"
-            onChange={handleDatatypeChange1}
-            value={datatype1}
-            disabled={!subject1}
-          >
-            {subject1 &&
-              Object.keys(subjectData[subject1]).map((datatype) => (
-                <Option key={datatype} value={datatype}>
-                  {subjectData[subject1][datatype][0].datatype_label}
-                </Option>
-              ))}
-          </StyledSelect>
+
+          <div style={{ 
+            width: "100%", 
+            height: "300px", 
+            marginTop: "20px",
+            display: "flex",
+            justifyContent: "center"
+          }}>
+            <div style={{
+              width: "50%",
+              height: "100%",
+              padding: "10px",
+              background: "var(--card-bg-color)",
+              borderRadius: "8px"
+            }}>
+              <Bar
+                data={defaultContent.chartData}
+                options={defaultContent.chartOptions}
+              />
+            </div>
+          </div>
 
           <ButtonsContainer>
-            <StyledButton style={{ width: "120px", marginRight: "10px" }}>
+            <StyledButton 
+              onClick={handlePreview}
+              style={{ width: "120px", marginRight: "10px" }}
+            >
               Preview
             </StyledButton>
-            <StyledButton style={{ width: "120px", marginLeft: "10px" }}>
+            <StyledButton 
+              onClick={() => {
+                const config = {
+                  subject: defaultContent.subject,
+                  datatype: defaultContent.datatype,
+                  selectedChart: defaultContent.chartType,
+                  chartData: defaultContent.chartData,
+                  chartOptions: defaultContent.chartOptions
+                };
+                localStorage.setItem(`block-${blockId}`, JSON.stringify(config));
+                navigate('/');
+              }}
+              style={{ width: "120px", marginLeft: "10px" }}
+            >
               Generate
             </StyledButton>
           </ButtonsContainer>
