@@ -1,0 +1,139 @@
+{
+    "dataset": "access_control_systems",
+    "dataset_label": "Access Control Systems",
+    "dataByRange": {
+      "date": {
+        "labels": ["1/1/2025", "2/1/2025", "3/1/2025", "4/1/2025", "5/1/2025"],
+        "datasets": [
+          {
+            "label": "Finger Print Scanner",
+            "data": [15, 18, 20, 19, 23],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Card Reader",
+            "data": [12, 15, 18, 16, 20],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Facial Scanner",
+            "data": [8, 10, 12, 11, 14],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Iris Scanner",
+            "data": [5, 7, 9, 8, 11],
+            "backgroundColor": "rgba(153, 102, 255, 0.5)",
+            "borderColor": "rgba(153, 102, 255, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "week": {
+        "labels": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+        "datasets": [
+          {
+            "label": "Finger Print Scanner",
+            "data": [30, 35, 40, 38, 42],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Card Reader",
+            "data": [25, 30, 35, 32, 37],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Facial Scanner",
+            "data": [20, 24, 28, 26, 30],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Iris Scanner",
+            "data": [15, 18, 21, 19, 24],
+            "backgroundColor": "rgba(153, 102, 255, 0.5)",
+            "borderColor": "rgba(153, 102, 255, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "month": {
+        "labels": ["January", "February", "March"],
+        "datasets": [
+          {
+            "label": "Finger Print Scanner",
+            "data": [120, 140, 160],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Card Reader",
+            "data": [100, 120, 140],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Facial Scanner",
+            "data": [85, 100, 115],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Iris Scanner",
+            "data": [70, 85, 100],
+            "backgroundColor": "rgba(153, 102, 255, 0.5)",
+            "borderColor": "rgba(153, 102, 255, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "year": {
+        "labels": ["2025"],
+        "datasets": [
+          {
+            "label": "Finger Print Scanner",
+            "data": [1500],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Card Reader",
+            "data": [1300],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Facial Scanner",
+            "data": [1100],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Iris Scanner",
+            "data": [900],
+            "backgroundColor": "rgba(153, 102, 255, 0.5)",
+            "borderColor": "rgba(153, 102, 255, 1)",
+            "borderWidth": 1
+          }
+        ]
+      }
+    }
+  }
+  

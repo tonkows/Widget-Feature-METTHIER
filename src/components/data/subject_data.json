@@ -32,16 +32,6 @@
         "widget": ["number", "doughnut chart", "bar chart", "time dependence", "time independence"]
       },
       {
-        "dataset": "highest_resolution_time",
-	      "dataset_label": "Highest Resolution Time",
-        "subject": "incident",
-        "subject_label": "Incident",
-        "datatype": "incident_type",
-        "datatype_label": "Incident type",
-        "datarange": ["date", "week", "month", "year"],
-        "widget": ["bar chart", "time dependence", "time independence"]
-      },
-      {
         "dataset": "fire_alarm_count",
 	      "dataset_label": "Fire Alarm Count",
         "subject": "incident",
@@ -69,7 +59,7 @@
         "datatype": "incident_type",
         "datatype_label": "Incident type",
         "datarange": ["date", "week", "month", "year"],
-        "widget": ["number", "time dependence", "time independence"]
+        "widget": ["number","bar chart",  "line chart", "time dependence", "time independence"]
       },
       {
         "dataset": "vip_detection_count",
@@ -79,7 +69,7 @@
         "datatype": "incident_type",
         "datatype_label": "Incident type",
         "datarange": ["date", "week", "month", "year"],
-        "widget": ["number", "time dependence", "time independence"]
+        "widget": ["number","bar chart",  "line chart", "time dependence", "time independence"]
       }
     ],
     "classification": [
@@ -98,7 +88,7 @@
   "asset": {
     "asset_type": [
       {
-        "dataset": "hvac_(heating_ventilation_and_air_conditioning)",
+        "dataset": "hvac",
         "dataset_label": "HVAC (Heating Ventilation and Air Conditioning)",
         "subject": "asset",
         "subject_label": "Asset",
@@ -130,106 +120,6 @@
       {
         "dataset": "access_control_systems",
         "dataset_label": "Access Control Systems",
-        "subject": "asset",
-        "subject_label": "Asset",
-        "datatype": "asset_type",
-        "datatype_label": "Asset Type",
-        "datarange": ["date", "week", "month", "year"],
-        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
-      },
-      {
-        "dataset": "lighting_systems",
-        "dataset_label": "Lighting Systems",
-        "subject": "asset",
-        "subject_label": "Asset",
-        "datatype": "asset_type",
-        "datatype_label": "Asset Type",
-        "datarange": ["date", "week", "month", "year"],
-        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
-      },
-      {
-        "dataset": "fire_and_notification_systems",
-        "dataset_label": "Fire and Notification Systems",
-        "subject": "asset",
-        "subject_label": "Asset",
-        "datatype": "asset_type",
-        "datatype_label": "Asset Type",
-        "datarange": ["date", "week", "month", "year"],
-        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
-      },
-      {
-        "dataset": "elevators_and_transportation_systems",
-        "dataset_label": "Elevators and Transportation Systems",
-        "subject": "asset",
-        "subject_label": "Asset",
-        "datatype": "asset_type",
-        "datatype_label": "Asset Type",
-        "datarange": ["date", "week", "month", "year"],
-        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
-      },
-      {
-        "dataset": "electrical_and_power_systems",
-        "dataset_label": "Electrical and Power Systems",
-        "subject": "asset",
-        "subject_label": "Asset",
-        "datatype": "asset_type",
-        "datatype_label": "Asset Type",
-        "datarange": ["date", "week", "month", "year"],
-        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
-      },
-      {
-        "dataset": "water_and_pump_systems",
-        "dataset_label": "Water and Pump Systems",
-        "subject": "asset",
-        "subject_label": "Asset",
-        "datatype": "asset_type",
-        "datatype_label": "Asset Type",
-        "datarange": ["date", "week", "month", "year"],
-        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
-      },
-      {
-        "dataset": "water_treatment_systems",
-        "dataset_label": "Water Treatment Systems",
-        "subject": "asset",
-        "subject_label": "Asset",
-        "datatype": "asset_type",
-        "datatype_label": "Asset Type",
-        "datarange": ["date", "week", "month", "year"],
-        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
-      },
-      {
-        "dataset": "flood_control_systems",
-        "dataset_label": "Flood Control Systems",
-        "subject": "asset",
-        "subject_label": "Asset",
-        "datatype": "asset_type",
-        "datatype_label": "Asset Type",
-        "datarange": ["date", "week", "month", "year"],
-        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
-      },
-      {
-        "dataset": "solar_systems",
-        "dataset_label": "Solar Systems",
-        "subject": "asset",
-        "subject_label": "Asset",
-        "datatype": "asset_type",
-        "datatype_label": "Asset Type",
-        "datarange": ["date", "week", "month", "year"],
-        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
-      },
-      {
-        "dataset": "networking_and_communication_systems",
-        "dataset_label": "Networking and Communication Systems",
-        "subject": "asset",
-        "subject_label": "Asset",
-        "datatype": "asset_type",
-        "datatype_label": "Asset Type",
-        "datarange": ["date", "week", "month", "year"],
-        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
-      },
-      {
-        "dataset": "internal_communication_systems",
-        "dataset_label": "Internal Communication Systems",
         "subject": "asset",
         "subject_label": "Asset",
         "datatype": "asset_type",
