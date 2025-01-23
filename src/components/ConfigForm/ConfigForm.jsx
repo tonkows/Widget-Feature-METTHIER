@@ -79,7 +79,7 @@ const ConfigForm = ({ isCollapsed }) => {
             setSelectedButton("custom");
             setSubject1(config.subject);
             setDatatype1(config.datatype);
-            setSelectedChart(config.chartType);
+            setSelectedChart(config.chartType || config.selectedChart);
             setChartData(config.chartData);
             setChartOptions(config.chartOptions);
 
@@ -95,6 +95,30 @@ const ConfigForm = ({ isCollapsed }) => {
 
             if (config.ranges) {
               setSelectedRanges(config.ranges);
+              if (config.ranges[0] === "date") {
+                setDateVisible(true);
+              }
+            }
+
+            if (config.chartOptions) {
+              setChartOptions({
+                ...defaultChartOptions,
+                ...config.chartOptions,
+                plugins: {
+                  ...defaultChartOptions.plugins,
+                  ...config.chartOptions?.plugins,
+                  title: {
+                    ...defaultChartOptions.plugins.title,
+                    ...config.chartOptions?.plugins?.title,
+                    text: [config.subject, config.datatype]
+                  }
+                }
+              });
+            }
+
+            if (config.dataset && config.ranges) {
+              const data = generateChartData(config.dataset, config.ranges);
+              setChartData(data);
             }
 
           } else {
@@ -326,7 +350,7 @@ const ConfigForm = ({ isCollapsed }) => {
     }
   };
 
-  const generateChartData = (dataset, range) => {
+  const generateChartData = (data, ranges) => {
     const chartData = {
       labels: [],
       datasets: []
@@ -334,37 +358,54 @@ const ConfigForm = ({ isCollapsed }) => {
   
     if (!datasetData) return chartData;
   
-    const data = datasetData.dataByRange[range];
+    const dataByRange = datasetData.dataByRange;
   
-    if (range === "date") {
-      if (!selectedRanges[1] || !selectedRanges[1][0] || !selectedRanges[1][1]) {
-        return chartData;
-      }
-
-      const selectedStartDate = selectedRanges[1][0]?.toDate();
-      const selectedEndDate = selectedRanges[1][1]?.toDate();
+    if (ranges && ranges.length === 2) {
+      const startDate = moment.isMoment(ranges[0]) ? ranges[0] : moment(ranges[0]);
+      const endDate = moment.isMoment(ranges[1]) ? ranges[1] : moment(ranges[1]);
   
-      data.labels.forEach((label, index) => {
-        const date = moment(label, "D/M/YYYY").toDate();
-        if (date >= selectedStartDate && date <= selectedEndDate) {
-          chartData.labels.push(label);
-          data.datasets.forEach((ds, dsIndex) => {
-            if (!chartData.datasets[dsIndex]) {
-              chartData.datasets[dsIndex] = {
-                label: ds.label,
-                data: [],
-                backgroundColor: ds.backgroundColor,
-                borderColor: ds.borderColor,
-                borderWidth: ds.borderWidth
-              };
+      for (const range in dataByRange) {
+        const rangeData = dataByRange[range];
+        if (range === "date") {
+          if (!ranges[1] || !ranges[1][0] || !ranges[1][1]) {
+            continue;
+          }
+  
+          const selectedStartDate = ranges[0][0]?.toDate();
+          const selectedEndDate = ranges[1][1]?.toDate();
+  
+          rangeData.labels.forEach((label, index) => {
+            const date = moment(label, "D/M/YYYY").toDate();
+            if (date >= selectedStartDate && date <= selectedEndDate) {
+              chartData.labels.push(label);
+              rangeData.datasets.forEach((ds, dsIndex) => {
+                if (!chartData.datasets[dsIndex]) {
+                  chartData.datasets[dsIndex] = {
+                    label: ds.label,
+                    data: [],
+                    backgroundColor: ds.backgroundColor,
+                    borderColor: ds.borderColor,
+                    borderWidth: ds.borderWidth
+                  };
+                }
+                chartData.datasets[dsIndex].data.push(ds.data[index]);
+              });
             }
-            chartData.datasets[dsIndex].data.push(ds.data[index]);
           });
+        } else {
+          chartData.labels = rangeData.labels;
+          chartData.datasets = rangeData.datasets.map((ds) => ({
+            ...ds,
+            backgroundColor: ds.backgroundColor,
+            borderColor: ds.borderColor,
+            borderWidth: ds.borderWidth
+          }));
         }
-      });
+      }
     } else {
-      chartData.labels = data.labels;
-      chartData.datasets = data.datasets.map((ds) => ({
+      const rangeData = dataByRange[ranges[0]];
+      chartData.labels = rangeData.labels;
+      chartData.datasets = rangeData.datasets.map((ds) => ({
         ...ds,
         backgroundColor: ds.backgroundColor,
         borderColor: ds.borderColor,
@@ -384,7 +425,7 @@ const ConfigForm = ({ isCollapsed }) => {
           return;
         }
       }
-      const data = generateChartData(dataset1, selectedRanges[0]);
+      const data = generateChartData(dataset1, selectedRanges);
       setChartData(data);
     }
   }, [dataset1, selectedRanges, datasetData]);
@@ -451,7 +492,9 @@ const ConfigForm = ({ isCollapsed }) => {
       subject1,
       datatype1,
       dataset1,
-      ranges: selectedRanges,
+      ranges: selectedRanges.map(date => 
+        moment.isMoment(date) ? date.format() : date
+      ),
       selectedChart,
       chartData,
       chartOptions,
@@ -463,7 +506,9 @@ const ConfigForm = ({ isCollapsed }) => {
       subject: subject1,
       datatype: datatype1,
       dataset: dataset1,
-      ranges: selectedRanges,
+      ranges: selectedRanges.map(date => 
+        moment.isMoment(date) ? date.format() : date
+      ),
       chartType: selectedChart,
       chartData: chartData,
       chartOptions: chartOptions
@@ -481,7 +526,19 @@ const ConfigForm = ({ isCollapsed }) => {
       setSubject1(state.subject1);
       setDatatype1(state.datatype1);
       setDataset1(state.dataset1);
-      setSelectedRanges(state.ranges || []);
+      
+      if (state.ranges && state.ranges.length === 2) {
+        try {
+          setSelectedRanges([
+            moment(state.ranges[0]),
+            moment(state.ranges[1])
+          ]);
+        } catch (error) {
+          console.error('Error converting dates:', error);
+          setSelectedRanges(state.ranges);
+        }
+      }
+      
       setSelectedChart(state.selectedChart);
       setChartData(state.chartData);
       setChartOptions(state.chartOptions);
