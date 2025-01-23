@@ -1,0 +1,495 @@
+{
+    "Left-TopLeft": {
+      "subject": "asset",
+      "datatype": "asset_maintenance",
+      "chartType": "bar chart",
+      "chartData": {
+        "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
+        "datasets": [{
+          "label": "Maintenance Cost",
+          "data": [1200, 1900, 1500, 1700, 2000],
+          "backgroundColor": "rgba(54, 162, 235, 0.5)",
+          "borderColor": "rgba(54, 162, 235, 1)",
+          "borderWidth": 1
+        }]
+      },
+      "chartOptions": {
+        "responsive": true,
+        "maintainAspectRatio": false,
+        "plugins": {
+          "legend": {
+            "display": true,
+            "position": "top",
+            "labels": {
+              "boxWidth": 10,
+              "padding": 5,
+              "font": {
+                "size": 8
+              }
+            }
+          },
+          "title": {
+            "display": true,
+            "text": ["Asset", "Asset Maintenance"],
+            "position": "top",
+            "align": "start",
+            "font": {
+              "size": 10,
+              "weight": "bold"
+            },
+            "padding": {
+              "top": 5,
+              "bottom": 5
+            }
+          }
+        }
+      }
+    },
+    "Right-TopRight": {
+      "subject": "asset",
+      "datatype": "asset_type",
+      "chartType": "doughnut chart",
+      "chartData": {
+        "labels": ["Dome Camera", "PTZ Camera", "Bullet Camera"],
+        "datasets": [{
+          "label": "Asset Types",
+          "data": [30, 20, 25],
+          "backgroundColor": [
+            "rgba(255, 99, 132, 0.5)",
+            "rgba(54, 162, 235, 0.5)",
+            "rgba(255, 206, 86, 0.5)"
+          ],
+          "borderColor": [
+            "rgba(255, 99, 132, 1)",
+            "rgba(54, 162, 235, 1)",
+            "rgba(255, 206, 86, 1)"
+          ],
+          "borderWidth": 1
+        }]
+      },
+      "chartOptions": {
+        "responsive": true,
+        "maintainAspectRatio": false,
+        "plugins": {
+          "legend": {
+            "display": true,
+            "position": "top",
+            "labels": {
+              "boxWidth": 10,
+              "padding": 5,
+              "font": {
+                "size": 8
+              }
+            }
+          },
+          "title": {
+            "display": true,
+            "text": ["Asset", "Asset Types"],
+            "position": "top",
+            "align": "start",
+            "font": {
+              "size": 10,
+              "weight": "bold"
+            },
+            "padding": {
+              "top": 5,
+              "bottom": 5
+            }
+          }
+        }
+      }
+    },
+    "Left-MiddleTopLeft": {
+      "subject": "DJSI",
+      "datatype": "score",
+      "chartType": "line chart",
+      "chartData": {
+        "labels": ["2019", "2020", "2021", "2022", "2023"],
+        "datasets": [{
+          "label": "DJSI Score",
+          "data": [75, 78, 82, 85, 88],
+          "backgroundColor": "rgba(75, 192, 192, 0.5)",
+          "borderColor": "rgba(75, 192, 192, 1)",
+          "borderWidth": 1
+        }]
+      },
+      "chartOptions": {
+        "responsive": true,
+        "maintainAspectRatio": false,
+        "plugins": {
+          "legend": {
+            "display": true,
+            "position": "top",
+            "labels": {
+              "boxWidth": 10,
+              "padding": 5,
+              "font": {
+                "size": 8
+              }
+            }
+          },
+          "title": {
+            "display": true,
+            "text": ["DJSI", "Score"],
+            "position": "top",
+            "align": "start",
+            "font": {
+              "size": 10,
+              "weight": "bold"
+            },
+            "padding": {
+              "top": 5,
+              "bottom": 5
+            }
+          }
+        }
+      }
+    },
+    "Right-MiddleTopRight": {
+      "subject": "GHG",
+      "datatype": "emission",
+      "chartType": "bar chart",
+      "chartData": {
+        "labels": ["2019", "2020", "2021", "2022", "2023"],
+        "datasets": [{
+          "label": "GHG Emission",
+          "data": [100, 95, 85, 80, 75],
+          "backgroundColor": "rgba(255, 99, 132, 0.5)",
+          "borderColor": "rgba(255, 99, 132, 1)",
+          "borderWidth": 1
+        }]
+      },
+      "chartOptions": {
+        "responsive": true,
+        "maintainAspectRatio": false,
+        "plugins": {
+          "legend": {
+            "display": true,
+            "position": "top",
+            "labels": {
+              "boxWidth": 10,
+              "padding": 5,
+              "font": {
+                "size": 8
+              }
+            }
+          },
+          "title": {
+            "display": true,
+            "text": ["GHG", "Emission"],
+            "position": "top",
+            "align": "start",
+            "font": {
+              "size": 10,
+              "weight": "bold"
+            },
+            "padding": {
+              "top": 5,
+              "bottom": 5
+            }
+          }
+        }
+      }
+    },
+    "Left-MiddleBottomLeft": {
+      "subject": "water",
+      "datatype": "consumption",
+      "chartType": "bar chart",
+      "chartData": {
+        "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
+        "datasets": [{
+          "label": "Water Consumption",
+          "data": [100, 120, 110, 130, 140],
+          "backgroundColor": "rgba(75, 192, 192, 0.5)",
+          "borderColor": "rgba(75, 192, 192, 1)",
+          "borderWidth": 1
+        }]
+      },
+      "chartOptions": {
+        "responsive": true,
+        "maintainAspectRatio": false,
+        "plugins": {
+          "legend": {
+            "display": true,
+            "position": "top",
+            "labels": {
+              "boxWidth": 10,
+              "padding": 5,
+              "font": {
+                "size": 8
+              }
+            }
+          },
+          "title": {
+            "display": true,
+            "text": ["Water", "Consumption"],
+            "position": "top",
+            "align": "start",
+            "font": {
+              "size": 10,
+              "weight": "bold"
+            },
+            "padding": {
+              "top": 5,
+              "bottom": 5
+            }
+          }
+        }
+      }
+    },
+    "Right-MiddleBottomRight": {
+      "subject": "waste",
+      "datatype": "recycled",
+      "chartType": "doughnut chart",
+      "chartData": {
+        "labels": ["Organic", "Plastic", "Metal", "Glass", "Paper"],
+        "datasets": [{
+          "label": "Waste Recycled",
+          "data": [30, 20, 25, 15, 10],
+          "backgroundColor": [
+            "rgba(255, 99, 132, 0.5)",
+            "rgba(54, 162, 235, 0.5)",
+            "rgba(255, 206, 86, 0.5)",
+            "rgba(75, 192, 192, 0.5)",
+            "rgba(153, 102, 255, 0.5)"
+          ],
+          "borderColor": [
+            "rgba(255, 99, 132, 1)",
+            "rgba(54, 162, 235, 1)",
+            "rgba(255, 206, 86, 1)",
+            "rgba(75, 192, 192, 1)",
+            "rgba(153, 102, 255, 1)"
+          ],
+          "borderWidth": 1
+        }]
+      },
+      "chartOptions": {
+        "responsive": true,
+        "maintainAspectRatio": false,
+        "plugins": {
+          "legend": {
+            "display": true,
+            "position": "top",
+            "labels": {
+              "boxWidth": 10,
+              "padding": 5,
+              "font": {
+                "size": 8
+              }
+            }
+          },
+          "title": {
+            "display": true,
+            "text": ["Waste", "Recycled"],
+            "position": "top",
+            "align": "start",
+            "font": {
+              "size": 10,
+              "weight": "bold"
+            },
+            "padding": {
+              "top": 5,
+              "bottom": 5
+            }
+          }
+        }
+      }
+    },
+    "Left-BottomLeft": {
+      "subject": "energy",
+      "datatype": "usage",
+      "chartType": "line chart",
+      "chartData": {
+        "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
+        "datasets": [{
+          "label": "Energy Usage",
+          "data": [1000, 1200, 1100, 1300, 1400],
+          "backgroundColor": "rgba(75, 192, 192, 0.5)",
+          "borderColor": "rgba(75, 192, 192, 1)",
+          "borderWidth": 1
+        }]
+      },
+      "chartOptions": {
+        "responsive": true,
+        "maintainAspectRatio": false,
+        "plugins": {
+          "legend": {
+            "display": true,
+            "position": "top",
+            "labels": {
+              "boxWidth": 10,
+              "padding": 5,
+              "font": {
+                "size": 8
+              }
+            }
+          },
+          "title": {
+            "display": true,
+            "text": ["Energy", "Usage"],
+            "position": "top",
+            "align": "start",
+            "font": {
+              "size": 10,
+              "weight": "bold"
+            },
+            "padding": {
+              "top": 5,
+              "bottom": 5
+            }
+          }
+        }
+      }
+    },
+    "Right-BottomRight": {
+      "subject": "social",
+      "datatype": "training",
+      "chartType": "bar chart",
+      "chartData": {
+        "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
+        "datasets": [{
+          "label": "Training Hours",
+          "data": [20, 25, 22, 28, 30],
+          "backgroundColor": "rgba(255, 99, 132, 0.5)",
+          "borderColor": "rgba(255, 99, 132, 1)",
+          "borderWidth": 1
+        }]
+      },
+      "chartOptions": {
+        "responsive": true,
+        "maintainAspectRatio": false,
+        "plugins": {
+          "legend": {
+            "display": true,
+            "position": "top",
+            "labels": {
+              "boxWidth": 10,
+              "padding": 5,
+              "font": {
+                "size": 8
+              }
+            }
+          },
+          "title": {
+            "display": true,
+            "text": ["Social", "Training"],
+            "position": "top",
+            "align": "start",
+            "font": {
+              "size": 10,
+              "weight": "bold"
+            },
+            "padding": {
+              "top": 5,
+              "bottom": 5
+            }
+          }
+        }
+      }
+    },
+    "BottomCenter-Left": {
+      "subject": "compliance",
+      "datatype": "incidents",
+      "chartType": "bar chart",
+      "chartData": {
+        "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
+        "datasets": [{
+          "label": "Compliance Incidents",
+          "data": [5, 7, 6, 8, 10],
+          "backgroundColor": "rgba(255, 99, 132, 0.5)",
+          "borderColor": "rgba(255, 99, 132, 1)",
+          "borderWidth": 1
+        }]
+      },
+      "chartOptions": {
+        "responsive": true,
+        "maintainAspectRatio": false,
+        "plugins": {
+          "legend": {
+            "display": true,
+            "position": "top",
+            "labels": {
+              "boxWidth": 10,
+              "padding": 5,
+              "font": {
+                "size": 8
+              }
+            }
+          },
+          "title": {
+            "display": true,
+            "text": ["Compliance", "Incidents"],
+            "position": "top",
+            "align": "start",
+            "font": {
+              "size": 10,
+              "weight": "bold"
+            },
+            "padding": {
+              "top": 5,
+              "bottom": 5
+            }
+          }
+        }
+      }
+    },
+    "BottomCenter-Right": {
+      "subject": "innovation",
+      "datatype": "projects",
+      "chartType": "doughnut chart",
+      "chartData": {
+        "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
+        "datasets": [{
+          "label": "Innovation Projects",
+          "data": [3, 5, 4, 6, 8],
+          "backgroundColor": [
+            "rgba(255, 99, 132, 0.5)",
+            "rgba(54, 162, 235, 0.5)",
+            "rgba(255, 206, 86, 0.5)",
+            "rgba(75, 192, 192, 0.5)",
+            "rgba(153, 102, 255, 0.5)"
+          ],
+          "borderColor": [
+            "rgba(255, 99, 132, 1)",
+            "rgba(54, 162, 235, 1)",
+            "rgba(255, 206, 86, 1)",
+            "rgba(75, 192, 192, 1)",
+            "rgba(153, 102, 255, 1)"
+          ],
+          "borderWidth": 1
+        }]
+      },
+      "chartOptions": {
+        "responsive": true,
+        "maintainAspectRatio": false,
+        "plugins": {
+          "legend": {
+            "display": true,
+            "position": "top",
+            "labels": {
+              "boxWidth": 10,
+              "padding": 5,
+              "font": {
+                "size": 8
+              }
+            }
+          },
+          "title": {
+            "display": true,
+            "text": ["Innovation", "Projects"],
+            "position": "top",
+            "align": "start",
+            "font": {
+              "size": 10,
+              "weight": "bold"
+            },
+            "padding": {
+              "top": 5,
+              "bottom": 5
+            }
+          }
+        }
+      }
+    }
+  } 
+  

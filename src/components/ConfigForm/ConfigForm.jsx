@@ -17,6 +17,7 @@ import {
   Legend,
 } from "chart.js";
 import subjectData from "../data/subject_data.json";
+import defaultBlockContents from '../defaultdata/block_default_content.json';
 
 ChartJS.register(
   CategoryScale,
@@ -48,71 +49,75 @@ const ConfigForm = ({ isCollapsed }) => {
   const navigate = useNavigate();
   const blockId = searchParams.get('block');
   const [chartOptions, setChartOptions] = useState(null);
+  
+  const [originalSubjectData,setOriginalSubjectData] = useState(null);
+
+ 
 
   useEffect(() => {
     console.log("Set selected chart " + selectedChart);
   }, [selectedChart]);
 
   useEffect(() => {
+    setOriginalSubjectData(subjectData);
     const loadInitialData = async () => {
-      if (blockId) {
-        const savedConfig = localStorage.getItem(`block-config-${blockId}`);
-        if (savedConfig) {
-          const config = JSON.parse(savedConfig);
-          setSelectedButton(config.selectedButton);
-          setSubject1(config.subject);
-          setDatatype1(config.datatype);
-          setDataset1(config.dataset);
-          setSelectedRanges(config.ranges);
-          setSelectedChart(config.selectedChart);
-          setChartData(config.chartData);
-          setChartOptions(config.chartOptions);
-
-          if (config.subject && config.datatype && config.dataset) {
-            try {
-              const response = await import(`../data/${config.subject}/${config.datatype}/${config.dataset}.json`);
-              setDatasetData(response.default);
-            } catch (error) {
-              console.error("Error loading dataset:", error);
-            }
-          }
-
-          localStorage.removeItem(`block-config-${blockId}`);
-          return;
-        }
-
+      if (blockId && subjectData) {
         const blockConfig = localStorage.getItem(`block-${blockId}`);
+        
         if (blockConfig) {
           const config = JSON.parse(blockConfig);
           
-          if (config.dataset) {
+          const isDefaultContent = JSON.stringify(config) === JSON.stringify({
+            subject: defaultBlockContents[blockId]?.subject,
+            datatype: defaultBlockContents[blockId]?.datatype,
+            chartType: defaultBlockContents[blockId]?.chartType,
+            chartData: defaultBlockContents[blockId]?.chartData,
+            chartOptions: defaultBlockContents[blockId]?.chartOptions
+          });
+
+          if (!isDefaultContent) {
             setSelectedButton("custom");
+            setSubject1(config.subject);
+            setDatatype1(config.datatype);
+            setSelectedChart(config.chartType);
+            setChartData(config.chartData);
+            setChartOptions(config.chartOptions);
+
+            if (config.dataset) {
+              setDataset1(config.dataset);
+              try {
+                const response = await import(`../data/${config.subject}/${config.datatype}/${config.dataset}.json`);
+                setDatasetData(response.default);
+              } catch (error) {
+                console.error("Error loading dataset:", error);
+              }
+            }
+
+            if (config.ranges) {
+              setSelectedRanges(config.ranges);
+            }
+
           } else {
             setSelectedButton("default");
+            setSubject1(defaultBlockContents[blockId]?.subject);
+            setDatatype1(defaultBlockContents[blockId]?.datatype);
+            setSelectedChart(defaultBlockContents[blockId]?.chartType);
+            setChartData(defaultBlockContents[blockId]?.chartData);
+            setChartOptions(defaultBlockContents[blockId]?.chartOptions);
           }
-          
-          setSubject1(config.subject);
-          setDatatype1(config.datatype);
-          setDataset1(config.dataset);
-          setSelectedRanges(config.ranges || []);
-          setSelectedChart(config.selectedChart);
-          setChartData(config.chartData);
-          setChartOptions(config.chartOptions);
-
-          if (config.subject && config.datatype && config.dataset) {
-            try {
-              const response = await import(`../data/${config.subject}/${config.datatype}/${config.dataset}.json`);
-              setDatasetData(response.default);
-            } catch (error) {
-              console.error("Error loading dataset:", error);
-            }
-          }
+        } else {
+          setSelectedButton("default");
+          setSubject1(defaultBlockContents[blockId]?.subject);
+          setDatatype1(defaultBlockContents[blockId]?.datatype);
+          setSelectedChart(defaultBlockContents[blockId]?.chartType);
+          setChartData(defaultBlockContents[blockId]?.chartData);
+          setChartOptions(defaultBlockContents[blockId]?.chartOptions);
         }
       }
     };
 
     loadInitialData();
-  }, [blockId]);
+  }, [blockId, subjectData]);
 
   const loadDatasetData = async (subject, datatype, dataset) => {
     if (!subject || !datatype || !dataset) {
@@ -419,25 +424,16 @@ const ConfigForm = ({ isCollapsed }) => {
 
 
   const handleGenerate = () => {
-    if (!selectedChart || !chartData) {
-      Modal.error({
-        title: 'Error',
-        content: 'Please select a chart type and ensure data is loaded'
-      });
-      return;
-    }
-
-    const blockConfig = {
+    const config = {
       subject: subject1,
       datatype: datatype1,
       dataset: dataset1,
       ranges: selectedRanges,
       selectedChart: selectedChart,
       chartData: chartData,
-      chartOptions: chartOptions || defaultChartOptions
+      chartOptions: chartOptions
     };
-
-    localStorage.setItem(`block-${blockId}`, JSON.stringify(blockConfig));
+    localStorage.setItem(`block-${blockId}`, JSON.stringify(config));
     navigate('/');
   };
 
@@ -450,31 +446,60 @@ const ConfigForm = ({ isCollapsed }) => {
       return;
     }
 
+    const configState = {
+      selectedButton,
+      subject1,
+      datatype1,
+      dataset1,
+      ranges: selectedRanges,
+      selectedChart,
+      chartData,
+      chartOptions,
+    };
+
+    localStorage.setItem('configState', JSON.stringify(configState));
+    
     const previewData = {
       subject: subject1,
       datatype: datatype1,
       dataset: dataset1,
       ranges: selectedRanges,
-      selectedChart: selectedChart,
+      chartType: selectedChart,
       chartData: chartData,
-      chartOptions: chartOptions || defaultChartOptions
+      chartOptions: chartOptions
     };
     localStorage.setItem('previewData', JSON.stringify(previewData));
     
     navigate(`/preview?block=${blockId}`);
   };
 
+  useEffect(() => {
+    const savedState = localStorage.getItem('configState');
+    if (savedState) {
+      const state = JSON.parse(savedState);
+      setSelectedButton(state.selectedButton);
+      setSubject1(state.subject1);
+      setDatatype1(state.datatype1);
+      setDataset1(state.dataset1);
+      setSelectedRanges(state.ranges || []);
+      setSelectedChart(state.selectedChart);
+      setChartData(state.chartData);
+      setChartOptions(state.chartOptions);
+      localStorage.removeItem('configState');
+    }
+  }, []);
+
   const defaultContent = {
     subject: "asset",
-    datatype: "asset_type",
+    datatype: "asset_maintenance",
     chartType: "bar chart",
     chartData: {
-      labels: ["2019", "2020", "2021", "2022", "2023"],
+      labels: ["Jan", "Feb", "Mar", "Apr", "May"],
       datasets: [{
-        label: 'DJSI Score',
-        data: [75, 78, 82, 85, 88],
-        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-        borderColor: 'rgba(54, 162, 235, 1)',
+        label: "Maintenance Cost",
+        data: [1200, 1900, 1500, 1700, 2000],
+        backgroundColor: "rgba(54, 162, 235, 0.5)",
+        borderColor: "rgba(54, 162, 235, 1)",
         borderWidth: 1
       }]
     },
@@ -485,14 +510,26 @@ const ConfigForm = ({ isCollapsed }) => {
         legend: {
           display: true,
           position: 'top',
+          labels: {
+            boxWidth: 10,
+            padding: 5,
+            font: {
+              size: 8
+            }
+          }
         },
         title: {
           display: true,
+          text: ['Asset', 'Asset Maintenance'],
           position: 'top',
           align: 'start',
           font: {
-            size: 14,
+            size: 10,
             weight: 'bold'
+          },
+          padding: {
+            top: 5,
+            bottom: 5
           }
         }
       }
@@ -536,12 +573,9 @@ const ConfigForm = ({ isCollapsed }) => {
             onChange={handleSubjectChange1}
             value={subject1}
           >
-            {Object.keys(subjectData).map((key) => (
+            {subjectData && Object.keys(subjectData).map((key) => (
               <Option key={key} value={key}>
-                {
-                  subjectData[key][Object.keys(subjectData[key])[0]][0]
-                    .subject_label
-                }
+                {key}
               </Option>
             ))}
           </StyledSelect>
@@ -555,12 +589,11 @@ const ConfigForm = ({ isCollapsed }) => {
             value={datatype1}
             disabled={!subject1}
           >
-            {subject1 &&
-              Object.keys(subjectData[subject1]).map((datatype) => (
-                <Option key={datatype} value={datatype}>
-                  {subjectData[subject1][datatype][0].datatype_label}
-                </Option>
-              ))}
+            {subject1 && subjectData && Object.keys(subjectData[subject1] || {}).map((datatype) => (
+              <Option key={datatype} value={datatype}>
+                {subjectData[subject1][datatype][0].datatype_label}
+              </Option>
+            ))}
           </StyledSelect>
 
           <Label>
@@ -775,14 +808,34 @@ const ConfigForm = ({ isCollapsed }) => {
           <Link to="/">Home</Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>Default</Breadcrumb.Item>
-      </Breadcrumb>
-          <Label>Default Content</Label>
+      </Breadcrumb>   
           <Label>
-            Subject: {defaultContent.subject}
+            Select Subject <Required>*</Required>
           </Label>
+          <StyledSelect
+            placeholder="Select Subject"
+            value={defaultContent.subject}
+          >
+            {Object.keys(subjectData).map((key) => (
+              <Option key={key} value={key}>
+                {subjectData[key][Object.keys(subjectData[key])[0]][0].subject_label}
+              </Option>
+            ))}
+          </StyledSelect>
+
           <Label>
-            DataType: {defaultContent.datatype}
+            Select DataType <Required>*</Required>
           </Label>
+          <StyledSelect
+            placeholder="Select Datatype"
+            value={defaultContent.datatype}
+          >
+            {Object.keys(subjectData[defaultContent.subject] || {}).map((datatype) => (
+              <Option key={datatype} value={datatype}>
+                {subjectData[defaultContent.subject][datatype][0].datatype_label}
+              </Option>
+            ))}
+          </StyledSelect>
 
           <div style={{ 
             width: "100%", 
@@ -798,10 +851,24 @@ const ConfigForm = ({ isCollapsed }) => {
               background: "var(--card-bg-color)",
               borderRadius: "8px"
             }}>
-              <Bar
-                data={defaultContent.chartData}
-                options={defaultContent.chartOptions}
-              />
+              {defaultBlockContents[blockId]?.chartType === "bar chart" && (
+                <Bar
+                  data={defaultBlockContents[blockId]?.chartData}
+                  options={defaultBlockContents[blockId]?.chartOptions}
+                />
+              )}
+              {defaultBlockContents[blockId]?.chartType === "line chart" && (
+                <Line
+                  data={defaultBlockContents[blockId]?.chartData}
+                  options={defaultBlockContents[blockId]?.chartOptions}
+                />
+              )}
+              {defaultBlockContents[blockId]?.chartType === "doughnut chart" && (
+                <Doughnut
+                  data={defaultBlockContents[blockId]?.chartData}
+                  options={defaultBlockContents[blockId]?.chartOptions}
+                />
+              )}
             </div>
           </div>
 
@@ -815,11 +882,11 @@ const ConfigForm = ({ isCollapsed }) => {
             <StyledButton 
               onClick={() => {
                 const config = {
-                  subject: defaultContent.subject,
-                  datatype: defaultContent.datatype,
-                  selectedChart: defaultContent.chartType,
-                  chartData: defaultContent.chartData,
-                  chartOptions: defaultContent.chartOptions
+                  subject: defaultBlockContents[blockId]?.subject,
+                  datatype: defaultBlockContents[blockId]?.datatype,
+                  selectedChart: defaultBlockContents[blockId]?.chartType,
+                  chartData: defaultBlockContents[blockId]?.chartData,
+                  chartOptions: defaultBlockContents[blockId]?.chartOptions
                 };
                 localStorage.setItem(`block-${blockId}`, JSON.stringify(config));
                 navigate('/');

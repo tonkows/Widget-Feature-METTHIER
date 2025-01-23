@@ -16,6 +16,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import defaultBlockContents from '../defaultdata/block_default_content.json';
 
 ChartJS.register(
   CategoryScale,
@@ -44,41 +45,55 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
     "BottomCenter-Right": { width: 12, id: "BottomCenter-Right" },
   });
 
+  const [originalPositions, setOriginalPositions] = useState({});
+  const [blockContents, setBlockContents] = useState({});
+
   const navigate = useNavigate();
 
   
   const handleClick = (blockId) => {
     console.log(`clicked on Block ${blockId}`);
-    navigate(`/config-form?block=${blockId}`);
+    const blockConfig = localStorage.getItem(`block-${blockId}`);
+    let config;
+    
+    if (!blockConfig) {
+      config = defaultBlockContents[blockId];
+    } else {
+      config = JSON.parse(blockConfig);
+    }
+
+    const searchParams = new URLSearchParams({
+      block: blockId,
+      data: JSON.stringify(config)
+    });
+    
+    navigate(`/config-form?${searchParams.toString()}`);
   };
 
   const handleSelectBlock = (blockId) => {
     if (!isSwitching) {
       console.warn("Switching mode is not enabled!");
-      return; 
+      return;
     }
-  
+
     if (selectedBlock === null) {
       setSelectedBlock(blockId);
     } else {
       const selectedBlockWidth = blocks[selectedBlock]?.width;
       const clickedBlockWidth = blocks[blockId]?.width;
-  
+
       if (selectedBlockWidth === clickedBlockWidth) {
-        const firstBlockData = localStorage.getItem(`block-${selectedBlock}`);
-        const secondBlockData = localStorage.getItem(`block-${blockId}`);
-        
-        if (firstBlockData) {
-          localStorage.setItem(`block-${blockId}`, firstBlockData);
-        } else {
-          localStorage.removeItem(`block-${blockId}`);
-        }
-        
-        if (secondBlockData) {
-          localStorage.setItem(`block-${selectedBlock}`, secondBlockData);
-        } else {
-          localStorage.removeItem(`block-${selectedBlock}`);
-        }
+        const firstContent = blockContents[selectedBlock];
+        const secondContent = blockContents[blockId];
+
+        setBlockContents(prev => ({
+          ...prev,
+          [selectedBlock]: secondContent,
+          [blockId]: firstContent
+        }));
+
+        localStorage.setItem(`block-${blockId}`, JSON.stringify(firstContent));
+        localStorage.setItem(`block-${selectedBlock}`, JSON.stringify(secondContent));
 
         setBlocks((prevBlocks) => {
           const newBlocks = { ...prevBlocks };
@@ -102,39 +117,62 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
     }
   }, [isSwitching]);
 
+  useEffect(() => {
+    const positions = {};
+    const contents = {};
+    
+    Object.keys(blocks).forEach(blockId => {
+      positions[blockId] = blockId;
+      
+      const blockConfig = localStorage.getItem(`block-${blockId}`);
+      if (blockConfig) {
+        contents[blockId] = JSON.parse(blockConfig);
+      } else {
+        contents[blockId] = defaultBlockContents[blockId];
+      }
+    });
+    
+    setOriginalPositions(positions);
+    setBlockContents(contents);
+  }, []);
+
   const renderChart = (blockId) => {
     const blockConfig = localStorage.getItem(`block-${blockId}`);
-    if (!blockConfig) return null;
+    let config;
 
-    const config = JSON.parse(blockConfig);
+    if (!blockConfig) {
+      config = defaultBlockContents[blockId];
+    } else {
+      config = JSON.parse(blockConfig);
+    }
+
+    if (!config) return null;
+
+    const chartType = config.chartType || config.selectedChart;
     const ChartComponent = {
       'bar chart': Bar,
       'line chart': Line,
       'doughnut chart': Doughnut
-    }[config.selectedChart];
+    }[chartType];
 
     if (!ChartComponent) return null;
 
-    const responsiveOptions = {
-      ...config.chartOptions,
+    const chartOptions = {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        ...config.chartOptions.plugins,
         legend: {
           display: true,
           position: 'top',
           labels: {
             boxWidth: 10,
             padding: 5,
-            font: {
-              size: 8
-            }
+            font: { size: 8 }
           }
         },
         title: {
           display: true,
-          text: config.subject,
+          text: [config.subject, config.datatype],
           position: 'top',
           align: 'start',
           font: {
@@ -146,14 +184,15 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
             bottom: 5
           }
         }
-      }
+      },
+      ...config.chartOptions
     };
 
     return (
       <ChartContainer>
         <ChartComponent
           data={config.chartData}
-          options={responsiveOptions}
+          options={chartOptions}
         />
       </ChartContainer>
     );
@@ -196,8 +235,27 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
     });
   };
 
+  const resetBlocks = () => {
+    Object.keys(originalPositions).forEach(blockId => {
+      const originalPosition = originalPositions[blockId];
+      const defaultContent = defaultBlockContents[originalPosition];
+      
+      if (defaultContent) {
+        localStorage.setItem(`block-${blockId}`, JSON.stringify(defaultContent));
+      }
+    });
+
+    setBlockContents(defaultBlockContents);
+    window.location.reload();
+  };
+
   return (
     <Container className={isCollapsed ? "isCollapsed" : "notCollapsed"}>
+      {isSwitching && (
+        <ResetButton onClick={resetBlocks}>
+          Reset Default
+        </ResetButton>
+      )}
       <WrapperDiv>
         <StyledRow gutter={[8, 8]}>
           <StyledCol span={6}>{renderColumnContent("Left")}</StyledCol>
@@ -387,4 +445,23 @@ const ChartContainer = styled.div`
   justify-content: center;
   align-items: center;
   padding: 5px;
+`;
+
+const ResetButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 8px 16px;
+  background: var(--button-bg-color);
+  color: var(--text-color);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--button-hover-bg-color);
+    transform: scale(1.05);
+  }
 `;
