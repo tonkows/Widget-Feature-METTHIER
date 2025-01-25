@@ -26,7 +26,7 @@ const App = () => {
     document.documentElement.setAttribute("theme", theme);
   }, []);
 
-  // เพิ่ม useEffect เพื่อบันทึกสถานะ sidebar
+  
   useEffect(() => {
     localStorage.setItem('sidebarCollapsed', JSON.stringify(isCollapsed));
   }, [isCollapsed]);

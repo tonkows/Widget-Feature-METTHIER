@@ -16,25 +16,15 @@ const Header = ({ toggleSidebar, isCollapsed, hasData, onEditToggle, isEditing, 
         danger: true,
       },
       onOk: () => {
-        const blockIds = [
-          "Left-TopLeft",
-          "Right-TopRight",
-          "Left-MiddleTopLeft",
-          "Right-MiddleTopRight",
-          "Left-MiddleBottomLeft",
-          "Right-MiddleBottomRight",
-          "Left-BottomLeft",
-          "Right-BottomRight",
-          "BottomCenter-Left",
-          "BottomCenter-Right"
-        ];
+       // วนลูปลบ key ทั้งหมด ยกเว้น key ที่ต้องการเก็บไว้
+      Object.keys(localStorage).forEach(key => {
+        if (key !== 'sidebarCollapsed' && key !== 'theme') {
+          localStorage.removeItem(key);
+        }
+      });
 
-        blockIds.forEach(blockId => {
-          localStorage.removeItem(`block-${blockId}`);
-        });
-
-        localStorage.removeItem('configFormData');
-        window.location.reload();
+      // รีโหลดหน้า
+      window.location.reload();
       }
     });
   };

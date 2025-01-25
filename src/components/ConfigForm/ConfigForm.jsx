@@ -4,6 +4,7 @@ import { Link, useSearchParams, useNavigate, Prompt } from "react-router-dom";
 import styled from "styled-components";
 import moment from "moment";
 import { Bar, Line, Doughnut } from "react-chartjs-2";
+import { BiCamera as CameraIcon, BiCameraOff as CameraOffIcon } from "react-icons/bi";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -165,6 +166,15 @@ const ConfigForm = ({ isCollapsed }) => {
     }
   }, [subject1, datatype1, dataset1, selectedRanges, chartData, defaultContent, blockId, selectedButton]);
 
+  useEffect(() => {
+    if (blockId) {
+      const savedTab = localStorage.getItem(`selected-tab-${blockId}`);
+      if (savedTab) {
+        setSelectedButton(savedTab);
+      }
+    }
+  }, [blockId]);
+
   const loadDatasetData = async (subject, datatype, dataset) => {
     if (!subject || !datatype || !dataset) {
       console.error("Invalid subject, datatype, or dataset");
@@ -208,6 +218,7 @@ const ConfigForm = ({ isCollapsed }) => {
           setSelectedRanges([]);
           }
           setSelectedButton(buttonType);
+          localStorage.setItem(`selected-tab-${blockId}`, buttonType);
         },
       });
     } else {
@@ -231,6 +242,7 @@ const ConfigForm = ({ isCollapsed }) => {
         }
         setSavedDefaultContent(defaultContent);
         setSelectedButton(buttonType);
+        localStorage.setItem(`selected-tab-${blockId}`, buttonType);
       } else {
         const lastDefaultConfig = localStorage.getItem(`block-${blockId}-last-default`);
         if (lastDefaultConfig) {
@@ -240,6 +252,7 @@ const ConfigForm = ({ isCollapsed }) => {
         setDataset1(null);
       setSelectedRanges([]);
       setSelectedButton(buttonType);
+      localStorage.setItem(`selected-tab-${blockId}`, buttonType);
       }
     }
   };
@@ -473,54 +486,124 @@ const ConfigForm = ({ isCollapsed }) => {
   });
 
 
-  const handleGenerate = () => {
-    if (!selectedChart || !chartData) {
-      Modal.error({
-        title: 'Error',
-        content: 'Please select a chart type and ensure data is loaded'
-      });
-      return;
+  const handlePreview = () => {
+    if (!blockId) return;
+
+    let previewData;
+    if (selectedButton === "custom") {
+      if (!selectedChart || !chartData) {
+        Modal.error({
+          title: 'Error',
+          content: 'Please select a chart type and ensure data is loaded'
+        });
+        return;
+      }
+      previewData = {
+        type: "chart-with-description",
+        selectedButton: "custom",
+        chart: {
+          type: selectedChart,
+          title: subject1,
+          subtitle: `${datatype1} - ${selectedRanges?.join(", ")}`,
+          data: chartData,
+          options: chartOptions || defaultChartOptions
+        },
+        description: {
+          title: "Custom Analysis",
+          content: `Analysis of ${subject1} data for ${datatype1}`,
+          highlights: [
+            `Period: ${selectedRanges?.join(", ")}`,
+            `Dataset: ${dataset1}`,
+            `Type: ${selectedChart}`
+          ]
+        }
+      };
+    } else {
+      // กรณี default ให้ส่งข้อมูลทั้งหมดไป
+      if (defaultContent.charts) {
+        // กรณีมีหลาย charts
+        previewData = {
+          type: "multi-chart",
+          selectedButton: "default",
+          layout: defaultContent.layout,
+          charts: defaultContent.charts.map(chart => ({
+            type: chart.type,
+            title: chart.title,
+            subtitle: chart.subtitle,
+            data: chart.data,
+            options: {
+              ...chart.options,
+              maintainAspectRatio: false,
+              responsive: true
+            }
+          }))
+        };
+      } else if (defaultContent.type === "info-display") {
+        // กรณีเป็น info-display
+        previewData = {
+          ...defaultContent,
+          selectedButton: "default"
+        };
+      } else {
+        // กรณีเป็น single chart
+        previewData = {
+          type: defaultContent.type || "chart",
+          selectedButton: "default",
+          title: defaultContent.title,
+          subtitle: defaultContent.subtitle,
+          data: defaultContent.chartData,
+          options: defaultContent.chartOptions
+        };
+      }
     }
 
-    const configData = selectedButton === "custom" ? {
-      subject: subject1,
-      datatype: datatype1,
-      dataset: dataset1,
-      ranges: selectedRanges,
-      selectedChart: selectedChart,
-      chartData: chartData,
-      chartOptions: chartOptions
-    } : defaultContent;
-
-    if (selectedButton === "default") {
-      localStorage.setItem(`block-${blockId}-last-default`, JSON.stringify(configData));
-    }
-
-    localStorage.setItem(`block-${blockId}`, JSON.stringify(configData));
-    navigate('/');
+    localStorage.setItem(`preview-${blockId}`, JSON.stringify(previewData));
+    navigate(`/preview?block=${blockId}`);
   };
 
-  const handlePreview = () => {
-    if (!selectedChart || !chartData) {
-      Modal.error({
-        title: 'Error',
-        content: 'Please select a chart type and ensure data is loaded'
-      });
-      return;
-    }
+  const handleGenerate = () => {
+    if (selectedButton === "default") {
+      // บันทึกข้อมูล default ลง localStorage โดยตรง
+      localStorage.setItem(`block-${blockId}`, JSON.stringify(defaultContent));
 
-    const previewData = {
-      subject: subject1,
-      datatype: datatype1,
-      dataset: dataset1,
-      ranges: selectedRanges,
-      selectedChart: selectedChart,
-      chartData: chartData,
-      chartOptions: chartOptions || defaultChartOptions
-    };
-    localStorage.setItem('previewData', JSON.stringify(previewData));
-    
-    navigate(`/preview?block=${blockId}`);
+      // กลับไปหน้าหลัก
+      navigate('/');
+    } else {
+      // กรณี custom ให้ทำงานเหมือนเดิม
+      if (!selectedChart || !chartData) {
+        Modal.error({
+          title: 'Error',
+          content: 'Please select a chart type and ensure data is loaded'
+        });
+        return;
+      }
+
+      const customData = {
+        subject: subject1,
+        datatype: datatype1,
+        dataset: dataset1,
+        ranges: selectedRanges,
+        selectedChart: selectedChart,
+        chartData: chartData,
+        chartOptions: chartOptions || defaultChartOptions,
+        subject_label: subject1,
+        dataset_label: dataset1,
+        subtitle: `${datatype1} - ${selectedRanges.join(", ")}`
+      };
+
+      // บันทึกข้อมูล custom
+      localStorage.setItem(`block-${blockId}`, JSON.stringify(customData));
+      localStorage.setItem(`block-${blockId}-last-default`, JSON.stringify(defaultContent));
+
+      // แสดง Modal สำเร็จ
+      Modal.success({
+        title: 'Success',
+        content: 'Chart has been generated successfully',
+        onOk: () => {
+          navigate('/');
+        }
+      });
+    }
   };
 
   const handleDefaultSubjectChange = (value) => {
@@ -533,7 +616,6 @@ const ConfigForm = ({ isCollapsed }) => {
 
   const handleDefaultDatatypeChange = async (value) => {
     try {
-
       const response = await import(`../defaultdata/${defaultContent.subject}/${value}/${value}.json`);
       const defaultData = response.default;
 
@@ -541,35 +623,11 @@ const ConfigForm = ({ isCollapsed }) => {
       setDefaultContent(prev => ({
         ...prev,
         datatype: value,
-        dataset: defaultData.dataset,
-        dataset_label: defaultData.dataset_label,
-        chartType: 'bar chart',
-        chartData: {
-          labels: defaultData.dataByRange.month.labels,
-          datasets: defaultData.dataByRange.month.datasets
-        },
-        chartOptions: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: true,
-              position: 'top',
-            },
-            title: {
-              display: true,
-              text: [
-                defaultContent.subject.split('_').map(word => 
-                  word.charAt(0).toUpperCase() + word.slice(1)
-                ).join(' '),
-                defaultData.dataset_label
-              ],
-              position: 'top',
-              align: 'start',
-              font: { size: 12, weight: 'bold' }
-            }
-          }
-        }
+        type: defaultData.type || "multi-chart",
+        layout: defaultData.layout || "horizontal",
+        charts: defaultData.charts || [],
+        items: defaultData.items || [],
+        styles: defaultData.styles || {},
       }));
     } catch (error) {
       console.error("Error loading default chart data:", error);
@@ -596,6 +654,10 @@ const ConfigForm = ({ isCollapsed }) => {
       navigate(path);
     }
   };
+
+  useEffect(() => {
+    localStorage.setItem('previousPath', '/config-form');
+  }, []);
 
   return (
     <Container isCollapsed={isCollapsed}>
@@ -928,84 +990,83 @@ const ConfigForm = ({ isCollapsed }) => {
               ))}
           </StyledSelect>
 
-          <div style={{ 
-            width: "100%", 
-            height: "300px",
+          <div style={{
             marginTop: "20px",
             display: "flex",
             justifyContent: "center",
             alignItems: "center"
           }}>
-            <div style={{
-              width: "80%",
-              height: "100%",
-              padding: "15px",
-              background: "var(--card-bg-color)",
-              borderRadius: "8px",
-              display: "flex",
-              flexDirection: defaultContent.layout === 'vertical' ? 'column' : 'row',
-              gap: "15px",
-              justifyContent: "center",
-              alignItems: "center"
-            }}>
-              {defaultContent.charts ? (
-                defaultContent.charts.map((chart, index) => (
-                  <div key={index} style={{
-                    width: defaultContent.layout === 'horizontal' ? '48%' : '90%',
-                    height: defaultContent.layout === 'horizontal' ? '100%' : '48%',
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center"
-                  }}>
-                    {(() => {
-                      const ChartComponent = {
-                        'bar chart': Bar,
-                        'line chart': Line,
-                        'doughnut chart': Doughnut
-                      }[chart.type];
-
-                      return ChartComponent ? (
-                        <ChartComponent
-                          data={chart.data}
-                          options={{
-                            ...chart.options,
-                            maintainAspectRatio: false,
-                            responsive: true,
-                            plugins: {
-                              ...chart.options.plugins,
-                              title: {
-                                display: true,
-                                text: [chart.title, chart.subtitle],
-                                position: 'top',
-                                align: 'start',
-                                font: { size: 12, weight: 'bold' }
-                              }
-                            }
-                          }}
-                        />
-                      ) : null;
-                    })()}
-                  </div>
-                ))
-              ) : (
-                <div style={{
-                  width: "90%",
-                  height: "90%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center"
-                }}>
-                  <Bar
-                    data={defaultContent.chartData}
-                    options={{
-                      ...defaultContent.chartOptions,
-                      maintainAspectRatio: false,
-                      responsive: true
+            {defaultContent.type === "info-display" ? (
+              <InfoDisplayContainer layout={defaultContent.layout}>
+                {defaultContent.items.map((item) => (
+                  <InfoItem
+                    key={item.id}
+                    style={{
+                      backgroundColor: item.style.backgroundColor,
+                      borderColor: item.style.borderColor,
+                      width: defaultContent.styles.itemWidth
                     }}
-                  />
-                </div>
-              )}
-            </div>
+                  >
+                    <InfoIcon status={item.status}>
+                      {item.icon === 'camera' ? <CameraIcon /> : <CameraOffIcon />}
+                    </InfoIcon>
+                    <InfoContent>
+                      <InfoTitle style={{ color: item.style.textColor }}>
+                        {item.title}
+                      </InfoTitle>
+                      <InfoValue style={{ color: item.style.textColor }}>
+                        {item.value}
+                        <InfoUnit>{item.unit}</InfoUnit>
+                      </InfoValue>
+                    </InfoContent>
+                  </InfoItem>
+                ))}
+              </InfoDisplayContainer>
+            ) : (
+              <ChartPreviewContainer>
+                <ChartGrid layout={defaultContent.layout}>
+                  {defaultContent.charts?.map((chart, index) => (
+                    <ChartBox 
+                      key={index}
+                      layout={defaultContent.layout}
+                      style={{
+                        width: defaultContent.styles?.chartWidth || '100%',
+                        height: defaultContent.styles?.chartHeight || '100%'
+                      }}
+                    >
+                      {(() => {
+                        const ChartComponent = {
+                          'bar chart': Bar,
+                          'line chart': Line,
+                          'doughnut chart': Doughnut
+                        }[chart.type];
+
+                        return ChartComponent ? (
+                          <ChartComponent
+                            data={chart.data}
+                            options={{
+                              ...chart.options,
+                              maintainAspectRatio: false,
+                              responsive: true,
+                              plugins: {
+                                ...chart.options.plugins,
+                                title: {
+                                  display: true,
+                                  text: [chart.title, chart.subtitle],
+                                  position: 'top',
+                                  align: 'start',
+                                  font: { size: 12, weight: 'bold' }
+                                }
+                              }
+                            }}
+                          />
+                        ) : null;
+                      })()}
+                    </ChartBox>
+                  ))}
+                </ChartGrid>
+              </ChartPreviewContainer>
+            )}
           </div>
 
           <ButtonsContainer>
@@ -1169,27 +1230,99 @@ const ButtonsContainer = styled.div`
 `;
 
 const ChartPreviewContainer = styled.div`
+  width: 800px;
+  height: 400px;
+  background: var(--card-bg-color);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 0 auto;
+`;
+
+const ChartGrid = styled.div`
   width: 100%;
-  height: 300px;
+  height: 100%;
+  display: flex;
+  flex-direction: ${props => props.layout === 'vertical' ? 'column' : 'row'};
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ChartBox = styled.div`
+  width: ${props => props.layout === 'horizontal' ? '380px' : '760px'};
+  height: ${props => props.layout === 'horizontal' ? '360px' : '170px'};
+  background: var(--background-color);
+  border-radius: 8px;
+  padding: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
-  background: var(--card-bg-color);
-  border-radius: 8px;
-  margin: 20px 0;
-  position: relative;
-
-  & > div {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
 
   canvas {
     max-width: 100% !important;
     max-height: 100% !important;
   }
+`;
+
+const SingleChartBox = styled.div`
+  width: 760px;
+  height: 360px;
+  background: var(--background-color);
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  canvas {
+    max-width: 100% !important;
+    max-height: 100% !important;
+  }
+`;
+
+const InfoDisplayContainer = styled.div`
+  padding: 20px;
+  background: var(--card-bg-color);
+  border-radius: 8px;
+  margin-top: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+const InfoItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: 1px solid ${props => props.style.borderColor};
+  border-radius: 8px;
+  width: ${props => props.style.itemWidth || '200px'};
+`;
+
+const InfoIcon = styled.div`
+  margin-right: 10px;
+  color: ${props => props.status === 'active' ? 'var(--button-color)' : 'var(--text-color)'};
+`;
+
+const InfoContent = styled.div`
+  text-align: left;
+`;
+
+const InfoTitle = styled.h4`
+  margin-bottom: 5px;
+  color: ${props => props.style.textColor || 'var(--text-color)'};
+`;
+
+const InfoValue = styled.div`
+  font-size: 24px;
+  font-weight: bold;
+  color: ${props => props.style.textColor || 'var(--text-color)'};
+`;
+
+const InfoUnit = styled.span`
+  font-size: 14px;
+  margin-left: 5px;
+  color: ${props => props.style.textColor || 'var(--text-color)'};
 `;

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col } from "antd";
+import { Row, Col, message } from "antd";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { BiEditAlt } from "react-icons/bi";
+import { BiEditAlt, BiCamera as CameraIcon, BiCameraOff as CameraOffIcon } from "react-icons/bi";
 import { Bar, Line, Doughnut } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -78,18 +78,18 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
       const clickedBlockWidth = blocks[blockId].width;
 
       if (selectedBlockWidth === clickedBlockWidth) {
-        // ดึงข้อมูล chart จาก localStorage หรือ default
+       
         const firstBlockConfig = localStorage.getItem(`block-${selectedBlock}`);
         const secondBlockConfig = localStorage.getItem(`block-${blockId}`);
         
         let firstContent = firstBlockConfig ? JSON.parse(firstBlockConfig) : defaultBlockContents[selectedBlock];
         let secondContent = secondBlockConfig ? JSON.parse(secondBlockConfig) : defaultBlockContents[blockId];
 
-        // ดึงข้อมูล last-default ของทั้งสอง block
+      
         const firstLastDefault = localStorage.getItem(`block-${selectedBlock}-last-default`);
         const secondLastDefault = localStorage.getItem(`block-${blockId}-last-default`);
 
-        // สลับข้อมูล last-default
+       
         if (firstLastDefault) {
           localStorage.setItem(`block-${blockId}-last-default`, firstLastDefault);
         } else {
@@ -102,12 +102,12 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
           localStorage.setItem(`block-${selectedBlock}-last-default`, JSON.stringify(defaultBlockContents[blockId]));
         }
 
-        // อัพเดท defaultBlockContents ด้วย
+        
         const tempDefault = defaultBlockContents[selectedBlock];
         defaultBlockContents[selectedBlock] = defaultBlockContents[blockId];
         defaultBlockContents[blockId] = tempDefault;
 
-        // สลับข้อมูล chart
+    
         setBlockContents(prev => ({
           ...prev,
           [selectedBlock]: {
@@ -120,14 +120,14 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
           }
         }));
 
-        // บันทึกตำแหน่งที่มีการแก้ไข
+    
         setModifiedPositions(prev => ({
           ...prev,
           [selectedBlock]: blockId,
           [blockId]: selectedBlock
         }));
 
-        // บันทึกลง localStorage
+        
         localStorage.setItem(`block-${blockId}`, JSON.stringify({
           ...firstContent,
           originalPosition: blockId
@@ -137,7 +137,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
           originalPosition: selectedBlock
         }));
 
-        // สลับตำแหน่ง block
+        
         setBlocks((prevBlocks) => {
           const newBlocks = { ...prevBlocks };
           [newBlocks[selectedBlock], newBlocks[blockId]] = [
@@ -149,9 +149,12 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
 
         setSelectedBlock(null);
       } else {
-        Modal.error({
-          title: "Cannot switch blocks",
+        message.error({
           content: "Can only switch blocks of the same size",
+          duration: 1,
+          style: {
+            marginTop: '50px'
+          }
         });
       }
     } else {
@@ -191,6 +194,10 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
     setModifiedPositions(modified);
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem('previousPath', '/');
+  }, []);
+
   const renderChart = (blockId) => {
     const blockConfig = localStorage.getItem(`block-${blockId}`);
     let config;
@@ -203,41 +210,80 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
 
     if (!config) return null;
 
-    // กรณีมีหลาย charts
-    if (config.charts) {
+    // เพิ่มการรองรับ info-display
+    if (config.type === "info-display") {
       return (
-        <ChartContainer layout={config.layout}>
-          {config.charts.map((chart) => {
+        <InfoDisplayContainer layout={config.layout}>
+          {config.items.map((item) => (
+            <InfoItem
+              key={item.id}
+              style={{
+                backgroundColor: item.style.backgroundColor,
+                borderColor: item.style.borderColor,
+                width: config.styles.itemWidth
+              }}
+            >
+              <InfoIcon status={item.status}>
+                {item.icon === 'camera' ? <CameraIcon /> : <CameraOffIcon />}
+              </InfoIcon>
+              <InfoContent>
+                <InfoTitle style={{ color: item.style.textColor }}>
+                  {item.title}
+                </InfoTitle>
+                <InfoValue style={{ color: item.style.textColor }}>
+                  {item.value}
+                  <InfoUnit>{item.unit}</InfoUnit>
+                </InfoValue>
+              </InfoContent>
+            </InfoItem>
+          ))}
+        </InfoDisplayContainer>
+      );
+    }
+
+    // กรณีมีหลาย charts
+    if (config.charts && Array.isArray(config.charts)) {
+      return (
+        <ChartContainer layout={config.layout || 'horizontal'}>
+          {config.charts.map((chart, index) => {
             const ChartComponent = {
               'bar chart': Bar,
               'line chart': Line,
               'doughnut chart': Doughnut
-            }[chart.type];
+            }[chart.type || chart.selectedChart];
 
             if (!ChartComponent) return null;
 
             return (
               <ChartWrapper 
-                key={chart.id}
-                layout={config.layout}
+                key={index}
+                layout={config.layout || 'horizontal'}
                 style={{
-                  height: config.styles?.chartHeight || "100%",
-                  width: config.styles?.chartWidth || "100%",
-                  margin: "0 5px"
+                  width: config.layout === 'horizontal' ? '48%' : '100%',
+                  height: config.layout === 'horizontal' ? '100%' : '48%'
                 }}
               >
                 <ChartComponent
-                  data={chart.data}
+                  data={chart.chartData || chart.data}
                   options={{
-                    ...chart.options,
+                    ...chart.chartOptions || chart.options,
+                    maintainAspectRatio: false,
+                    responsive: true,
                     plugins: {
-                      ...chart.options.plugins,
+                      legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                          boxWidth: 10,
+                          padding: 5,
+                          font: { size: 8 }
+                        }
+                      },
                       title: {
                         display: true,
-                        text: [chart.title, chart.subtitle],
-                        position: 'top',
-                        align: 'start',
-                        font: { size: 12, weight: 'bold' }
+                        text: [chart.subject_label || chart.title, chart.subtitle],
+                        font: { size: 10, weight: 'bold' },
+                        padding: { top: 5, bottom: 5 }
                       }
                     }
                   }}
@@ -249,7 +295,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
       );
     }
 
-    // กรณีมี chart เดียว (custom chart)
+    // กรณีมี chart เดียว
     const chartType = config.chartType || config.selectedChart;
     const ChartComponent = {
       'bar chart': Bar,
@@ -260,12 +306,13 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
     if (!ChartComponent) return null;
 
     return (
-      <ChartContainer>
+      <ChartWrapper>
         <ChartComponent
           data={config.chartData}
           options={{
-            responsive: true,
+            ...config.chartOptions,
             maintainAspectRatio: false,
+            responsive: true,
             plugins: {
               legend: {
                 display: true,
@@ -278,23 +325,14 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
               },
               title: {
                 display: true,
-                text: [config.subject, config.datatype],
-                position: 'top',
-                align: 'start',
-                font: {
-                  size: 10,
-                  weight: 'bold'
-                },
-                padding: {
-                  top: 5,
-                  bottom: 5
-                }
+                text: [config.subject_label, config.subtitle],
+                font: { size: 10, weight: 'bold' },
+                padding: { top: 5, bottom: 5 }
               }
-            },
-            ...config.chartOptions
+            }
           }}
         />
-      </ChartContainer>
+      </ChartWrapper>
     );
   };
 
@@ -340,42 +378,31 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
       title: 'Reset to Default',
       content: 'Are you sure you want to reset all blocks to their default content?',
       onOk: () => {
-        // ล้าง localStorage ทั้งหมด
-        Object.keys(blocks).forEach(blockId => {
-          // ล้างข้อมูลที่เกี่ยวข้องกับ block นี้ทั้งหมด
-          localStorage.removeItem(`block-${blockId}`);
-          localStorage.removeItem(`block-config-${blockId}`);
-          localStorage.removeItem(`block-${blockId}-last-default`);
-        });
-
-        // ล้างข้อมูลการสลับทั้งหมด
-        localStorage.removeItem('defaultBlockContents');
-        localStorage.removeItem('configFormData');
-        localStorage.removeItem('switched-from-block');
-
-        // นำเข้าข้อมูล default ใหม่
+      
+        localStorage.clear();
+  
+      
         const defaultContents = require('../defaultdata/block_default_content.json');
-
-        // บันทึกค่าเริ่มต้นลง localStorage ตามตำแหน่งเดิม
-        Object.keys(blocks).forEach(blockId => {
-          localStorage.setItem(`block-${blockId}`, JSON.stringify(defaultContents[blockId]));
-        });
-
-        // รีเซ็ต defaultBlockContents กลับเป็นค่าเริ่มต้น
+  
+   
         Object.keys(defaultBlockContents).forEach(key => {
           defaultBlockContents[key] = defaultContents[key];
         });
-
-        // รีเซ็ตค่าใน state
+  
+        Object.keys(defaultContents).forEach(blockId => {
+          localStorage.setItem(`block-${blockId}`, JSON.stringify(defaultContents[blockId]));
+        });
+  
+    
         setBlockContents(defaultContents);
         setModifiedPositions({});
         setSelectedBlock(null);
-
-        // รีโหลดหน้า
+ 
         window.location.reload();
       }
     });
   };
+  
 
   return (
     <Container className={isCollapsed ? "isCollapsed" : "notCollapsed"}>
@@ -571,21 +598,19 @@ const ChartContainer = styled.div`
   height: 100%;
   display: flex;
   flex-direction: ${props => props.layout === 'vertical' ? 'column' : 'row'};
-  gap: ${props => props.layout === 'vertical' ? '20px' : '15px'};
-  padding: 10px;
+  gap: 15px;
+  justify-content: space-between;
   align-items: center;
+  padding: 10px;
 `;
 
 const ChartWrapper = styled.div`
-  flex: ${props => props.layout === 'horizontal' ? '1' : 'none'};
-  width: ${props => props.layout === 'horizontal' ? '50%' : '100%'};
-  height: ${props => props.layout === 'horizontal' ? '100%' : '45%'};
-  background: var(--card-bg-color);
-  border-radius: 8px;
-  padding: 15px;
+  width: ${props => props.layout === 'horizontal' ? '48%' : '100%'};
+  height: ${props => props.layout === 'horizontal' ? '100%' : '48%'};
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 5px;
 
   canvas {
     max-width: 100% !important;
@@ -610,4 +635,58 @@ const ResetButton = styled.button`
     background: var(--button-hover-bg-color);
     transform: scale(1.05);
   }
+`;
+
+const InfoDisplayContainer = styled.div`
+  display: flex;
+  flex-direction: ${props => props.layout === 'vertical' ? 'column' : 'row'};
+  gap: 15px;
+  width: 100%;
+  height: 100%;
+  padding: 15px;
+`;
+
+const InfoItem = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const InfoIcon = styled.div`
+  font-size: 24px;
+  margin-right: 15px;
+  opacity: ${props => props.status === 'active' ? 1 : 0.7};
+`;
+
+const InfoContent = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const InfoTitle = styled.div`
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 5px;
+`;
+
+const InfoValue = styled.div`
+  font-size: 32px;
+  font-weight: 700;
+  display: flex;
+  align-items: baseline;
+`;
+
+const InfoUnit = styled.span`
+  font-size: 14px;
+  font-weight: 400;
+  margin-left: 5px;
+  opacity: 0.8;
 `;

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col } from "antd";
 import styled from "styled-components";
-import { BiArrowBack } from "react-icons/bi";
+import { BiArrowBack, BiCamera as CameraIcon, BiCameraOff as CameraOffIcon } from "react-icons/bi";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Bar, Line, Doughnut } from "react-chartjs-2";
+import defaultBlockContents from '../defaultdata/block_default_content.json';
+
 
 const Preview = ({ isCollapsed }) => {
   const navigate = useNavigate();
@@ -16,126 +18,230 @@ const Preview = ({ isCollapsed }) => {
     if (data) {
       setPreviewConfig(JSON.parse(data));
     }
+
+    // เก็บข้อมูลว่ามาจากหน้าไหน
+    const previousPath = localStorage.getItem('previousPath') || '/config-form';
+    if (window.location.pathname !== previousPath) {
+      localStorage.setItem('previousPath', window.location.pathname);
+    }
   }, []);
 
   const renderChart = (blockId) => {
-    if (blockId === searchParams.get('block') && previewConfig) {
+    // ดึงข้อมูล preview จาก localStorage
+    const previewData = localStorage.getItem(`preview-${blockId}`);
+    
+    // ถ้ามีข้อมูล preview ให้ใช้ข้อมูลนั้น
+    if (previewData) {
+      const config = JSON.parse(previewData);
+      
+      // กรณี info-display
+      if (config.type === "info-display") {
+        return (
+          <Block>
+            <InfoDisplayContainer layout={config.layout}>
+              {config.items.map((item) => (
+                <InfoItem
+                  key={item.id}
+                  style={{
+                    backgroundColor: item.style.backgroundColor,
+                    borderColor: item.style.borderColor,
+                    width: config.styles.itemWidth
+                  }}
+                >
+                  <InfoIcon status={item.status}>
+                    {item.icon === 'camera' ? <CameraIcon /> : <CameraOffIcon />}
+                  </InfoIcon>
+                  <InfoContent>
+                    <InfoTitle style={{ color: item.style.textColor }}>
+                      {item.title}
+                    </InfoTitle>
+                    <InfoValue style={{ color: item.style.textColor }}>
+                      {item.value}
+                      <InfoUnit>{item.unit}</InfoUnit>
+                    </InfoValue>
+                  </InfoContent>
+                </InfoItem>
+              ))}
+            </InfoDisplayContainer>
+          </Block>
+        );
+      }
+
+      // กรณี custom chart
+      if (config.type === "chart-with-description") {
+        const ChartComponent = {
+          'bar chart': Bar,
+          'line chart': Line,
+          'doughnut chart': Doughnut
+        }[config.chart.type];
+
+        if (!ChartComponent) return null;
+
+        return (
+          <Block>
+            <ChartContainer>
+              <ChartWrapper style={{ width: '100%', height: '100%' }}>
+                <ChartComponent
+                  data={config.chart.data}
+                  options={{
+                    ...config.chart.options,
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    plugins: {
+                      ...config.chart.options?.plugins,
+                      title: {
+                        display: true,
+                        text: [config.chart.title, config.chart.subtitle],
+                        position: 'top',
+                        align: 'start',
+                        font: { size: 12, weight: 'bold' }
+                      }
+                    }
+                  }}
+                />
+              </ChartWrapper>
+            </ChartContainer>
+          </Block>
+        );
+      }
+
+      // กรณี multi-chart
+      if (config.type === "multi-chart") {
+        return (
+          <Block>
+            <ChartContainer layout={config.layout}>
+              {config.charts.map((chart, index) => {
+                const ChartComponent = {
+                  'bar chart': Bar,
+                  'line chart': Line,
+                  'doughnut chart': Doughnut
+                }[chart.type];
+
+                if (!ChartComponent) return null;
+
+                return (
+                  <ChartWrapper 
+                    key={index}
+                    layout={config.layout}
+                    style={{
+                      width: config.layout === 'horizontal' ? '48%' : '100%',
+                      height: config.layout === 'horizontal' ? '100%' : '48%'
+                    }}
+                  >
+                    <ChartComponent
+                      data={chart.data}
+                      options={{
+                        ...chart.options,
+                        maintainAspectRatio: false,
+                        responsive: true
+                      }}
+                    />
+                  </ChartWrapper>
+                );
+              })}
+            </ChartContainer>
+          </Block>
+        );
+      }
+
+      // กรณี single chart
       const ChartComponent = {
         'bar chart': Bar,
         'line chart': Line,
         'doughnut chart': Doughnut
-      }[previewConfig.selectedChart];
+      }[config.type];
 
       if (!ChartComponent) return null;
 
-      const chartOptions = {
-        ...previewConfig.chartOptions,
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          ...previewConfig.chartOptions.plugins,
-          legend: {
-            display: true,
-            position: 'top',
-            labels: {
-              boxWidth: 10,
-              padding: 5,
-              font: {
-                size: 8
-              }
-            }
-          },
-          title: {
-            display: true,
-            text: [previewConfig.subject, previewConfig.subtitle],
-            font: {
-              size: 10,
-              weight: 'bold'
-            },
-            padding: {
-              top: 5,
-              bottom: 5
-            }
-          },
-          tooltip: {
-            callbacks: {
-              label: function(tooltipItem) {
-                return `${previewConfig.dataset_label}: ${tooltipItem.raw}`;
-              }
-            }
-          }
-        }
-      };
-
       return (
-        <ChartWrapper>
+        <Block>
           <ChartComponent
-            data={previewConfig.chartData}
-            options={chartOptions}
+            data={config.data}
+            options={{
+              ...config.options,
+              maintainAspectRatio: false,
+              responsive: true
+            }}
           />
-        </ChartWrapper>
+        </Block>
       );
     }
 
-    const blockConfig = localStorage.getItem(`block-${blockId}`);
-    if (!blockConfig) return null;
+    // ถ้าไม่มีข้อมูล preview ให้ใช้ข้อมูล default
+    const defaultConfig = defaultBlockContents[blockId];
+    if (!defaultConfig) return null;
 
-    const config = JSON.parse(blockConfig);
-    const ChartComponent = {
-      'bar chart': Bar,
-      'line chart': Line,
-      'doughnut chart': Doughnut
-    }[config.selectedChart];
+    // กรณีเป็น info-display
+    if (defaultConfig.type === "info-display") {
+      return (
+        <Block>
+          <InfoDisplayContainer layout={defaultConfig.layout}>
+            {defaultConfig.items.map((item) => (
+              <InfoItem
+                key={item.id}
+                style={{
+                  backgroundColor: item.style.backgroundColor,
+                  borderColor: item.style.borderColor,
+                  width: defaultConfig.styles.itemWidth
+                }}
+              >
+                <InfoIcon status={item.status}>
+                  {item.icon === 'camera' ? <CameraIcon /> : <CameraOffIcon />}
+                </InfoIcon>
+                <InfoContent>
+                  <InfoTitle style={{ color: item.style.textColor }}>
+                    {item.title}
+                  </InfoTitle>
+                  <InfoValue style={{ color: item.style.textColor }}>
+                    {item.value}
+                    <InfoUnit>{item.unit}</InfoUnit>
+                  </InfoValue>
+                </InfoContent>
+              </InfoItem>
+            ))}
+          </InfoDisplayContainer>
+        </Block>
+      );
+    }
 
-    if (!ChartComponent) return null;
+    // กรณีเป็น chart แบบปกติ
+    if (defaultConfig.charts && Array.isArray(defaultConfig.charts)) {
+      return (
+        <Block>
+          <ChartContainer layout={defaultConfig.layout}>
+            {defaultConfig.charts.map((chart, index) => {
+              const ChartComponent = {
+                'bar chart': Bar,
+                'line chart': Line,
+                'doughnut chart': Doughnut
+              }[chart.type];
 
-    const chartOptions = {
-      ...config.chartOptions,
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        ...config.chartOptions.plugins,
-        legend: {
-          display: true,
-          position: 'top',
-          labels: {
-            boxWidth: 10,
-            padding: 5,
-            font: {
-              size: 8
-            }
-          }
-        },
-        title: {
-          display: true,
-          text: [config.subject_label, config.subtitle],
-          font: {
-            size: 10,
-            weight: 'bold'
-          },
-          padding: {
-            top: 5,
-            bottom: 5
-          }
-        },
-        tooltip: {
-          callbacks: {
-            label: function(tooltipItem) {
-              return `${config.dataset_label}: ${tooltipItem.raw}`;
-            }
-          }
-        }
-      }
-    };
+              if (!ChartComponent) return null;
 
-    return (
-      <ChartWrapper>
-        <ChartComponent
-          data={config.chartData}
-          options={chartOptions}
-        />
-      </ChartWrapper>
-    );
+              return (
+                <ChartWrapper 
+                  key={index}
+                  layout={defaultConfig.layout}
+                  style={{
+                    width: defaultConfig.layout === 'horizontal' ? '48%' : '100%',
+                    height: defaultConfig.layout === 'horizontal' ? '100%' : '48%'
+                  }}
+                >
+                  <ChartComponent
+                    data={chart.data}
+                    options={{
+                      ...chart.options,
+                      maintainAspectRatio: false,
+                      responsive: true
+                    }}
+                  />
+                </ChartWrapper>
+              );
+            })}
+          </ChartContainer>
+        </Block>
+      );
+    }
   };
 
   const renderColumnContent = (columnId) => {
@@ -158,21 +264,54 @@ const Preview = ({ isCollapsed }) => {
     });
   };
   const handleBack = () => {
-    if (previewConfig) {
-      const savedConfig = {
-        selectedButton: "custom",
-        subject: previewConfig.subject,
-        datatype: previewConfig.datatype,
-        dataset: previewConfig.dataset,
-        ranges: previewConfig.ranges,
-        selectedChart: previewConfig.selectedChart,
-        chartData: previewConfig.chartData,
-        chartOptions: previewConfig.chartOptions
-      };
-      localStorage.setItem(`block-config-${blockId}`, JSON.stringify(savedConfig));
+    const savedPreview = localStorage.getItem(`preview-${blockId}`);
+    if (savedPreview) {
+      const previewData = JSON.parse(savedPreview);
+      const previousPath = localStorage.getItem('previousPath');
+      
+      if (previousPath === '/') {
+        navigate('/');
+      } else {
+        // ใช้ selectedButton จาก preview data
+        const selectedTab = previewData.selectedButton || "default";
+        localStorage.setItem(`selected-tab-${blockId}`, selectedTab);
+        
+        if (selectedTab === "default") {
+          const defaultConfig = defaultBlockContents[blockId];
+          const savedConfig = {
+            selectedButton: "default",
+            chartData: defaultConfig.chartData,
+            chartOptions: defaultConfig.chartOptions,
+            chartType: defaultConfig.chartType,
+            subject_label: defaultConfig.subject_label,
+            subtitle: defaultConfig.subtitle,
+            dataset_label: defaultConfig.dataset_label,
+            ranges: [],
+            subject: null,
+            datatype: null,
+            dataset: null,
+            selectedChart: defaultConfig.chartType
+          };
+          localStorage.setItem(`block-config-${blockId}`, JSON.stringify(savedConfig));
+        } else {
+          const savedConfig = {
+            selectedButton: "custom",
+            subject: previewData.chart.title,
+            datatype: previewData.chart.subtitle?.split(' - ')[0],
+            dataset: previewData.description?.highlights?.[1]?.split(': ')[1],
+            ranges: previewData.description?.highlights?.[0]?.split(': ')[1]?.split(', '),
+            selectedChart: previewData.chart.type,
+            chartData: previewData.chart.data,
+            chartOptions: previewData.chart.options
+          };
+          localStorage.setItem(`block-config-${blockId}`, JSON.stringify(savedConfig));
+        }
+        
+        navigate(`/config-form?block=${blockId}`);
+      }
+    } else {
+      navigate('/');
     }
-    
-    navigate(`/config-form?block=${blockId}`);
   };
 
   return (
@@ -245,7 +384,7 @@ const StyledRow = styled(Row)`
 `;
 
 const StyledCol = styled(Col)`
-  display: flex;
+display: flex;
   flex-direction: column;
   justify-content: space-between;
 `;
@@ -332,9 +471,20 @@ const BackButton = styled.button`
   }
 `;
 
-const ChartWrapper = styled.div`
+const ChartContainer = styled.div`
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: ${props => props.layout === 'vertical' ? 'column' : 'row'};
+  gap: 15px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+`;
+
+const ChartWrapper = styled.div`
+  width: ${props => props.layout === 'horizontal' ? '48%' : '100%'};
+  height: ${props => props.layout === 'horizontal' ? '100%' : '48%'};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -346,6 +496,59 @@ const ChartWrapper = styled.div`
   }
 `;
 
+// เพิ่ม styled components สำหรับ info-display
+const InfoDisplayContainer = styled.div`
+  display: flex;
+  flex-direction: ${props => props.layout === 'vertical' ? 'column' : 'row'};
+  gap: 15px;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+`;
 
+const InfoItem = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid;
+  transition: all 0.3s ease;
 
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+`;
 
+const InfoIcon = styled.div`
+  font-size: 24px;
+  margin-right: 15px;
+  opacity: ${props => props.status === 'active' ? 1 : 0.7};
+`;
+
+const InfoContent = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const InfoTitle = styled.div`
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 5px;
+`;
+
+const InfoValue = styled.div`
+  font-size: 32px;
+  font-weight: 700;
+  display: flex;
+  align-items: baseline;
+`;
+
+const InfoUnit = styled.span`
+  font-size: 14px;
+  font-weight: 400;
+  margin-left: 5px;
+  opacity: 0.8;
+`;
