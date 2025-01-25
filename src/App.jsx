@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation, useSearchParams } from "react-router-dom";
 import "./App.css";
 import "./Theme.css";
@@ -9,10 +9,27 @@ import ConfigForm from "./components/ConfigForm/ConfigForm";
 import Preview from './components/Preview/Preview';
 
 const App = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [theme, setTheme] = useState("light");
+  // ดึงสถานะ sidebar จาก localStorage
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    const savedSidebarState = localStorage.getItem('sidebarCollapsed');
+    return savedSidebarState ? JSON.parse(savedSidebarState) : false;
+  });
+
+  const [theme, setTheme] = useState(() => {
+    const savedTheme = localStorage.getItem('theme');
+    return savedTheme || "light";
+  });
   const [isEditing, setIsEditing] = useState(false);
   const [isSwitching, setIsSwitching] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("theme", theme);
+  }, []);
+
+  // เพิ่ม useEffect เพื่อบันทึกสถานะ sidebar
+  useEffect(() => {
+    localStorage.setItem('sidebarCollapsed', JSON.stringify(isCollapsed));
+  }, [isCollapsed]);
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
@@ -21,21 +38,22 @@ const App = () => {
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
     document.documentElement.setAttribute("theme", newTheme);
   };
 
   return (
     <Router>
-    <MainLayout
-      isCollapsed={isCollapsed}
-      toggleSidebar={toggleSidebar}
-      toggleTheme={toggleTheme}
-      isEditing={isEditing}
-      onEditToggle={() => setIsEditing((prev) => !prev)}
-      isSwitching={isSwitching}
-      onSwitchToggle={() => setIsSwitching((prev) => !prev)} 
-    />
-  </Router>
+      <MainLayout
+        isCollapsed={isCollapsed}
+        toggleSidebar={toggleSidebar}
+        toggleTheme={toggleTheme}
+        isEditing={isEditing}
+        onEditToggle={() => setIsEditing((prev) => !prev)}
+        isSwitching={isSwitching}
+        onSwitchToggle={() => setIsSwitching((prev) => !prev)} 
+      />
+    </Router>
   );
 };
 

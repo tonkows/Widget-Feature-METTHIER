@@ -1,0 +1,33 @@
+{
+  "dataset": "highest_email_notifications",
+  "dataset_label": "Highest Email Notifications",
+  "dataByRange": {
+    "date": {
+      "labels": ["1/1/2025", "2/1/2025", "3/1/2025", "4/1/2025", "5/1/2025"],
+      "datasets": [
+        {
+          "label": "Fire Alarm",
+          "data": [5, 6, 8, 7, 10],
+          "backgroundColor": "rgba(255, 99, 132, 0.5)",
+          "borderColor": "rgba(255, 99, 132, 1)",
+          "borderWidth": 1
+        }
+      ]
+      
+    },
+    "month": {
+      "labels": ["January", "February", "March"],
+      "datasets": [
+        {
+          "label": "Fire Alarm",
+          "data": [30, 35, 40],
+          "backgroundColor": "rgba(255, 99, 132, 0.5)",
+          "borderColor": "rgba(255, 99, 132, 1)",
+          "borderWidth": 1
+        }
+      
+      ]
+    }
+    
+  }
+} 

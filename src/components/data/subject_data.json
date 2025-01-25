@@ -126,6 +126,26 @@
         "datatype_label": "Asset Type",
         "datarange": ["date", "week", "month", "year"],
         "widget": ["number", "doughnut chart", "bar chart", "time independence"]
+      },
+      {
+        "dataset": "lighting_systems",
+        "dataset_label": "Lighting Systems",
+        "subject": "asset",
+        "subject_label": "Asset",
+        "datatype": "asset_type",
+        "datatype_label": "Asset Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
+      },
+      {
+        "dataset": "fire_and_notification_systems",
+        "dataset_label": "Fire and Notification Systems",
+        "subject": "asset",
+        "subject_label": "Asset",
+        "datatype": "asset_type",
+        "datatype_label": "Asset Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
       }
     ],
     "asset_maitenance": [

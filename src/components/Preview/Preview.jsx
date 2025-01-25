@@ -47,9 +47,7 @@ const Preview = ({ isCollapsed }) => {
           },
           title: {
             display: true,
-            text: previewConfig.subject,
-            position: 'top',
-            align: 'start',
+            text: [previewConfig.subject, previewConfig.subtitle],
             font: {
               size: 10,
               weight: 'bold'
@@ -57,6 +55,13 @@ const Preview = ({ isCollapsed }) => {
             padding: {
               top: 5,
               bottom: 5
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(tooltipItem) {
+                return `${previewConfig.dataset_label}: ${tooltipItem.raw}`;
+              }
             }
           }
         }
@@ -103,9 +108,7 @@ const Preview = ({ isCollapsed }) => {
         },
         title: {
           display: true,
-          text: config.subject,
-          position: 'top',
-          align: 'start',
+          text: [config.subject_label, config.subtitle],
           font: {
             size: 10,
             weight: 'bold'
@@ -113,6 +116,13 @@ const Preview = ({ isCollapsed }) => {
           padding: {
             top: 5,
             bottom: 5
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(tooltipItem) {
+              return `${config.dataset_label}: ${tooltipItem.raw}`;
+            }
           }
         }
       }
@@ -147,7 +157,6 @@ const Preview = ({ isCollapsed }) => {
       );
     });
   };
-
   const handleBack = () => {
     if (previewConfig) {
       const savedConfig = {

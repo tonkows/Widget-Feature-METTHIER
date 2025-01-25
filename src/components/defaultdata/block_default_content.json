@@ -1,48 +1,82 @@
 {
     "Left-TopLeft": {
-      "subject": "asset",
-      "datatype": "asset_maintenance",
-      "chartType": "bar chart",
-      "chartData": {
-        "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
-        "datasets": [{
-          "label": "Maintenance Cost",
-          "data": [1200, 1900, 1500, 1700, 2000],
-          "backgroundColor": "rgba(54, 162, 235, 0.5)",
-          "borderColor": "rgba(54, 162, 235, 1)",
-          "borderWidth": 1
-        }]
-      },
-      "chartOptions": {
-        "responsive": true,
-        "maintainAspectRatio": false,
-        "plugins": {
-          "legend": {
-            "display": true,
-            "position": "top",
-            "labels": {
-              "boxWidth": 10,
-              "padding": 5,
-              "font": {
-                "size": 8
+      "layout": "horizontal",
+      "charts": [
+        {
+          "id": "chart1",
+          "type": "bar chart",
+          "title": "Asset Maintenance",
+          "subtitle": "2024",
+          "data": {
+            "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
+            "datasets": [
+              {
+                "label": "asset maintenance",
+                "data": [12, 19, 15, 17, 20],
+                "backgroundColor": "rgba(54, 162, 235, 0.5)",
+                "borderColor": "rgba(54, 162, 235, 1)",
+                "borderWidth": 1
+              }
+            ]
+          },
+          "options": {
+            "responsive": true,
+            "maintainAspectRatio": false,
+            "plugins": {
+              "legend": {
+                "display": true,
+                "position": "top"
               }
             }
           },
-          "title": {
-            "display": true,
-            "text": ["Asset", "Asset Maintenance"],
-            "position": "top",
-            "align": "start",
-            "font": {
-              "size": 10,
-              "weight": "bold"
-            },
-            "padding": {
-              "top": 5,
-              "bottom": 5
+          "metadata": {
+            "subject": "asset",
+            "datatype": "asset_maintenance",
+            "dataset": "maintenance_cost",
+            "ranges": ["month"]
+          }
+        },
+        {
+          "id": "chart2",
+          "type": "bar chart",
+          "title": "Asset Maintenance",
+          "subtitle": "2025",
+          "data": {
+            "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
+            "datasets": [
+              {
+                "label": "asset maintenance",
+                "data": [10, 12, 9, 7, 12],
+                "backgroundColor": "rgba(54, 162, 235, 0.5)",
+                "borderColor": "rgba(54, 162, 235, 1)",
+                "borderWidth": 1
+              }
+            ]
+          },
+          "options": {
+            "responsive": true,
+            "maintainAspectRatio": false,
+            "plugins": {
+              "legend": {
+                "display": true,
+                "position": "top"
+              }
             }
+          },
+          "metadata": {
+            "subject": "asset",
+            "datatype": "asset_performance",
+            "dataset": "performance_score",
+            "ranges": ["year"]
           }
         }
+      ],
+      "styles": {
+        "gap": "15px",
+        "padding": "15px",
+        "backgroundColor": "var(--card-bg-color)",
+        "chartHeight": "100%",
+        "chartWidth": "50%"
       }
     },
     "Right-TopRight": {

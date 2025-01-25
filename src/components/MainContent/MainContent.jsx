@@ -47,6 +47,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
 
   const [originalPositions, setOriginalPositions] = useState({});
   const [blockContents, setBlockContents] = useState({});
+  const [modifiedPositions, setModifiedPositions] = useState({});
 
   const navigate = useNavigate();
 
@@ -83,18 +84,46 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
       const clickedBlockWidth = blocks[blockId]?.width;
 
       if (selectedBlockWidth === clickedBlockWidth) {
-        const firstContent = blockContents[selectedBlock];
-        const secondContent = blockContents[blockId];
+        // ดึงข้อมูล chart จาก localStorage หรือ default
+        const firstBlockConfig = localStorage.getItem(`block-${selectedBlock}`);
+        const secondBlockConfig = localStorage.getItem(`block-${blockId}`);
+        
+        let firstContent = firstBlockConfig ? JSON.parse(firstBlockConfig) : defaultBlockContents[selectedBlock];
+        let secondContent = secondBlockConfig ? JSON.parse(secondBlockConfig) : defaultBlockContents[blockId];
 
+        // สลับข้อมูล chart
         setBlockContents(prev => ({
           ...prev,
-          [selectedBlock]: secondContent,
-          [blockId]: firstContent
+          [selectedBlock]: {
+            ...secondContent,
+            // เก็บข้อมูลตำแหน่งเดิม
+            originalPosition: selectedBlock
+          },
+          [blockId]: {
+            ...firstContent,
+            // เก็บข้อมูลตำแหน่งเดิม
+            originalPosition: blockId
+          }
         }));
 
-        localStorage.setItem(`block-${blockId}`, JSON.stringify(firstContent));
-        localStorage.setItem(`block-${selectedBlock}`, JSON.stringify(secondContent));
+        // บันทึกตำแหน่งที่มีการแก้ไข
+        setModifiedPositions(prev => ({
+          ...prev,
+          [selectedBlock]: blockId,
+          [blockId]: selectedBlock
+        }));
 
+        // บันทึกลง localStorage
+        localStorage.setItem(`block-${blockId}`, JSON.stringify({
+          ...firstContent,
+          originalPosition: blockId
+        }));
+        localStorage.setItem(`block-${selectedBlock}`, JSON.stringify({
+          ...secondContent,
+          originalPosition: selectedBlock
+        }));
+
+        // สลับตำแหน่ง block
         setBlocks((prevBlocks) => {
           const newBlocks = { ...prevBlocks };
           const tempBlock = newBlocks[selectedBlock];
@@ -120,6 +149,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
   useEffect(() => {
     const positions = {};
     const contents = {};
+    const modified = {};
     
     Object.keys(blocks).forEach(blockId => {
       positions[blockId] = blockId;
@@ -127,6 +157,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
       const blockConfig = localStorage.getItem(`block-${blockId}`);
       if (blockConfig) {
         contents[blockId] = JSON.parse(blockConfig);
+        modified[blockId] = blockId;
       } else {
         contents[blockId] = defaultBlockContents[blockId];
       }
@@ -134,6 +165,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
     
     setOriginalPositions(positions);
     setBlockContents(contents);
+    setModifiedPositions(modified);
   }, []);
 
   const renderChart = (blockId) => {
@@ -148,6 +180,53 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
 
     if (!config) return null;
 
+    // กรณีมีหลาย charts
+    if (config.charts) {
+      return (
+        <ChartContainer layout={config.layout}>
+          {config.charts.map((chart) => {
+            const ChartComponent = {
+              'bar chart': Bar,
+              'line chart': Line,
+              'doughnut chart': Doughnut
+            }[chart.type];
+
+            if (!ChartComponent) return null;
+
+            return (
+              <ChartWrapper 
+                key={chart.id}
+                layout={config.layout}
+                style={{
+                  height: config.styles?.chartHeight || "100%",
+                  width: config.styles?.chartWidth || "100%",
+                  margin: "0 5px"
+                }}
+              >
+                <ChartComponent
+                  data={chart.data}
+                  options={{
+                    ...chart.options,
+                    plugins: {
+                      ...chart.options.plugins,
+                      title: {
+                        display: true,
+                        text: [chart.title, chart.subtitle],
+                        position: 'top',
+                        align: 'start',
+                        font: { size: 12, weight: 'bold' }
+                      }
+                    }
+                  }}
+                />
+              </ChartWrapper>
+            );
+          })}
+        </ChartContainer>
+      );
+    }
+
+    // กรณีมี chart เดียว (custom chart)
     const chartType = config.chartType || config.selectedChart;
     const ChartComponent = {
       'bar chart': Bar,
@@ -157,42 +236,40 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
 
     if (!ChartComponent) return null;
 
-    const chartOptions = {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: true,
-          position: 'top',
-          labels: {
-            boxWidth: 10,
-            padding: 5,
-            font: { size: 8 }
-          }
-        },
-        title: {
-          display: true,
-          text: [config.subject, config.datatype],
-          position: 'top',
-          align: 'start',
-          font: {
-            size: 10,
-            weight: 'bold'
-          },
-          padding: {
-            top: 5,
-            bottom: 5
-          }
-        }
-      },
-      ...config.chartOptions
-    };
-
     return (
       <ChartContainer>
         <ChartComponent
           data={config.chartData}
-          options={chartOptions}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                  boxWidth: 10,
+                  padding: 5,
+                  font: { size: 8 }
+                }
+              },
+              title: {
+                display: true,
+                text: [config.subject, config.datatype],
+                position: 'top',
+                align: 'start',
+                font: {
+                  size: 10,
+                  weight: 'bold'
+                },
+                padding: {
+                  top: 5,
+                  bottom: 5
+                }
+              }
+            },
+            ...config.chartOptions
+          }}
         />
       </ChartContainer>
     );
@@ -236,16 +313,23 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
   };
 
   const resetBlocks = () => {
-    Object.keys(originalPositions).forEach(blockId => {
-      const originalPosition = originalPositions[blockId];
+    Object.keys(modifiedPositions).forEach(blockId => {
+      const content = blockContents[blockId];
+      const originalPosition = content?.originalPosition || blockId;
       const defaultContent = defaultBlockContents[originalPosition];
       
       if (defaultContent) {
-        localStorage.setItem(`block-${blockId}`, JSON.stringify(defaultContent));
+        localStorage.setItem(`block-${blockId}`, JSON.stringify({
+          ...defaultContent,
+          originalPosition: originalPosition
+        }));
+      } else {
+        localStorage.removeItem(`block-${blockId}`);
       }
     });
 
     setBlockContents(defaultBlockContents);
+    setModifiedPositions({});
     window.location.reload();
   };
 
@@ -442,9 +526,27 @@ const ChartContainer = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: ${props => props.layout === 'vertical' ? 'column' : 'row'};
+  gap: ${props => props.layout === 'vertical' ? '20px' : '15px'};
+  padding: 10px;
+  align-items: center;
+`;
+
+const ChartWrapper = styled.div`
+  flex: ${props => props.layout === 'horizontal' ? '1' : 'none'};
+  width: ${props => props.layout === 'horizontal' ? '50%' : '100%'};
+  height: ${props => props.layout === 'horizontal' ? '100%' : '45%'};
+  background: var(--card-bg-color);
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
   justify-content: center;
   align-items: center;
-  padding: 5px;
+
+  canvas {
+    max-width: 100% !important;
+    max-height: 100% !important;
+  }
 `;
 
 const ResetButton = styled.button`

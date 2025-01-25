@@ -1,0 +1,28 @@
+{
+    "incident": {
+      "incident_type": [
+        {
+          "dataset": "highest_email_notifications",
+          "dataset_label": "Highest Email Notifications",
+          "subject": "incident",
+          "subject_label": "Incident",
+          "datatype": "incident_type",
+          "datatype_label": "Incident type",
+          "datarange": ["date", "week", "month", "year"],
+          "widget": ["number", "doughnut chart", "bar chart", "time dependence", "time independence"]
+        }
+      ],
+      "classification": [
+        {
+          "dataset": "number_of_incident_type_as_true_and_false",
+            "dataset_label": "Number of incident type as True and False",
+          "subject": "incident",
+          "subject_label": "Incident",
+          "datatype": "classification",
+          "datatype_label": "Classification",
+          "datarange": ["date", "week", "month", "year"],
+          "widget": ["number", "line chart", "bar chart", "time dependence", "time independence"]
+        }
+      ]
+    }
+}

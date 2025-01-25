@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Select, Button, Radio, DatePicker, Modal, Breadcrumb } from "antd";
-import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import { Link, useSearchParams, useNavigate, Prompt } from "react-router-dom";
 import styled from "styled-components";
 import moment from "moment";
 import { Bar, Line, Doughnut } from "react-chartjs-2";
@@ -18,6 +18,7 @@ import {
 } from "chart.js";
 import subjectData from "../data/subject_data.json";
 import defaultBlockContents from '../defaultdata/block_default_content.json';
+import defaultData from '../defaultdata/default_data.json';
 
 ChartJS.register(
   CategoryScale,
@@ -49,10 +50,10 @@ const ConfigForm = ({ isCollapsed }) => {
   const navigate = useNavigate();
   const blockId = searchParams.get('block');
   const [chartOptions, setChartOptions] = useState(null);
-  
   const [originalSubjectData,setOriginalSubjectData] = useState(null);
-
- 
+  const [defaultContent, setDefaultContent] = useState(null);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [savedDefaultContent, setSavedDefaultContent] = useState(null);
 
   useEffect(() => {
     console.log("Set selected chart " + selectedChart);
@@ -62,86 +63,108 @@ const ConfigForm = ({ isCollapsed }) => {
     setOriginalSubjectData(subjectData);
     const loadInitialData = async () => {
       if (blockId && subjectData) {
+        const savedConfig = localStorage.getItem(`block-config-${blockId}`);
+        if (savedConfig) {
+          
+          const config = JSON.parse(savedConfig);
+          setSelectedButton(config.selectedButton);
+          setSubject1(config.subject);
+          setDatatype1(config.datatype);
+          setDataset1(config.dataset);
+          setSelectedRanges(config.ranges);
+          setSelectedChart(config.selectedChart);
+          setChartData(config.chartData);
+          setChartOptions(config.chartOptions);
+
+          if (config.subject && config.datatype && config.dataset) {
+            try {
+              const response = await import(`../data/${config.subject}/${config.datatype}/${config.dataset}.json`);
+              setDatasetData(response.default);
+            } catch (error) {
+              console.error("Error loading dataset:", error);
+            }
+          }
+
+          localStorage.removeItem(`block-config-${blockId}`);
+          return;
+        }
+
         const blockConfig = localStorage.getItem(`block-${blockId}`);
-        
         if (blockConfig) {
           const config = JSON.parse(blockConfig);
           
-          const isDefaultContent = JSON.stringify(config) === JSON.stringify({
-            subject: defaultBlockContents[blockId]?.subject,
-            datatype: defaultBlockContents[blockId]?.datatype,
-            chartType: defaultBlockContents[blockId]?.chartType,
-            chartData: defaultBlockContents[blockId]?.chartData,
-            chartOptions: defaultBlockContents[blockId]?.chartOptions
-          });
-
-          if (!isDefaultContent) {
+          if (config.dataset) {
             setSelectedButton("custom");
-            setSubject1(config.subject);
-            setDatatype1(config.datatype);
-            setSelectedChart(config.chartType || config.selectedChart);
-            setChartData(config.chartData);
-            setChartOptions(config.chartOptions);
-
-            if (config.dataset) {
-              setDataset1(config.dataset);
-              try {
-                const response = await import(`../data/${config.subject}/${config.datatype}/${config.dataset}.json`);
-                setDatasetData(response.default);
-              } catch (error) {
-                console.error("Error loading dataset:", error);
-              }
-            }
-
-            if (config.ranges) {
-              setSelectedRanges(config.ranges);
-              if (config.ranges[0] === "date") {
-                setDateVisible(true);
-              }
-            }
-
-            if (config.chartOptions) {
-              setChartOptions({
-                ...defaultChartOptions,
-                ...config.chartOptions,
-                plugins: {
-                  ...defaultChartOptions.plugins,
-                  ...config.chartOptions?.plugins,
-                  title: {
-                    ...defaultChartOptions.plugins.title,
-                    ...config.chartOptions?.plugins?.title,
-                    text: [config.subject, config.datatype]
-                  }
-                }
-              });
-            }
-
-            if (config.dataset && config.ranges) {
-              const data = generateChartData(config.dataset, config.ranges);
-              setChartData(data);
-            }
-
           } else {
             setSelectedButton("default");
-            setSubject1(defaultBlockContents[blockId]?.subject);
-            setDatatype1(defaultBlockContents[blockId]?.datatype);
-            setSelectedChart(defaultBlockContents[blockId]?.chartType);
-            setChartData(defaultBlockContents[blockId]?.chartData);
-            setChartOptions(defaultBlockContents[blockId]?.chartOptions);
           }
-        } else {
-          setSelectedButton("default");
-          setSubject1(defaultBlockContents[blockId]?.subject);
-          setDatatype1(defaultBlockContents[blockId]?.datatype);
-          setSelectedChart(defaultBlockContents[blockId]?.chartType);
-          setChartData(defaultBlockContents[blockId]?.chartData);
-          setChartOptions(defaultBlockContents[blockId]?.chartOptions);
+          
+          setSubject1(config.subject);
+          setDatatype1(config.datatype);
+          setDataset1(config.dataset);
+          setSelectedRanges(config.ranges || []);
+          setSelectedChart(config.selectedChart);
+          setChartData(config.chartData);
+          setChartOptions(config.chartOptions);
+
+          if (config.subject && config.datatype && config.dataset) {
+            try {
+              const response = await import(`../data/${config.subject}/${config.datatype}/${config.dataset}.json`);
+              setDatasetData(response.default);
+            } catch (error) {
+              console.error("Error loading dataset:", error);
+            }
+          }
         }
       }
     };
 
     loadInitialData();
-  }, [blockId, subjectData]);
+  }, [blockId]);
+
+  useEffect(() => {
+    const loadInitialData = async () => {
+      if (blockId) {
+        const blockConfig = localStorage.getItem(`block-${blockId}`);
+        if (blockConfig) {
+          const config = JSON.parse(blockConfig);
+          // ถ้าเป็น custom ให้ดูว่ามีข้อมูล default ที่ถูกสลับไว้หรือไม่
+          if (config.dataset) {
+            const lastDefaultConfig = localStorage.getItem(`block-${blockId}-last-default`);
+            if (lastDefaultConfig) {
+              const lastDefault = JSON.parse(lastDefaultConfig);
+              setDefaultContent(lastDefault);
+              setSavedDefaultContent(lastDefault);
+            } else {
+              const defaultConfig = defaultBlockContents[blockId];
+              setDefaultContent(defaultConfig);
+              setSavedDefaultContent(defaultConfig);
+            }
+          } else {
+            // ถ้าเป็น default ให้ใช้ข้อมูลจาก localStorage โดยตรง
+            setDefaultContent(config);
+            setSavedDefaultContent(config);
+          }
+        } else {
+          const defaultConfig = defaultBlockContents[blockId];
+          setDefaultContent(defaultConfig);
+          setSavedDefaultContent(defaultConfig);
+        }
+      }
+    };
+    loadInitialData();
+  }, [blockId]);
+
+  useEffect(() => {
+    if (selectedButton === "custom") {
+      setHasUnsavedChanges(!!(subject1 || datatype1 || dataset1 || selectedRanges.length > 0 || chartData));
+    } else {
+      const originalConfig = defaultBlockContents[blockId];
+      setHasUnsavedChanges(
+        JSON.stringify(defaultContent) !== JSON.stringify(originalConfig)
+      );
+    }
+  }, [subject1, datatype1, dataset1, selectedRanges, chartData, defaultContent, blockId, selectedButton]);
 
   const loadDatasetData = async (subject, datatype, dataset) => {
     if (!subject || !datatype || !dataset) {
@@ -175,9 +198,16 @@ const ConfigForm = ({ isCollapsed }) => {
             setDatatype1(null);
             setDataset1(null);
             setSelectedRanges([]);
+            setSavedDefaultContent(defaultContent);
           } else {
+            // ดึงข้อมูล default ล่าสุดที่ถูกสลับ
+            const lastDefaultConfig = localStorage.getItem(`block-${blockId}-last-default`);
+            if (lastDefaultConfig) {
+              const lastDefault = JSON.parse(lastDefaultConfig);
+              setDefaultContent(lastDefault);
+            }
             setDataset1(null);
-            setSelectedRanges([]);
+          setSelectedRanges([]);
           }
           setSelectedButton(buttonType);
         },
@@ -196,25 +226,24 @@ const ConfigForm = ({ isCollapsed }) => {
             loadDatasetData(config.subject, config.datatype, config.dataset);
           }
         } else {
-          setSubject1(null);
-          setDatatype1(null);
-          setDataset1(null);
+        setSubject1(null);
+        setDatatype1(null);
+        setDataset1(null);
           setSelectedRanges([]);
         }
+        setSavedDefaultContent(defaultContent);
+        setSelectedButton(buttonType);
       } else {
-        const blockConfig = localStorage.getItem(`block-${blockId}`);
-        if (blockConfig) {
-          const config = JSON.parse(blockConfig);
-          setSubject1(config.subject);
-          setDatatype1(config.datatype);
-        } else {
-          setSubject1(null);
-          setDatatype1(null);
+        // ดึงข้อมูล default ล่าสุดที่ถูกสลับ
+        const lastDefaultConfig = localStorage.getItem(`block-${blockId}-last-default`);
+        if (lastDefaultConfig) {
+          const lastDefault = JSON.parse(lastDefaultConfig);
+          setDefaultContent(lastDefault);
         }
         setDataset1(null);
-        setSelectedRanges([]);
-      }
+      setSelectedRanges([]);
       setSelectedButton(buttonType);
+      }
     }
   };
 
@@ -251,7 +280,7 @@ const ConfigForm = ({ isCollapsed }) => {
   };
 
   const handleDatatypeChange1 = (value) => {
-    setDatatype1(value);        
+    setDatatype1(value);
     setDataset1(null);
     setSelectedRanges([]);
     setChartData(null);
@@ -350,7 +379,7 @@ const ConfigForm = ({ isCollapsed }) => {
     }
   };
 
-  const generateChartData = (data, ranges) => {
+  const generateChartData = (dataset, range) => {
     const chartData = {
       labels: [],
       datasets: []
@@ -358,54 +387,37 @@ const ConfigForm = ({ isCollapsed }) => {
   
     if (!datasetData) return chartData;
   
-    const dataByRange = datasetData.dataByRange;
+    const data = datasetData.dataByRange[range];
   
-    if (ranges && ranges.length === 2) {
-      const startDate = moment.isMoment(ranges[0]) ? ranges[0] : moment(ranges[0]);
-      const endDate = moment.isMoment(ranges[1]) ? ranges[1] : moment(ranges[1]);
-  
-      for (const range in dataByRange) {
-        const rangeData = dataByRange[range];
-        if (range === "date") {
-          if (!ranges[1] || !ranges[1][0] || !ranges[1][1]) {
-            continue;
-          }
-  
-          const selectedStartDate = ranges[0][0]?.toDate();
-          const selectedEndDate = ranges[1][1]?.toDate();
-  
-          rangeData.labels.forEach((label, index) => {
-            const date = moment(label, "D/M/YYYY").toDate();
-            if (date >= selectedStartDate && date <= selectedEndDate) {
-              chartData.labels.push(label);
-              rangeData.datasets.forEach((ds, dsIndex) => {
-                if (!chartData.datasets[dsIndex]) {
-                  chartData.datasets[dsIndex] = {
-                    label: ds.label,
-                    data: [],
-                    backgroundColor: ds.backgroundColor,
-                    borderColor: ds.borderColor,
-                    borderWidth: ds.borderWidth
-                  };
-                }
-                chartData.datasets[dsIndex].data.push(ds.data[index]);
-              });
-            }
-          });
-        } else {
-          chartData.labels = rangeData.labels;
-          chartData.datasets = rangeData.datasets.map((ds) => ({
-            ...ds,
-            backgroundColor: ds.backgroundColor,
-            borderColor: ds.borderColor,
-            borderWidth: ds.borderWidth
-          }));
-        }
+    if (range === "date") {
+      if (!selectedRanges[1] || !selectedRanges[1][0] || !selectedRanges[1][1]) {
+        return chartData;
       }
+
+      const selectedStartDate = selectedRanges[1][0]?.toDate();
+      const selectedEndDate = selectedRanges[1][1]?.toDate();
+  
+      data.labels.forEach((label, index) => {
+        const date = moment(label, "D/M/YYYY").toDate();
+        if (date >= selectedStartDate && date <= selectedEndDate) {
+          chartData.labels.push(label);
+          data.datasets.forEach((ds, dsIndex) => {
+            if (!chartData.datasets[dsIndex]) {
+              chartData.datasets[dsIndex] = {
+                label: ds.label,
+                data: [],
+                backgroundColor: ds.backgroundColor,
+                borderColor: ds.borderColor,
+                borderWidth: ds.borderWidth
+              };
+            }
+            chartData.datasets[dsIndex].data.push(ds.data[index]);
+          });
+        }
+      });
     } else {
-      const rangeData = dataByRange[ranges[0]];
-      chartData.labels = rangeData.labels;
-      chartData.datasets = rangeData.datasets.map((ds) => ({
+      chartData.labels = data.labels;
+      chartData.datasets = data.datasets.map((ds) => ({
         ...ds,
         backgroundColor: ds.backgroundColor,
         borderColor: ds.borderColor,
@@ -425,7 +437,7 @@ const ConfigForm = ({ isCollapsed }) => {
           return;
         }
       }
-      const data = generateChartData(dataset1, selectedRanges);
+      const data = generateChartData(dataset1, selectedRanges[0]);
       setChartData(data);
     }
   }, [dataset1, selectedRanges, datasetData]);
@@ -465,7 +477,15 @@ const ConfigForm = ({ isCollapsed }) => {
 
 
   const handleGenerate = () => {
-    const config = {
+    if (!selectedChart || !chartData) {
+      Modal.error({
+        title: 'Error',
+        content: 'Please select a chart type and ensure data is loaded'
+      });
+      return;
+    }
+
+    const configData = selectedButton === "custom" ? {
       subject: subject1,
       datatype: datatype1,
       dataset: dataset1,
@@ -473,8 +493,14 @@ const ConfigForm = ({ isCollapsed }) => {
       selectedChart: selectedChart,
       chartData: chartData,
       chartOptions: chartOptions
-    };
-    localStorage.setItem(`block-${blockId}`, JSON.stringify(config));
+    } : defaultContent;
+
+    // เมื่อ generate ข้อมูล default ให้เก็บไว้เป็นข้อมูลล่าสุด
+    if (selectedButton === "default") {
+      localStorage.setItem(`block-${blockId}-last-default`, JSON.stringify(configData));
+    }
+
+    localStorage.setItem(`block-${blockId}`, JSON.stringify(configData));
     navigate('/');
   };
 
@@ -487,109 +513,91 @@ const ConfigForm = ({ isCollapsed }) => {
       return;
     }
 
-    const configState = {
-      selectedButton,
-      subject1,
-      datatype1,
-      dataset1,
-      ranges: selectedRanges.map(date => 
-        moment.isMoment(date) ? date.format() : date
-      ),
-      selectedChart,
-      chartData,
-      chartOptions,
-    };
-
-    localStorage.setItem('configState', JSON.stringify(configState));
-    
     const previewData = {
       subject: subject1,
       datatype: datatype1,
       dataset: dataset1,
-      ranges: selectedRanges.map(date => 
-        moment.isMoment(date) ? date.format() : date
-      ),
-      chartType: selectedChart,
+      ranges: selectedRanges,
+      selectedChart: selectedChart,
       chartData: chartData,
-      chartOptions: chartOptions
+      chartOptions: chartOptions || defaultChartOptions
     };
     localStorage.setItem('previewData', JSON.stringify(previewData));
     
     navigate(`/preview?block=${blockId}`);
   };
 
-  useEffect(() => {
-    const savedState = localStorage.getItem('configState');
-    if (savedState) {
-      const state = JSON.parse(savedState);
-      setSelectedButton(state.selectedButton);
-      setSubject1(state.subject1);
-      setDatatype1(state.datatype1);
-      setDataset1(state.dataset1);
-      
-      if (state.ranges && state.ranges.length === 2) {
-        try {
-          setSelectedRanges([
-            moment(state.ranges[0]),
-            moment(state.ranges[1])
-          ]);
-        } catch (error) {
-          console.error('Error converting dates:', error);
-          setSelectedRanges(state.ranges);
-        }
-      }
-      
-      setSelectedChart(state.selectedChart);
-      setChartData(state.chartData);
-      setChartOptions(state.chartOptions);
-      localStorage.removeItem('configState');
-    }
-  }, []);
+  const handleDefaultSubjectChange = (value) => {
+    setDefaultContent(prev => ({
+      ...prev,
+      subject: value,
+      datatype: null
+    }));
+  };
 
-  const defaultContent = {
-    subject: "asset",
-    datatype: "asset_maintenance",
-    chartType: "bar chart",
-    chartData: {
-      labels: ["Jan", "Feb", "Mar", "Apr", "May"],
-      datasets: [{
-        label: "Maintenance Cost",
-        data: [1200, 1900, 1500, 1700, 2000],
-        backgroundColor: "rgba(54, 162, 235, 0.5)",
-        borderColor: "rgba(54, 162, 235, 1)",
-        borderWidth: 1
-      }]
-    },
-    chartOptions: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: true,
-          position: 'top',
-          labels: {
-            boxWidth: 10,
-            padding: 5,
-            font: {
-              size: 8
+  const handleDefaultDatatypeChange = async (value) => {
+    try {
+      // โหลดข้อมูล chart จาก defaultdata โดยใช้ path ตามโครงสร้างที่กำหนด
+      const response = await import(`../defaultdata/${defaultContent.subject}/${value}/${value}.json`);
+      const defaultData = response.default;
+
+      // อัพเดท defaultContent ด้วยข้อมูลใหม่
+      setDefaultContent(prev => ({
+        ...prev,
+        datatype: value,
+        dataset: defaultData.dataset,
+        dataset_label: defaultData.dataset_label,
+        chartType: 'bar chart',
+        chartData: {
+          labels: defaultData.dataByRange.month.labels,
+          datasets: defaultData.dataByRange.month.datasets
+        },
+        chartOptions: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+            },
+            title: {
+              display: true,
+              text: [
+                defaultContent.subject.split('_').map(word => 
+                  word.charAt(0).toUpperCase() + word.slice(1)
+                ).join(' '),
+                defaultData.dataset_label
+              ],
+              position: 'top',
+              align: 'start',
+              font: { size: 12, weight: 'bold' }
             }
           }
-        },
-        title: {
-          display: true,
-          text: ['Asset', 'Asset Maintenance'],
-          position: 'top',
-          align: 'start',
-          font: {
-            size: 10,
-            weight: 'bold'
-          },
-          padding: {
-            top: 5,
-            bottom: 5
-          }
         }
-      }
+      }));
+    } catch (error) {
+      console.error("Error loading default chart data:", error);
+      Modal.error({
+        title: 'Error',
+        content: `Failed to load chart data from path: ${defaultContent.subject}/${value}/${value}.json`
+      });
+    }
+  };
+
+  const handleLeavePage = (path) => {
+    if (hasUnsavedChanges) {
+      Modal.confirm({
+        title: 'Unsaved Changes',
+        content: 'You have unsaved changes. Are you sure you want to leave?',
+        okText: 'Yes',
+        cancelText: 'No',
+        onOk: () => {
+          setHasUnsavedChanges(false);
+          navigate(path);
+        }
+      });
+    } else {
+      navigate(path);
     }
   };
 
@@ -625,14 +633,18 @@ const ConfigForm = ({ isCollapsed }) => {
           <Label>
             Select Subject <Required>*</Required>
           </Label>
+
           <StyledSelect
             placeholder="Select Subject"
             onChange={handleSubjectChange1}
             value={subject1}
           >
-            {subjectData && Object.keys(subjectData).map((key) => (
+            {Object.keys(subjectData).map((key) => (
               <Option key={key} value={key}>
-                {key}
+                {
+                  subjectData[key][Object.keys(subjectData[key])[0]][0]
+                    .subject_label
+                }
               </Option>
             ))}
           </StyledSelect>
@@ -646,11 +658,12 @@ const ConfigForm = ({ isCollapsed }) => {
             value={datatype1}
             disabled={!subject1}
           >
-            {subject1 && subjectData && Object.keys(subjectData[subject1] || {}).map((datatype) => (
-              <Option key={datatype} value={datatype}>
-                {subjectData[subject1][datatype][0].datatype_label}
-              </Option>
-            ))}
+            {subject1 &&
+              Object.keys(subjectData[subject1]).map((datatype) => (
+                <Option key={datatype} value={datatype}>
+                  {subjectData[subject1][datatype][0].datatype_label}
+                </Option>
+              ))}
           </StyledSelect>
 
           <Label>
@@ -710,8 +723,8 @@ const ConfigForm = ({ isCollapsed }) => {
                   marginTop: "4px" 
                 }}>
                   Please select both start and end dates to view charts
-                </div>
-              )}
+            </div>
+          )}
             </div>
           )}
          {chartData && dataset1 && datasetData?.dataByRange && (
@@ -730,8 +743,8 @@ const ConfigForm = ({ isCollapsed }) => {
         gap: "20px",
         alignItems: "center",
         justifyContent: "center",
-        maxWidth: "100%",
-        overflowX: "hidden",
+        maxWidth: "100%", 
+        overflowX: "hidden", 
         overflowY: "auto",
       }}
     >
@@ -740,8 +753,8 @@ const ConfigForm = ({ isCollapsed }) => {
           style={chartStyle("bar chart")}
           onClick={() => handleChartClick("bar chart")}
         >
-          <Bar 
-            data={chartData} 
+          <Bar
+            data={chartData}
             options={{
               ...(chartOptions || defaultChartOptions),
               plugins: {
@@ -774,8 +787,8 @@ const ConfigForm = ({ isCollapsed }) => {
           style={chartStyle("line chart")}
           onClick={() => handleChartClick("line chart")}
         >
-          <Line 
-            data={chartData} 
+          <Line
+            data={chartData}
             options={{
               ...(chartOptions || defaultChartOptions),
               plugins: {
@@ -808,8 +821,8 @@ const ConfigForm = ({ isCollapsed }) => {
           style={chartStyle("doughnut chart")}
           onClick={() => handleChartClick("doughnut chart")}
         >
-          <Doughnut 
-            data={chartData} 
+          <Doughnut
+            data={chartData}
             options={{
               ...(chartOptions || defaultChartOptions),
               plugins: {
@@ -822,8 +835,8 @@ const ConfigForm = ({ isCollapsed }) => {
                   ],
                   position: 'top',
                   align: 'start',
-                  font: {
-                    size: 14,
+                      font: {
+                        size: 14,
                     weight: 'bold'
                   },
                   padding: {
@@ -848,7 +861,22 @@ const ConfigForm = ({ isCollapsed }) => {
               Preview
             </StyledButton>
             <StyledButton 
-              onClick={handleGenerate}
+              onClick={() => {
+                if (hasUnsavedChanges) {
+                  Modal.confirm({
+                    title: 'Save Changes',
+                    content: 'Do you want to save your changes?',
+                    okText: 'Yes',
+                    cancelText: 'No',
+                    onOk: () => {
+                      handleGenerate();
+                      setHasUnsavedChanges(false);
+                    }
+                  });
+                } else {
+                  handleGenerate();
+                }
+              }}
               style={{ width: "120px", marginLeft: "10px" }}
               disabled={!selectedChart || !chartData}
             >
@@ -858,73 +886,128 @@ const ConfigForm = ({ isCollapsed }) => {
         </WrapperDiv1>
       )}
 
-      {selectedButton === "default" && (
+{selectedButton === "default" && defaultContent && (
         <WrapperDiv2>
            <Breadcrumb>
         <Breadcrumb.Item>
           <Link to="/">Home</Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>Default</Breadcrumb.Item>
-      </Breadcrumb>   
+      </Breadcrumb>
+      
+          <Label>Default Content</Label>
           <Label>
             Select Subject <Required>*</Required>
           </Label>
+          
           <StyledSelect
             placeholder="Select Subject"
             value={defaultContent.subject}
+            onChange={handleDefaultSubjectChange}
           >
-            {Object.keys(subjectData).map((key) => (
-              <Option key={key} value={key}>
-                {subjectData[key][Object.keys(subjectData[key])[0]][0].subject_label}
+            {Object.keys(defaultData).map(subject => (
+              <Option key={subject} value={subject}>
+                {subject.split('_').map(word => 
+                  word.charAt(0).toUpperCase() + word.slice(1)
+                ).join(' ')}
               </Option>
             ))}
           </StyledSelect>
-
           <Label>
             Select DataType <Required>*</Required>
           </Label>
           <StyledSelect
             placeholder="Select Datatype"
             value={defaultContent.datatype}
+            onChange={handleDefaultDatatypeChange}
+            disabled={!defaultContent.subject}
           >
-            {Object.keys(subjectData[defaultContent.subject] || {}).map((datatype) => (
-              <Option key={datatype} value={datatype}>
-                {subjectData[defaultContent.subject][datatype][0].datatype_label}
-              </Option>
-            ))}
+            {defaultContent.subject && 
+              Object.keys(defaultData[defaultContent.subject] || {}).map(datatype => (
+                <Option key={datatype} value={datatype}>
+                  {datatype.split('_').map(word => 
+                    word.charAt(0).toUpperCase() + word.slice(1)
+                  ).join(' ')}
+                </Option>
+              ))}
           </StyledSelect>
 
           <div style={{ 
             width: "100%", 
-            height: "300px", 
+            height: "300px",
             marginTop: "20px",
             display: "flex",
-            justifyContent: "center"
+            justifyContent: "center",
+            alignItems: "center"
           }}>
             <div style={{
-              width: "50%",
+              width: "80%",
               height: "100%",
-              padding: "10px",
+              padding: "15px",
               background: "var(--card-bg-color)",
-              borderRadius: "8px"
+              borderRadius: "8px",
+              display: "flex",
+              flexDirection: defaultContent.layout === 'vertical' ? 'column' : 'row',
+              gap: "15px",
+              justifyContent: "center",
+              alignItems: "center"
             }}>
-              {defaultBlockContents[blockId]?.chartType === "bar chart" && (
-                <Bar
-                  data={defaultBlockContents[blockId]?.chartData}
-                  options={defaultBlockContents[blockId]?.chartOptions}
-                />
-              )}
-              {defaultBlockContents[blockId]?.chartType === "line chart" && (
-                <Line
-                  data={defaultBlockContents[blockId]?.chartData}
-                  options={defaultBlockContents[blockId]?.chartOptions}
-                />
-              )}
-              {defaultBlockContents[blockId]?.chartType === "doughnut chart" && (
-                <Doughnut
-                  data={defaultBlockContents[blockId]?.chartData}
-                  options={defaultBlockContents[blockId]?.chartOptions}
-                />
+              {defaultContent.charts ? (
+                defaultContent.charts.map((chart, index) => (
+                  <div key={index} style={{
+                    width: defaultContent.layout === 'horizontal' ? '48%' : '90%',
+                    height: defaultContent.layout === 'horizontal' ? '100%' : '48%',
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center"
+                  }}>
+                    {(() => {
+                      const ChartComponent = {
+                        'bar chart': Bar,
+                        'line chart': Line,
+                        'doughnut chart': Doughnut
+                      }[chart.type];
+
+                      return ChartComponent ? (
+                        <ChartComponent
+                          data={chart.data}
+                          options={{
+                            ...chart.options,
+                            maintainAspectRatio: false,
+                            responsive: true,
+                            plugins: {
+                              ...chart.options.plugins,
+                              title: {
+                                display: true,
+                                text: [chart.title, chart.subtitle],
+                                position: 'top',
+                                align: 'start',
+                                font: { size: 12, weight: 'bold' }
+                              }
+                            }
+                          }}
+                        />
+                      ) : null;
+                    })()}
+                  </div>
+                ))
+              ) : (
+                <div style={{
+                  width: "90%",
+                  height: "90%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}>
+                  <Bar
+                    data={defaultContent.chartData}
+                    options={{
+                      ...defaultContent.chartOptions,
+                      maintainAspectRatio: false,
+                      responsive: true
+                    }}
+                  />
+                </div>
               )}
             </div>
           </div>
@@ -938,15 +1021,20 @@ const ConfigForm = ({ isCollapsed }) => {
             </StyledButton>
             <StyledButton 
               onClick={() => {
-                const config = {
-                  subject: defaultBlockContents[blockId]?.subject,
-                  datatype: defaultBlockContents[blockId]?.datatype,
-                  selectedChart: defaultBlockContents[blockId]?.chartType,
-                  chartData: defaultBlockContents[blockId]?.chartData,
-                  chartOptions: defaultBlockContents[blockId]?.chartOptions
-                };
-                localStorage.setItem(`block-${blockId}`, JSON.stringify(config));
-                navigate('/');
+                if (hasUnsavedChanges) {
+                  Modal.confirm({
+                    title: 'Save Changes',
+                    content: 'Do you want to save your changes?',
+                    okText: 'Yes',
+                    cancelText: 'No',
+                    onOk: () => {
+                      handleGenerate();
+                      setHasUnsavedChanges(false);
+                    }
+                  });
+                } else {
+                  handleGenerate();
+                }
               }}
               style={{ width: "120px", marginLeft: "10px" }}
             >
