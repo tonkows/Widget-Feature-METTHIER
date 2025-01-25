@@ -1,0 +1,210 @@
+{
+  "Left-TopLeft": {
+    "layout": "horizontal",
+    "charts": [
+      {
+        "id": "chart1",
+        "type": "bar chart",
+        "title": "Asset Maintenance",
+        "subtitle": "2024",
+        "data": {
+          "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
+          "datasets": [
+            {
+              "label": "asset maintenance",
+              "data": [12, 19, 15, 17, 20],
+              "backgroundColor": "rgba(54, 162, 235, 0.5)",
+              "borderColor": "rgba(54, 162, 235, 1)",
+              "borderWidth": 1
+            }
+          ]
+        },
+        "options": {
+          "responsive": true,
+          "maintainAspectRatio": false,
+          "plugins": {
+            "legend": {
+              "display": true,
+              "position": "top"
+            }
+          }
+        }
+      },
+      {
+        "id": "chart2",
+        "type": "bar chart",
+        "title": "Asset Maintenance (Comparison)",
+        "subtitle": "2023 vs 2024",
+        "data": {
+          "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
+          "datasets": [
+            {
+              "label": "2023",
+              "data": [10, 15, 14, 12, 18],
+              "backgroundColor": "rgba(255, 99, 132, 0.5)",
+              "borderColor": "rgba(255, 99, 132, 1)",
+              "borderWidth": 1
+            },
+            {
+              "label": "2024",
+              "data": [12, 19, 15, 17, 20],
+              "backgroundColor": "rgba(54, 162, 235, 0.5)",
+              "borderColor": "rgba(54, 162, 235, 1)",
+              "borderWidth": 1
+            }
+          ]
+        },
+        "options": {
+          "responsive": true,
+          "maintainAspectRatio": false,
+          "plugins": {
+            "legend": {
+              "display": true,
+              "position": "top"
+            }
+          }
+        }
+      }
+    ],
+    "styles": {
+      "gap": "15px",
+      "padding": "15px",
+      "backgroundColor": "var(--card-bg-color)",
+      "chartHeight": "100%",
+      "chartWidth": "50%"
+    }
+  },
+  "Right-TopRight": {
+    "charts": [
+      {
+        "id": "doughnut1",
+        "type": "doughnut chart",
+        "title": "Asset Types",
+        "subtitle": "Overview",
+        "data": {
+          "labels": [],
+          "datasets": [
+            {
+              "label": "Asset Types",
+              "data": [30, 20, 25],
+              "backgroundColor": [
+                "rgba(255, 99, 132, 0.5)",
+                "rgba(54, 162, 235, 0.5)",
+                "rgba(255, 206, 86, 0.5)"
+              ],
+              "borderColor": [
+                "rgba(255, 99, 132, 1)",
+                "rgba(54, 162, 235, 1)",
+                "rgba(255, 206, 86, 1)"
+              ],
+              "borderWidth": 1
+            }
+          ]
+        },
+        "options": {
+          "responsive": true,
+          "maintainAspectRatio": false
+        }
+      },
+      {
+        "id": "doughnut2",
+        "type": "doughnut chart",
+        "title": "Asset Categories",
+        "subtitle": "2024 Distribution",
+        "data": {
+          "labels": [],
+          "datasets": [
+            {
+              "label": "Asset Distribution",
+              "data": [40, 30, 30],
+              "backgroundColor": [
+                "rgba(153, 102, 255, 0.5)",
+                "rgba(255, 159, 64, 0.5)",
+                "rgba(75, 192, 192, 0.5)"
+              ],
+              "borderColor": [
+                "rgba(153, 102, 255, 1)",
+                "rgba(255, 159, 64, 1)",
+                "rgba(75, 192, 192, 1)"
+              ],
+              "borderWidth": 1
+            }
+          ]
+        },
+        "options": {
+          "responsive": true,
+          "maintainAspectRatio": false
+        }
+      }
+    ],
+    "styles": {
+      "gap": "15px",
+      "padding": "15px",
+      "backgroundColor": "var(--card-bg-color)",
+      "chartHeight": "100%",
+      "chartWidth": "40%"
+    }
+  },
+  "Left-MiddleTopLeft": {
+    "charts": [
+      {
+        "id": "line1",
+        "type": "line chart",
+        "title": "DJSI Score",
+        "subtitle": "2019-2023",
+        "data": {
+          "labels": ["2019", "2020", "2021"],
+          "datasets": [
+            {
+              "label": "DJSI Score",
+              "data": [75, 78, 82, 85, 88],
+              "backgroundColor": "rgba(75, 192, 192, 0.5)",
+              "borderColor": "rgba(75, 192, 192, 1)",
+              "borderWidth": 1
+            }
+          ]
+        },
+        "options": {
+          "responsive": true,
+          "maintainAspectRatio": false
+        }
+      },
+      {
+        "id": "line2",
+        "type": "line chart",
+        "title": "DJSI Benchmark",
+        "subtitle": "2019-2023",
+        "data": {
+          "labels": ["2019", "2020", "2021"],
+          "datasets": [
+            {
+              "label": "Company Score",
+              "data": [75, 78, 82, 85, 88],
+              "backgroundColor": "rgba(54, 162, 235, 0.5)",
+              "borderColor": "rgba(54, 162, 235, 1)",
+              "borderWidth": 1
+            },
+            {
+              "label": "Industry Average",
+              "data": [70, 72, 76, 80, 84],
+              "backgroundColor": "rgba(255, 99, 132, 0.5)",
+              "borderColor": "rgba(255, 99, 132, 1)",
+              "borderWidth": 1
+            }
+          ]
+        },
+        "options": {
+          "responsive": true,
+          "maintainAspectRatio": false
+        }
+      }
+    ],
+    "styles": {
+      "gap": "5px",
+      "padding": "15px",
+      "backgroundColor": "var(--card-bg-color)",
+      "chartHeight": "100%",
+      "chartWidth": "40%"
+    }
+  }
+}

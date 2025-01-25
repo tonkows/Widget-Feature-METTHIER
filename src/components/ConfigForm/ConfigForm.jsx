@@ -127,8 +127,7 @@ const ConfigForm = ({ isCollapsed }) => {
       if (blockId) {
         const blockConfig = localStorage.getItem(`block-${blockId}`);
         if (blockConfig) {
-          const config = JSON.parse(blockConfig);
-          // ถ้าเป็น custom ให้ดูว่ามีข้อมูล default ที่ถูกสลับไว้หรือไม่
+          const config = JSON.parse(blockConfig)
           if (config.dataset) {
             const lastDefaultConfig = localStorage.getItem(`block-${blockId}-last-default`);
             if (lastDefaultConfig) {
@@ -200,7 +199,6 @@ const ConfigForm = ({ isCollapsed }) => {
             setSelectedRanges([]);
             setSavedDefaultContent(defaultContent);
           } else {
-            // ดึงข้อมูล default ล่าสุดที่ถูกสลับ
             const lastDefaultConfig = localStorage.getItem(`block-${blockId}-last-default`);
             if (lastDefaultConfig) {
               const lastDefault = JSON.parse(lastDefaultConfig);
@@ -234,7 +232,6 @@ const ConfigForm = ({ isCollapsed }) => {
         setSavedDefaultContent(defaultContent);
         setSelectedButton(buttonType);
       } else {
-        // ดึงข้อมูล default ล่าสุดที่ถูกสลับ
         const lastDefaultConfig = localStorage.getItem(`block-${blockId}-last-default`);
         if (lastDefaultConfig) {
           const lastDefault = JSON.parse(lastDefaultConfig);
@@ -495,7 +492,6 @@ const ConfigForm = ({ isCollapsed }) => {
       chartOptions: chartOptions
     } : defaultContent;
 
-    // เมื่อ generate ข้อมูล default ให้เก็บไว้เป็นข้อมูลล่าสุด
     if (selectedButton === "default") {
       localStorage.setItem(`block-${blockId}-last-default`, JSON.stringify(configData));
     }
@@ -537,7 +533,7 @@ const ConfigForm = ({ isCollapsed }) => {
 
   const handleDefaultDatatypeChange = async (value) => {
     try {
-      // โหลดข้อมูล chart จาก defaultdata โดยใช้ path ตามโครงสร้างที่กำหนด
+
       const response = await import(`../defaultdata/${defaultContent.subject}/${value}/${value}.json`);
       const defaultData = response.default;
 

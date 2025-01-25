@@ -17,6 +17,7 @@ import {
   Legend,
 } from "chart.js";
 import defaultBlockContents from '../defaultdata/block_default_content.json';
+import { Modal } from "antd";
 
 ChartJS.register(
   CategoryScale,
@@ -71,17 +72,10 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
     navigate(`/config-form?${searchParams.toString()}`);
   };
 
-  const handleSelectBlock = (blockId) => {
-    if (!isSwitching) {
-      console.warn("Switching mode is not enabled!");
-      return;
-    }
-
-    if (selectedBlock === null) {
-      setSelectedBlock(blockId);
-    } else {
-      const selectedBlockWidth = blocks[selectedBlock]?.width;
-      const clickedBlockWidth = blocks[blockId]?.width;
+  const handleBlockSwitch = (blockId) => {
+    if (selectedBlock && selectedBlock !== blockId) {
+      const selectedBlockWidth = blocks[selectedBlock].width;
+      const clickedBlockWidth = blocks[blockId].width;
 
       if (selectedBlockWidth === clickedBlockWidth) {
         // ดึงข้อมูล chart จาก localStorage หรือ default
@@ -91,17 +85,37 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
         let firstContent = firstBlockConfig ? JSON.parse(firstBlockConfig) : defaultBlockContents[selectedBlock];
         let secondContent = secondBlockConfig ? JSON.parse(secondBlockConfig) : defaultBlockContents[blockId];
 
+        // ดึงข้อมูล last-default ของทั้งสอง block
+        const firstLastDefault = localStorage.getItem(`block-${selectedBlock}-last-default`);
+        const secondLastDefault = localStorage.getItem(`block-${blockId}-last-default`);
+
+        // สลับข้อมูล last-default
+        if (firstLastDefault) {
+          localStorage.setItem(`block-${blockId}-last-default`, firstLastDefault);
+        } else {
+          localStorage.setItem(`block-${blockId}-last-default`, JSON.stringify(defaultBlockContents[selectedBlock]));
+        }
+
+        if (secondLastDefault) {
+          localStorage.setItem(`block-${selectedBlock}-last-default`, secondLastDefault);
+        } else {
+          localStorage.setItem(`block-${selectedBlock}-last-default`, JSON.stringify(defaultBlockContents[blockId]));
+        }
+
+        // อัพเดท defaultBlockContents ด้วย
+        const tempDefault = defaultBlockContents[selectedBlock];
+        defaultBlockContents[selectedBlock] = defaultBlockContents[blockId];
+        defaultBlockContents[blockId] = tempDefault;
+
         // สลับข้อมูล chart
         setBlockContents(prev => ({
           ...prev,
           [selectedBlock]: {
             ...secondContent,
-            // เก็บข้อมูลตำแหน่งเดิม
             originalPosition: selectedBlock
           },
           [blockId]: {
             ...firstContent,
-            // เก็บข้อมูลตำแหน่งเดิม
             originalPosition: blockId
           }
         }));
@@ -126,13 +140,22 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
         // สลับตำแหน่ง block
         setBlocks((prevBlocks) => {
           const newBlocks = { ...prevBlocks };
-          const tempBlock = newBlocks[selectedBlock];
-          newBlocks[selectedBlock] = newBlocks[blockId];
-          newBlocks[blockId] = tempBlock;
+          [newBlocks[selectedBlock], newBlocks[blockId]] = [
+            newBlocks[blockId],
+            newBlocks[selectedBlock],
+          ];
           return newBlocks;
         });
+
+        setSelectedBlock(null);
+      } else {
+        Modal.error({
+          title: "Cannot switch blocks",
+          content: "Can only switch blocks of the same size",
+        });
       }
-      setSelectedBlock(null);
+    } else {
+      setSelectedBlock(blockId);
     }
   };
   
@@ -291,7 +314,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
               style={{
                 border: isSelected ? "2px solid var(--text-color)" : "none",
               }}
-              onClick={() => isSwitching && handleSelectBlock(blockId)}
+              onClick={() => isSwitching && handleBlockSwitch(blockId)}
             >
               {isEditing && (
                 <IconButton 
@@ -313,24 +336,45 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
   };
 
   const resetBlocks = () => {
-    Object.keys(modifiedPositions).forEach(blockId => {
-      const content = blockContents[blockId];
-      const originalPosition = content?.originalPosition || blockId;
-      const defaultContent = defaultBlockContents[originalPosition];
-      
-      if (defaultContent) {
-        localStorage.setItem(`block-${blockId}`, JSON.stringify({
-          ...defaultContent,
-          originalPosition: originalPosition
-        }));
-      } else {
-        localStorage.removeItem(`block-${blockId}`);
+    Modal.confirm({
+      title: 'Reset to Default',
+      content: 'Are you sure you want to reset all blocks to their default content?',
+      onOk: () => {
+        // ล้าง localStorage ทั้งหมด
+        Object.keys(blocks).forEach(blockId => {
+          // ล้างข้อมูลที่เกี่ยวข้องกับ block นี้ทั้งหมด
+          localStorage.removeItem(`block-${blockId}`);
+          localStorage.removeItem(`block-config-${blockId}`);
+          localStorage.removeItem(`block-${blockId}-last-default`);
+        });
+
+        // ล้างข้อมูลการสลับทั้งหมด
+        localStorage.removeItem('defaultBlockContents');
+        localStorage.removeItem('configFormData');
+        localStorage.removeItem('switched-from-block');
+
+        // นำเข้าข้อมูล default ใหม่
+        const defaultContents = require('../defaultdata/block_default_content.json');
+
+        // บันทึกค่าเริ่มต้นลง localStorage ตามตำแหน่งเดิม
+        Object.keys(blocks).forEach(blockId => {
+          localStorage.setItem(`block-${blockId}`, JSON.stringify(defaultContents[blockId]));
+        });
+
+        // รีเซ็ต defaultBlockContents กลับเป็นค่าเริ่มต้น
+        Object.keys(defaultBlockContents).forEach(key => {
+          defaultBlockContents[key] = defaultContents[key];
+        });
+
+        // รีเซ็ตค่าใน state
+        setBlockContents(defaultContents);
+        setModifiedPositions({});
+        setSelectedBlock(null);
+
+        // รีโหลดหน้า
+        window.location.reload();
       }
     });
-
-    setBlockContents(defaultBlockContents);
-    setModifiedPositions({});
-    window.location.reload();
   };
 
   return (
@@ -352,7 +396,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
             <SpacedRow style={{ height: "30%" }} gutter={[6, 0]}>
               <Col span={12}>
                 <Block
-                  onClick={() => isSwitching && handleSelectBlock("BottomCenter-Left")}
+                  onClick={() => isSwitching && handleBlockSwitch("BottomCenter-Left")}
                   style={{
                     border: selectedBlock === "BottomCenter-Left" && isSwitching ? "2px solid var(--text-color)" : "none",
                   }}
@@ -373,7 +417,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
               </Col>
               <Col span={12}>
                 <Block
-                  onClick={() => isSwitching && handleSelectBlock("BottomCenter-Right")}
+                  onClick={() => isSwitching && handleBlockSwitch("BottomCenter-Right")}
                   style={{
                     border: selectedBlock === "BottomCenter-Right" && isSwitching ? "2px solid var(--text-color)" : "none",
                   }}
