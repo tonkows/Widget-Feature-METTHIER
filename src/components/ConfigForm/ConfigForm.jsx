@@ -524,6 +524,13 @@ const ConfigForm = ({ isCollapsed }) => {
   const handlePreview = () => {
     if (!blockId) return;
   
+    // ล้าง preview data ทั้งหมดที่มีอยู่ใน localStorage
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('preview-')) {
+        localStorage.removeItem(key);
+      }
+    });
+  
     let previewData;
     if (selectedButton === "custom") {
       if (!selectedChart || !chartData) {
@@ -584,6 +591,7 @@ const ConfigForm = ({ isCollapsed }) => {
       };
     }
   
+    // เก็บ preview data ใหม่
     localStorage.setItem(`preview-${blockId}`, JSON.stringify(previewData));
     navigate(`/preview?block=${blockId}`);
   };
