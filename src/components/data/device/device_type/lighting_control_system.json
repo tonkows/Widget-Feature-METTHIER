@@ -1,0 +1,54 @@
+{
+    "dataset": "lighting_control_system",
+    "dataset_label": "Lighting Control System",
+    "dataByRange": {
+      "date": {
+        "labels": ["1/1/2025", "2/1/2025", "3/1/2025", "4/1/2025", "5/1/2025"],
+        "datasets": [
+          {
+            "label": "Lighting Control",
+            "data": [10, 12, 14, 15, 17],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "week": {
+        "labels": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+        "datasets": [
+          {
+            "label": "Lighting Control",
+            "data": [11, 13, 15, 16, 18],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "month": {
+        "labels": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+        "datasets": [
+          {
+            "label": "Lighting Control",
+            "data": [100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "year": {
+        "labels": ["2025"],
+        "datasets": [
+          {
+            "label": "Lighting Control",
+            "data": [1800],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          }
+        ]
+      }
+    }
+  }

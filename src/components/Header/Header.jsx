@@ -16,14 +16,13 @@ const Header = ({ toggleSidebar, isCollapsed, hasData, onEditToggle, isEditing, 
         danger: true,
       },
       onOk: () => {
-       // วนลูปลบ key ทั้งหมด ยกเว้น key ที่ต้องการเก็บไว้
+      
       Object.keys(localStorage).forEach(key => {
         if (key !== 'sidebarCollapsed' && key !== 'theme') {
           localStorage.removeItem(key);
         }
       });
 
-      // รีโหลดหน้า
       window.location.reload();
       }
     });

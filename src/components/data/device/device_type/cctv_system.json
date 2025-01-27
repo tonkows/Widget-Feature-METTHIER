@@ -1,0 +1,82 @@
+{
+    "dataset": "cctv_system",
+    "dataset_label": "CCTV System",
+    "dataByRange": {
+      "date": {
+        "labels": ["1/1/2025", "2/1/2025", "3/1/2025", "4/1/2025", "5/1/2025"],
+        "datasets": [
+          {
+            "label": "Camera",
+            "data": [50, 55, 60, 62, 68],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "CCTV Control",
+            "data": [30, 35, 40, 42, 48],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "week": {
+        "labels": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+        "datasets": [
+          {
+            "label": "Camera",
+            "data": [60, 65, 70, 75, 80],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "CCTV Control",
+            "data": [40, 45, 50, 55, 60],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "month": {
+        "labels": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+        "datasets": [
+          {
+            "label": "Camera",
+            "data": [500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1050],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "CCTV Control",
+            "data": [300, 320, 340, 360, 380, 400, 420, 440, 460, 480, 500, 520],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "year": {
+        "labels": ["2025"],
+        "datasets": [
+          {
+            "label": "Camera",
+            "data": [6000],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "CCTV Control",
+            "data": [3600],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          }
+        ]
+      }
+    }
+  }

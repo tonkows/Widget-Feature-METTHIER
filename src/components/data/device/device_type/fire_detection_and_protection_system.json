@@ -1,0 +1,82 @@
+{
+    "dataset": "fire_detection_and_protection_system",
+    "dataset_label": "Fire Detection and Protection System",
+    "dataByRange": {
+      "date": {
+        "labels": ["1/1/2025", "2/1/2025", "3/1/2025", "4/1/2025", "5/1/2025"],
+        "datasets": [
+          {
+            "label": "Detection Device",
+            "data": [5, 6, 8, 10, 12],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Fire Alarm Controllers",
+            "data": [3, 4, 6, 8, 9],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "week": {
+        "labels": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+        "datasets": [
+          {
+            "label": "Detection Device",
+            "data": [6, 8, 10, 12, 14],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Fire Alarm Controllers",
+            "data": [5, 6, 7, 9, 11],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "month": {
+        "labels": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+        "datasets": [
+          {
+            "label": "Detection Device",
+            "data": [60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Fire Alarm Controllers",
+            "data": [40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "year": {
+        "labels": ["2025"],
+        "datasets": [
+          {
+            "label": "Detection Device",
+            "data": [1200],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Fire Alarm Controllers",
+            "data": [900],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          }
+        ]
+      }
+    }
+  }

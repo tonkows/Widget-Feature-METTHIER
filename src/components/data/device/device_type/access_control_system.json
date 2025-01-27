@@ -1,0 +1,110 @@
+{
+    "dataset": "access_control_system",
+    "dataset_label": "Access Control System",
+    "dataByRange": {
+      "date": {
+        "labels": ["1/1/2025", "2/1/2025", "3/1/2025", "4/1/2025", "5/1/2025"],
+        "datasets": [
+          {
+            "label": "Physical Access Control",
+            "data": [50, 55, 60, 62, 70],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Visitor Access Control",
+            "data": [30, 35, 40, 42, 50],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Security Control",
+            "data": [20, 25, 30, 32, 40],
+            "backgroundColor": "rgba(255, 159, 64, 0.5)",
+            "borderColor": "rgba(255, 159, 64, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "week": {
+        "labels": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+        "datasets": [
+          {
+            "label": "Physical Access Control",
+            "data": [60, 65, 70, 75, 80],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Visitor Access Control",
+            "data": [40, 45, 50, 55, 60],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Security Control",
+            "data": [30, 35, 40, 45, 50],
+            "backgroundColor": "rgba(255, 159, 64, 0.5)",
+            "borderColor": "rgba(255, 159, 64, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "month": {
+        "labels": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+        "datasets": [
+          {
+            "label": "Physical Access Control",
+            "data": [600, 650, 700, 750, 800, 850, 900, 950, 1000, 1050, 1100, 1150],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Visitor Access Control",
+            "data": [400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Security Control",
+            "data": [300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850],
+            "backgroundColor": "rgba(255, 159, 64, 0.5)",
+            "borderColor": "rgba(255, 159, 64, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "year": {
+        "labels": ["2025"],
+        "datasets": [
+          {
+            "label": "Physical Access Control",
+            "data": [7200],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Visitor Access Control",
+            "data": [4800],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Security Control",
+            "data": [3600],
+            "backgroundColor": "rgba(255, 159, 64, 0.5)",
+            "borderColor": "rgba(255, 159, 64, 1)",
+            "borderWidth": 1
+          }
+        ]
+      }
+    }
+  }

@@ -1,38 +1,6 @@
 {
   "Left-TopLeft": {
     "layout": "horizontal",
-    "subject": "incident",
-    "datatype": "incident_type",
-    "items": [
-      {
-        "id": "online-cameras",
-        "title": "Online Cameras",
-        "value": "100",
-        "unit": "devices",
-        "status": "active",
-        "icon": "camera",
-        "style": {
-          "backgroundColor": "rgba(75, 192, 192, 0.1)",
-          "borderColor": "rgba(75, 192, 192, 1)",
-          "textColor": "rgba(75, 192, 192, 1)",
-          "iconColor": "rgba(75, 192, 192, 1)"
-        }
-      },
-      {
-        "id": "offline-cameras",
-        "title": "Offline Cameras",
-        "value": "0",
-        "unit": "devices",
-        "status": "inactive",
-        "icon": "camera-off",
-        "style": {
-          "backgroundColor": "rgba(255, 99, 132, 0.1)",
-          "borderColor": "rgba(255, 99, 132, 1)",
-          "textColor": "rgba(255, 99, 132, 1)",
-          "iconColor": "rgba(255, 99, 132, 1)"
-        }
-      }
-    ],
     "charts": [
       {
         "id": "chart1",
@@ -425,35 +393,93 @@
     }
   },
   "Left-MiddleBottomLeft": {
-    "type": "info-display",
     "layout": "horizontal",
-    "items": [
+    "subject": "ghg",
+    "datatype": "emission",
+    "charts": [
       {
-        "id": "online-cameras",
-        "title": "Online Cameras",
-        "value": "100",
-        "unit": "devices",
-        "status": "active",
-        "icon": "camera",
-        "style": {
-          "backgroundColor": "rgba(75, 192, 192, 0.1)",
-          "borderColor": "rgba(75, 192, 192, 1)",
-          "textColor": "rgba(75, 192, 192, 1)",
-          "iconColor": "rgba(75, 192, 192, 1)"
+        "id": "chart1",
+        "type": "bar chart",
+        "title": "GHG Emissions by Source",
+        "subtitle": "2024",
+        "data": {
+          "labels": ["Factory", "Transport", "Office", "Others"],
+          "datasets": [
+            {
+              "label": "CO2 Emissions (tons)",
+              "data": [120, 80, 40, 20],
+              "backgroundColor": [
+                "rgba(255, 99, 132, 0.5)",
+                "rgba(54, 162, 235, 0.5)",
+                "rgba(255, 206, 86, 0.5)",
+                "rgba(75, 192, 192, 0.5)"
+              ],
+              "borderColor": [
+                "rgba(255, 99, 132, 1)",
+                "rgba(54, 162, 235, 1)",
+                "rgba(255, 206, 86, 1)",
+                "rgba(75, 192, 192, 1)"
+              ],
+              "borderWidth": 1
+            }
+          ]
+        },
+        "options": {
+          "responsive": true,
+          "maintainAspectRatio": false,
+          "plugins": {
+            "legend": {
+              "display": true,
+              "position": "top"
+            }
+          }
+        },
+        "metadata": {
+          "subject": "ghg",
+          "datatype": "emission",
+          "dataset": "by_source",
+          "ranges": ["year"]
         }
       },
       {
-        "id": "offline-cameras",
-        "title": "Offline Cameras",
-        "value": "0",
-        "unit": "devices",
-        "status": "inactive",
-        "icon": "camera-off",
-        "style": {
-          "backgroundColor": "rgba(255, 99, 132, 0.1)",
-          "borderColor": "rgba(255, 99, 132, 1)",
-          "textColor": "rgba(255, 99, 132, 1)",
-          "iconColor": "rgba(255, 99, 132, 1)"
+        "id": "chart2",
+        "type": "line chart",
+        "title": "Monthly Emission Trend",
+        "subtitle": "2024 vs 2023",
+        "data": {
+          "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
+          "datasets": [
+            {
+              "label": "2024",
+              "data": [260, 255, 250, 245, 240],
+              "borderColor": "rgba(255, 99, 132, 1)",
+              "borderWidth": 2,
+              "fill": false
+            },
+            {
+              "label": "2023",
+              "data": [280, 275, 270, 265, 260],
+              "borderColor": "rgba(54, 162, 235, 1)",
+              "borderWidth": 2,
+              "fill": false
+            }
+          ]
+        },
+        "options": {
+          "responsive": true,
+          "maintainAspectRatio": false,
+          "plugins": {
+            "legend": {
+              "display": true,
+              "position": "top"
+            }
+          }
+        },
+        "metadata": {
+          "subject": "ghg",
+          "datatype": "emission",
+          "dataset": "monthly_trend",
+          "ranges": ["month"]
         }
       }
     ],
@@ -461,28 +487,18 @@
       "gap": "15px",
       "padding": "15px",
       "backgroundColor": "var(--card-bg-color)",
-      "height": "100%",
-      "itemWidth": " 70%",
-      "borderRadius": "8px",
-      "fontSize": {
-        "title": "16px",
-        "value": "32px",
-        "unit": "14px"
-      },
-      "fontWeight": {
-        "title": "500",
-        "value": "700",
-        "unit": "400"
-      }
+      "chartHeight": "100%",
+      "chartWidth": "50%"
     }
+    
   },
   "Right-MiddleBottomRight": {
-    "layout": "vertical",
+    "layout": "horizontal",
     "charts": [
       {
         "id": "chart1",
-        "type": "doughnut chart",
-        "title": "Recycled Waste",
+        "type": "bar chart",
+        "title": "incident",
         "subtitle": "2024",
         "data": {
           "labels": ["Organic", "Plastic", "Metal", "Glass", "Paper"],
@@ -527,8 +543,8 @@
       },
       {
         "id": "chart2",
-        "type": "line chart",
-        "title": "Recycling Rate",
+        "type": "doughnut chart",
+        "title": "Device",
         "subtitle": "Monthly 2024",
         "data": {
           "labels": ["Jan", "Feb", "Mar", "Apr", "May"],

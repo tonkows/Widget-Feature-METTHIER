@@ -1,0 +1,55 @@
+{
+    "dataset": "favorite_video_count",
+    "dataset_label": "Favorite Video Count",
+    "dataByRange": {
+      "date": {
+        "labels": ["1/1/2025", "2/1/2025", "3/1/2025", "4/1/2025", "5/1/2025"],
+        "datasets": [
+          {
+            "label": "Favorite Video Count",
+            "data": [8, 9, 11, 10, 13],
+            "backgroundColor": "rgba(255, 159, 64, 0.5)",
+            "borderColor": "rgba(255, 159, 64, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "week": {
+        "labels": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+        "datasets": [
+          {
+            "label": "Favorite Video Count",
+            "data": [15, 18, 20, 19, 22],
+            "backgroundColor": "rgba(255, 159, 64, 0.5)",
+            "borderColor": "rgba(255, 159, 64, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "month": {
+        "labels": ["January", "February", "March"],
+        "datasets": [
+          {
+            "label": "Favorite Video Count",
+            "data": [60, 70, 80],
+            "backgroundColor": "rgba(255, 159, 64, 0.5)",
+            "borderColor": "rgba(255, 159, 64, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "year": {
+        "labels": ["2025"],
+        "datasets": [
+          {
+            "label": "Favorite Video Count",
+            "data": [900],
+            "backgroundColor": "rgba(255, 159, 64, 0.5)",
+            "borderColor": "rgba(255, 159, 64, 1)",
+            "borderWidth": 1
+          }
+        ]
+      }
+    }
+  }
+  

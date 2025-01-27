@@ -49,7 +49,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar, toggleTheme }) => {
 
 export default Sidebar;
 
-// Styled components
+
 
 const StyledSidebar = styled.div`
   background-color: var(--background-color);

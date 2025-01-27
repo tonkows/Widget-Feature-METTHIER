@@ -1,0 +1,139 @@
+{
+    "dataset": "water_and_pump_systems",
+    "dataset_label": "Water and Pump Systems",
+    "dataByRange": {
+      "date": {
+        "labels": ["1/1/2025", "2/1/2025", "3/1/2025", "4/1/2025", "5/1/2025"],
+        "datasets": [
+          {
+            "label": "Transfer Pumps",
+            "data": [4, 6, 5, 7, 8],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Sewage Pumps",
+            "data": [5, 7, 6, 8, 9],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Hydraulic Pumps",
+            "data": [3, 4, 5, 6, 7],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Pneumatic Pumps",
+            "data": [2, 3, 4, 5, 6],
+            "backgroundColor": "rgba(255, 206, 86, 0.5)",
+            "borderColor": "rgba(255, 206, 86, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "week": {
+        "labels": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+        "datasets": [
+          {
+            "label": "Transfer Pumps",
+            "data": [10, 12, 11, 14, 15],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Sewage Pumps",
+            "data": [12, 14, 13, 15, 16],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Hydraulic Pumps",
+            "data": [8, 9, 10, 11, 12],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Pneumatic Pumps",
+            "data": [7, 8, 9, 10, 11],
+            "backgroundColor": "rgba(255, 206, 86, 0.5)",
+            "borderColor": "rgba(255, 206, 86, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "month": {
+        "labels": ["January", "February", "March", "April", "May", "June", "July", "August", "September"],
+        "datasets": [
+          {
+            "label": "Transfer Pumps",
+            "data": [40, 45, 50, 55, 60, 65, 70, 75, 80],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Sewage Pumps",
+            "data": [45, 50, 55, 60, 65, 70, 75, 80, 85],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Hydraulic Pumps",
+            "data": [30, 35, 40, 45, 50, 55, 60, 65, 70],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Pneumatic Pumps",
+            "data": [25, 30, 35, 40, 45, 50, 55, 60, 65],
+            "backgroundColor": "rgba(255, 206, 86, 0.5)",
+            "borderColor": "rgba(255, 206, 86, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "year": {
+        "labels": ["2025"],
+        "datasets": [
+          {
+            "label": "Transfer Pumps",
+            "data": [450],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Sewage Pumps",
+            "data": [500],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Hydraulic Pumps",
+            "data": [350],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Pneumatic Pumps",
+            "data": [300],
+            "backgroundColor": "rgba(255, 206, 86, 0.5)",
+            "borderColor": "rgba(255, 206, 86, 1)",
+            "borderWidth": 1
+          }
+        ]
+      }
+    }
+  }
+  

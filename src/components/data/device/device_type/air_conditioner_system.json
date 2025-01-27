@@ -1,0 +1,110 @@
+{
+    "dataset": "air_conditioner_system",
+    "dataset_label": "Air Conditioner System",
+    "dataByRange": {
+      "date": {
+        "labels": ["1/1/2025", "2/1/2025", "3/1/2025", "4/1/2025", "5/1/2025"],
+        "datasets": [
+          {
+            "label": "Indoor Units",
+            "data": [5, 7, 8, 9, 10],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Outdoor Units",
+            "data": [4, 5, 6, 7, 8],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Air Distribution Devices",
+            "data": [6, 8, 9, 11, 12],
+            "backgroundColor": "rgba(255, 206, 86, 0.5)",
+            "borderColor": "rgba(255, 206, 86, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "week": {
+        "labels": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+        "datasets": [
+          {
+            "label": "Indoor Units",
+            "data": [10, 12, 13, 14, 15],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Outdoor Units",
+            "data": [8, 9, 10, 12, 14],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Air Distribution Devices",
+            "data": [12, 14, 16, 18, 20],
+            "backgroundColor": "rgba(255, 206, 86, 0.5)",
+            "borderColor": "rgba(255, 206, 86, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "month": {
+        "labels": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+        "datasets": [
+          {
+            "label": "Indoor Units",
+            "data": [60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Outdoor Units",
+            "data": [55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Air Distribution Devices",
+            "data": [75, 80, 85, 90, 95, 100, 105, 110, 115, 120, 125, 130],
+            "backgroundColor": "rgba(255, 206, 86, 0.5)",
+            "borderColor": "rgba(255, 206, 86, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "year": {
+        "labels": ["2025"],
+        "datasets": [
+          {
+            "label": "Indoor Units",
+            "data": [1000],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Outdoor Units",
+            "data": [950],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Air Distribution Devices",
+            "data": [1200],
+            "backgroundColor": "rgba(255, 206, 86, 0.5)",
+            "borderColor": "rgba(255, 206, 86, 1)",
+            "borderWidth": 1
+          }
+        ]
+      }
+    }
+  }

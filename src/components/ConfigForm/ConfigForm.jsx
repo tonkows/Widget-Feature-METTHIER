@@ -519,9 +519,9 @@ const ConfigForm = ({ isCollapsed }) => {
         }
       };
     } else {
-      // กรณี default ให้ส่งข้อมูลทั้งหมดไป
+   
       if (defaultContent.charts) {
-        // กรณีมีหลาย charts
+    
         previewData = {
           type: "multi-chart",
           selectedButton: "default",
@@ -539,13 +539,13 @@ const ConfigForm = ({ isCollapsed }) => {
           }))
         };
       } else if (defaultContent.type === "info-display") {
-        // กรณีเป็น info-display
+    
         previewData = {
           ...defaultContent,
           selectedButton: "default"
         };
       } else {
-        // กรณีเป็น single chart
+      
         previewData = {
           type: defaultContent.type || "chart",
           selectedButton: "default",
@@ -563,13 +563,13 @@ const ConfigForm = ({ isCollapsed }) => {
 
   const handleGenerate = () => {
     if (selectedButton === "default") {
-      // บันทึกข้อมูล default ลง localStorage โดยตรง
+    
       localStorage.setItem(`block-${blockId}`, JSON.stringify(defaultContent));
 
-      // กลับไปหน้าหลัก
+     
       navigate('/');
     } else {
-      // กรณี custom ให้ทำงานเหมือนเดิม
+      
       if (!selectedChart || !chartData) {
         Modal.error({
           title: 'Error',
@@ -591,11 +591,11 @@ const ConfigForm = ({ isCollapsed }) => {
         subtitle: `${datatype1} - ${selectedRanges.join(", ")}`
       };
 
-      // บันทึกข้อมูล custom
+     
       localStorage.setItem(`block-${blockId}`, JSON.stringify(customData));
       localStorage.setItem(`block-${blockId}-last-default`, JSON.stringify(defaultContent));
 
-      // แสดง Modal สำเร็จ
+    
       Modal.success({
         title: 'Success',
         content: 'Chart has been generated successfully',
@@ -618,8 +618,6 @@ const ConfigForm = ({ isCollapsed }) => {
     try {
       const response = await import(`../defaultdata/${defaultContent.subject}/${value}/${value}.json`);
       const defaultData = response.default;
-
-      // อัพเดท defaultContent ด้วยข้อมูลใหม่
       setDefaultContent(prev => ({
         ...prev,
         datatype: value,
@@ -938,17 +936,6 @@ const ConfigForm = ({ isCollapsed }) => {
             <StyledButton 
               onClick={() => {
                 if (hasUnsavedChanges) {
-                  Modal.confirm({
-                    title: 'Save Changes',
-                    content: 'Do you want to save your changes?',
-                    okText: 'Yes',
-                    cancelText: 'No',
-                    onOk: () => {
-                      handleGenerate();
-                      setHasUnsavedChanges(false);
-                    }
-                  });
-                } else {
                   handleGenerate();
                 }
               }}
@@ -1096,17 +1083,6 @@ const ConfigForm = ({ isCollapsed }) => {
             <StyledButton 
               onClick={() => {
                 if (hasUnsavedChanges) {
-                  Modal.confirm({
-                    title: 'Save Changes',
-                    content: 'Do you want to save your changes?',
-                    okText: 'Yes',
-                    cancelText: 'No',
-                    onOk: () => {
-                      handleGenerate();
-                      setHasUnsavedChanges(false);
-                    }
-                  });
-                } else {
                   handleGenerate();
                 }
               }}
