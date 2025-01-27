@@ -27,10 +27,9 @@ const Preview = ({ isCollapsed }) => {
   }, []);
 
   const renderChart = (blockId) => {
-   
     const previewData = localStorage.getItem(`preview-${blockId}`);
+    const blockConfig = localStorage.getItem(`block-${blockId}`);
     
-   
     if (previewData) {
       const config = JSON.parse(previewData);
 
@@ -163,9 +162,83 @@ const Preview = ({ isCollapsed }) => {
           />
         </Block>
       );
+    } else if (blockConfig) {
+      const config = JSON.parse(blockConfig);
+      
+      if (config.selectedChart) {
+        const ChartComponent = {
+          'bar chart': Bar,
+          'line chart': Line,
+          'doughnut chart': Doughnut
+        }[config.selectedChart];
+
+        if (!ChartComponent) return null;
+
+        return (
+          <Block>
+            <ChartContainer>
+              <ChartWrapper style={{ width: '100%', height: '100%' }}>
+                <ChartComponent
+                  data={config.chartData}
+                  options={{
+                    ...config.chartOptions,
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    plugins: {
+                      ...config.chartOptions?.plugins,
+                      title: {
+                        display: true,
+                        text: [config.subject_label, config.subtitle],
+                        position: 'top',
+                        align: 'start',
+                        font: { size: 12, weight: 'bold' }
+                      }
+                    }
+                  }}
+                />
+              </ChartWrapper>
+            </ChartContainer>
+          </Block>
+        );
+      } else if (config.charts) {
+        return (
+          <Block>
+            <ChartContainer layout={config.layout}>
+              {config.charts.map((chart, index) => {
+                const ChartComponent = {
+                  'bar chart': Bar,
+                  'line chart': Line,
+                  'doughnut chart': Doughnut
+                }[chart.type];
+
+                if (!ChartComponent) return null;
+
+                return (
+                  <ChartWrapper 
+                    key={index}
+                    layout={config.layout}
+                    style={{
+                      width: config.layout === 'horizontal' ? '48%' : '100%',
+                      height: config.layout === 'horizontal' ? '100%' : '48%'
+                    }}
+                  >
+                    <ChartComponent
+                      data={chart.data}
+                      options={{
+                        ...chart.options,
+                        maintainAspectRatio: false,
+                        responsive: true
+                      }}
+                    />
+                  </ChartWrapper>
+                );
+              })}
+            </ChartContainer>
+          </Block>
+        );
+      }
     }
 
- 
     const defaultConfig = defaultBlockContents[blockId];
     if (!defaultConfig) return null;
 
