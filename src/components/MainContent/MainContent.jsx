@@ -32,7 +32,8 @@ ChartJS.register(
 );
 
 const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
-  const [selectedBlock, setSelectedBlock] = useState(null);
+  const [selectedBlock, setSelectedBlock] = useState(null
+  );
   const [blocks, setBlocks] = useState({
     "Left-TopLeft": { width: 6, id: "Left-TopLeft"  },
     "Right-TopRight": { width: 6, id: "Right-TopRight"},
@@ -210,7 +211,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
 
     if (!config) return null;
 
-    // เพิ่มการรองรับ info-display
+ 
     if (config.type === "info-display") {
       return (
         <InfoDisplayContainer layout={config.layout}>
@@ -241,7 +242,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
       );
     }
 
-    // กรณีมีหลาย charts
+
     if (config.charts && Array.isArray(config.charts)) {
       return (
         <ChartContainer layout={config.layout || 'horizontal'}>
@@ -262,7 +263,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
                   width: config.layout === 'horizontal' ? '48%' : '100%',
                   height: config.layout === 'horizontal' ? '100%' : '48%'
                 }}
-              >
+              >dsfsf   
                 <ChartComponent
                   data={chart.chartData || chart.data}
                   options={{
@@ -295,7 +296,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
       );
     }
 
-    // กรณีมี chart เดียว
+
     const chartType = config.chartType || config.selectedChart;
     const ChartComponent = {
       'bar chart': Bar,

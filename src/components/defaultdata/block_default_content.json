@@ -1,6 +1,7 @@
 {
   "Left-TopLeft": {
     "layout": "horizontal",
+      
     "charts": [
       {
         "id": "chart1",
@@ -482,15 +483,7 @@
           "ranges": ["month"]
         }
       }
-    ],
-    "styles": {
-      "gap": "15px",
-      "padding": "15px",
-      "backgroundColor": "var(--card-bg-color)",
-      "chartHeight": "100%",
-      "chartWidth": "50%"
-    }
-    
+    ]
   },
   "Right-MiddleBottomRight": {
     "layout": "horizontal",

@@ -19,7 +19,7 @@ const Preview = ({ isCollapsed }) => {
       setPreviewConfig(JSON.parse(data));
     }
 
-    // เก็บข้อมูลว่ามาจากหน้าไหน
+
     const previousPath = localStorage.getItem('previousPath') || '/config-form';
     if (window.location.pathname !== previousPath) {
       localStorage.setItem('previousPath', window.location.pathname);
@@ -27,14 +27,13 @@ const Preview = ({ isCollapsed }) => {
   }, []);
 
   const renderChart = (blockId) => {
-    // ดึงข้อมูล preview จาก localStorage
+   
     const previewData = localStorage.getItem(`preview-${blockId}`);
     
-    // ถ้ามีข้อมูล preview ให้ใช้ข้อมูลนั้น
+   
     if (previewData) {
       const config = JSON.parse(previewData);
-      
-      // กรณี info-display
+
       if (config.type === "info-display") {
         return (
           <Block>
@@ -67,7 +66,7 @@ const Preview = ({ isCollapsed }) => {
         );
       }
 
-      // กรณี custom chart
+  
       if (config.type === "chart-with-description") {
         const ChartComponent = {
           'bar chart': Bar,
@@ -105,7 +104,7 @@ const Preview = ({ isCollapsed }) => {
         );
       }
 
-      // กรณี multi-chart
+
       if (config.type === "multi-chart") {
         return (
           <Block>
@@ -144,7 +143,6 @@ const Preview = ({ isCollapsed }) => {
         );
       }
 
-      // กรณี single chart
       const ChartComponent = {
         'bar chart': Bar,
         'line chart': Line,
@@ -167,11 +165,11 @@ const Preview = ({ isCollapsed }) => {
       );
     }
 
-    // ถ้าไม่มีข้อมูล preview ให้ใช้ข้อมูล default
+ 
     const defaultConfig = defaultBlockContents[blockId];
     if (!defaultConfig) return null;
 
-    // กรณีเป็น info-display
+ 
     if (defaultConfig.type === "info-display") {
       return (
         <Block>
@@ -204,7 +202,7 @@ const Preview = ({ isCollapsed }) => {
       );
     }
 
-    // กรณีเป็น chart แบบปกติ
+
     if (defaultConfig.charts && Array.isArray(defaultConfig.charts)) {
       return (
         <Block>
@@ -272,27 +270,16 @@ const Preview = ({ isCollapsed }) => {
       if (previousPath === '/') {
         navigate('/');
       } else {
-        // ใช้ selectedButton จาก preview data
         const selectedTab = previewData.selectedButton || "default";
         localStorage.setItem(`selected-tab-${blockId}`, selectedTab);
         
         if (selectedTab === "default") {
-          const defaultConfig = defaultBlockContents[blockId];
-          const savedConfig = {
+          const config = {
             selectedButton: "default",
-            chartData: defaultConfig.chartData,
-            chartOptions: defaultConfig.chartOptions,
-            chartType: defaultConfig.chartType,
-            subject_label: defaultConfig.subject_label,
-            subtitle: defaultConfig.subtitle,
-            dataset_label: defaultConfig.dataset_label,
-            ranges: [],
-            subject: null,
-            datatype: null,
-            dataset: null,
-            selectedChart: defaultConfig.chartType
+            subject: previewData.subject,
+            datatype: previewData.datatype
           };
-          localStorage.setItem(`block-config-${blockId}`, JSON.stringify(savedConfig));
+          localStorage.setItem(`block-config-${blockId}`, JSON.stringify(config));
         } else {
           const savedConfig = {
             selectedButton: "custom",
@@ -496,7 +483,6 @@ const ChartWrapper = styled.div`
   }
 `;
 
-// เพิ่ม styled components สำหรับ info-display
 const InfoDisplayContainer = styled.div`
   display: flex;
   flex-direction: ${props => props.layout === 'vertical' ? 'column' : 'row'};

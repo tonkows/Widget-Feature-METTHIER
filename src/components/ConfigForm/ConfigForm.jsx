@@ -63,26 +63,52 @@ const ConfigForm = ({ isCollapsed }) => {
   useEffect(() => {
     setOriginalSubjectData(subjectData);
     const loadInitialData = async () => {
-      if (blockId && subjectData) {
+      if (blockId) {
         const savedConfig = localStorage.getItem(`block-config-${blockId}`);
         if (savedConfig) {
-          
           const config = JSON.parse(savedConfig);
-          setSelectedButton(config.selectedButton);
-          setSubject1(config.subject);
-          setDatatype1(config.datatype);
-          setDataset1(config.dataset);
-          setSelectedRanges(config.ranges);
-          setSelectedChart(config.selectedChart);
-          setChartData(config.chartData);
-          setChartOptions(config.chartOptions);
+          
+          setSelectedButton(config.selectedButton || "default");
+          
+          if (config.selectedButton === "default") {
+            if (config.subject) {
+              try {
+                const defaultConfig = defaultBlockContents[blockId];
+                const updatedContent = {
+                  ...defaultConfig,
+                  subject: config.subject,
+                  datatype: config.datatype
+                };
 
-          if (config.subject && config.datatype && config.dataset) {
-            try {
-              const response = await import(`../data/${config.subject}/${config.datatype}/${config.dataset}.json`);
-              setDatasetData(response.default);
-            } catch (error) {
-              console.error("Error loading dataset:", error);
+                if (config.datatype) {
+                  const response = await import(`../defaultdata/${config.subject}/${config.datatype}/${config.datatype}.json`);
+                  const chartData = response.default;
+                  updatedContent.charts = chartData.charts;
+                  updatedContent.layout = chartData.layout;
+                  updatedContent.type = chartData.type;
+                }
+
+                setDefaultContent(updatedContent);
+              } catch (error) {
+                console.error("Error loading default content:", error);
+              }
+            }
+          } else {
+            setSubject1(config.subject);
+            setDatatype1(config.datatype);
+            setDataset1(config.dataset);
+            setSelectedRanges(config.ranges || []);
+            setSelectedChart(config.selectedChart);
+            setChartData(config.chartData);
+            setChartOptions(config.chartOptions);
+
+            if (config.subject && config.datatype && config.dataset) {
+              try {
+                const response = await import(`../data/${config.subject}/${config.datatype}/${config.dataset}.json`);
+                setDatasetData(response.default);
+              } catch (error) {
+                console.error("Error loading dataset:", error);
+              }
             }
           }
 
@@ -172,6 +198,15 @@ const ConfigForm = ({ isCollapsed }) => {
       if (savedTab) {
         setSelectedButton(savedTab);
       }
+    }
+  }, [blockId]);
+
+  useEffect(() => {
+    const savedSubject = localStorage.getItem('selectedSubject');
+    const savedDatatype = localStorage.getItem('selectedDatatype');
+    if (savedSubject && savedDatatype) {
+      setSubject1(savedSubject);
+      setDatatype1(savedDatatype);
     }
   }, [blockId]);
 
@@ -488,7 +523,7 @@ const ConfigForm = ({ isCollapsed }) => {
 
   const handlePreview = () => {
     if (!blockId) return;
-
+  
     let previewData;
     if (selectedButton === "custom") {
       if (!selectedChart || !chartData) {
@@ -519,47 +554,40 @@ const ConfigForm = ({ isCollapsed }) => {
         }
       };
     } else {
-   
-      if (defaultContent.charts) {
-    
-        previewData = {
-          type: "multi-chart",
-          selectedButton: "default",
-          layout: defaultContent.layout,
-          charts: defaultContent.charts.map(chart => ({
-            type: chart.type,
-            title: chart.title,
-            subtitle: chart.subtitle,
-            data: chart.data,
-            options: {
-              ...chart.options,
-              maintainAspectRatio: false,
-              responsive: true
-            }
-          }))
-        };
-      } else if (defaultContent.type === "info-display") {
-    
-        previewData = {
-          ...defaultContent,
-          selectedButton: "default"
-        };
-      } else {
-      
-        previewData = {
-          type: defaultContent.type || "chart",
-          selectedButton: "default",
-          title: defaultContent.title,
-          subtitle: defaultContent.subtitle,
-          data: defaultContent.chartData,
-          options: defaultContent.chartOptions
-        };
-      }
-    }
+      const defaultConfigToSave = {
+        selectedButton: "default",
+        subject: defaultContent.subject,
+        datatype: defaultContent.datatype,
+        type: "multi-chart",
+        layout: defaultContent.layout,
+        charts: defaultContent.charts
+      };
+      localStorage.setItem(`block-config-${blockId}`, JSON.stringify(defaultConfigToSave));
 
+      previewData = {
+        type: "multi-chart",
+        selectedButton: "default",
+        subject: defaultContent.subject,
+        datatype: defaultContent.datatype,
+        layout: defaultContent.layout,
+        charts: defaultContent.charts.map(chart => ({
+          type: chart.type,
+          title: chart.title,
+          subtitle: chart.subtitle,
+          data: chart.data,
+          options: {
+            ...chart.options,
+            maintainAspectRatio: false,
+            responsive: true
+          }
+        }))
+      };
+    }
+  
     localStorage.setItem(`preview-${blockId}`, JSON.stringify(previewData));
     navigate(`/preview?block=${blockId}`);
   };
+  
 
   const handleGenerate = () => {
     if (selectedButton === "default") {
@@ -612,21 +640,40 @@ const ConfigForm = ({ isCollapsed }) => {
       subject: value,
       datatype: null
     }));
+
+    const config = {
+      selectedButton: "default",
+      subject: value,
+      datatype: null
+    };
+    localStorage.setItem(`block-config-${blockId}`, JSON.stringify(config));
   };
 
   const handleDefaultDatatypeChange = async (value) => {
     try {
       const response = await import(`../defaultdata/${defaultContent.subject}/${value}/${value}.json`);
       const defaultData = response.default;
-      setDefaultContent(prev => ({
-        ...prev,
+      
+      const updatedContent = {
+        ...defaultContent,
         datatype: value,
         type: defaultData.type || "multi-chart",
         layout: defaultData.layout || "horizontal",
         charts: defaultData.charts || [],
         items: defaultData.items || [],
         styles: defaultData.styles || {},
-      }));
+      };
+      
+      setDefaultContent(updatedContent);
+
+      const config = {
+        selectedButton: "default",
+        subject: defaultContent.subject,
+        datatype: value,
+        ...updatedContent
+      };
+      localStorage.setItem(`block-config-${blockId}`, JSON.stringify(config));
+
     } catch (error) {
       console.error("Error loading default chart data:", error);
       Modal.error({
@@ -1244,22 +1291,6 @@ const ChartGrid = styled.div`
 const ChartBox = styled.div`
   width: ${props => props.layout === 'horizontal' ? '380px' : '760px'};
   height: ${props => props.layout === 'horizontal' ? '360px' : '170px'};
-  background: var(--background-color);
-  border-radius: 8px;
-  padding: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  canvas {
-    max-width: 100% !important;
-    max-height: 100% !important;
-  }
-`;
-
-const SingleChartBox = styled.div`
-  width: 760px;
-  height: 360px;
   background: var(--background-color);
   border-radius: 8px;
   padding: 10px;
