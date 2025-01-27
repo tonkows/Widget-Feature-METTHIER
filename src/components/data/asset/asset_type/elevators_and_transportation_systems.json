@@ -1,0 +1,167 @@
+{
+    "dataset": "elevators_and_transportation_systems",
+    "dataset_label": "Elevators and Transportation",
+    "dataByRange": {
+      "date": {
+        "labels": ["1/1/2025", "2/1/2025", "3/1/2025", "4/1/2025", "5/1/2025"],
+        "datasets": [
+          {
+            "label": "Passenger Elevators",
+            "data": [5, 6, 7, 8, 9],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Freight Elevators",
+            "data": [3, 4, 5, 6, 7],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Dumbwaiters",
+            "data": [2, 3, 4, 5, 6],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Escalators",
+            "data": [7, 8, 9, 10, 11],
+            "backgroundColor": "rgba(153, 102, 255, 0.5)",
+            "borderColor": "rgba(153, 102, 255, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Walkalators",
+            "data": [4, 5, 6, 7, 8],
+            "backgroundColor": "rgba(255, 206, 86, 0.5)",
+            "borderColor": "rgba(255, 206, 86, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "week": {
+        "labels": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+        "datasets": [
+          {
+            "label": "Passenger Elevators",
+            "data": [15, 16, 18, 20, 22],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Freight Elevators",
+            "data": [10, 12, 14, 15, 17],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Dumbwaiters",
+            "data": [8, 9, 10, 11, 12],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Escalators",
+            "data": [20, 22, 24, 26, 28],
+            "backgroundColor": "rgba(153, 102, 255, 0.5)",
+            "borderColor": "rgba(153, 102, 255, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Walkalators",
+            "data": [12, 14, 16, 18, 20],
+            "backgroundColor": "rgba(255, 206, 86, 0.5)",
+            "borderColor": "rgba(255, 206, 86, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "month": {
+        "labels": ["January", "February", "March", "April", "May", "June", "July", "August", "September"],
+        "datasets": [
+          {
+            "label": "Passenger Elevators",
+            "data": [100, 110, 120, 130, 140, 150, 160, 170, 180],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Freight Elevators",
+            "data": [80, 90, 100, 110, 120, 130, 140, 150, 160],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Dumbwaiters",
+            "data": [50, 60, 70, 80, 90, 100, 110, 120, 130],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Escalators",
+            "data": [200, 220, 240, 260, 280, 300, 320, 340, 360],
+            "backgroundColor": "rgba(153, 102, 255, 0.5)",
+            "borderColor": "rgba(153, 102, 255, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Walkalators",
+            "data": [150, 160, 170, 180, 190, 200, 210, 220, 230],
+            "backgroundColor": "rgba(255, 206, 86, 0.5)",
+            "borderColor": "rgba(255, 206, 86, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "year": {
+        "labels": ["2025"],
+        "datasets": [
+          {
+            "label": "Passenger Elevators",
+            "data": [1200],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Freight Elevators",
+            "data": [900],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Dumbwaiters",
+            "data": [700],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Escalators",
+            "data": [2400],
+            "backgroundColor": "rgba(153, 102, 255, 0.5)",
+            "borderColor": "rgba(153, 102, 255, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Walkalators",
+            "data": [1800],
+            "backgroundColor": "rgba(255, 206, 86, 0.5)",
+            "borderColor": "rgba(255, 206, 86, 1)",
+            "borderWidth": 1
+          }
+        ]
+      }
+    }
+  }
+ 

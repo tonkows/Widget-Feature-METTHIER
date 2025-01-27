@@ -1,30 +1,40 @@
 {
   "type": "multi-chart",
   "layout": "horizontal",
+  "items": [
+    {
+      "title": "Total Devices",
+      "value": "156",
+      "unit": "devices",
+      "status": "active"
+    },
+    {
+      "title": "Active Devices",
+      "value": "142",
+      "unit": "devices",
+      "status": "active"
+    },
+    {
+      "title": "Inactive Devices",
+      "value": "14",
+      "unit": "devices",
+      "status": "inactive"
+    }
+  ],
   "charts": [
     {
       "id": "chart1",
       "type": "bar chart",
-      "title": "Incident Classification Status",
+      "title": "Device Distribution by Type",
       "subtitle": "2024",
       "data": {
-        "labels": ["True Positive", "False Positive", "True Negative", "False Negative"],
+        "labels": ["Camera", "NVR", "Access Control", "Fire Alarm", "Network", "Others"],
         "datasets": [
           {
-            "label": "Number of Cases",
-            "data": [45, 15, 30, 10],
-            "backgroundColor": [
-              "rgba(75, 192, 192, 0.5)",
-              "rgba(255, 99, 132, 0.5)",
-              "rgba(54, 162, 235, 0.5)",
-              "rgba(255, 206, 86, 0.5)"
-            ],
-            "borderColor": [
-              "rgba(75, 192, 192, 1)",
-              "rgba(255, 99, 132, 1)",
-              "rgba(54, 162, 235, 1)",
-              "rgba(255, 206, 86, 1)"
-            ],
+            "label": "Number of Devices",
+            "data": [80, 15, 25, 12, 18, 6],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
             "borderWidth": 1
           }
         ]
@@ -42,13 +52,13 @@
           "x": {
             "title": {
               "display": true,
-              "text": "Classification"
+              "text": "Device Types"
             }
           },
           "y": {
             "title": {
               "display": true,
-              "text": "Number of Cases"
+              "text": "Count"
             }
           }
         }
@@ -56,24 +66,22 @@
     },
     {
       "id": "chart2",
-      "type": "doughnut chart",
-      "title": "Classification Distribution",
+      "type": "doughnut chart", 
+      "title": "Device Status Distribution",
       "subtitle": "2024",
       "data": {
-        "labels": ["True Positive", "False Positive", "True Negative", "False Negative"],
+        "labels": ["Active", "Inactive", "Maintenance"],
         "datasets": [
           {
-            "data": [45, 15, 30, 10],
+            "data": [142, 8, 6],
             "backgroundColor": [
               "rgba(75, 192, 192, 0.5)",
               "rgba(255, 99, 132, 0.5)",
-              "rgba(54, 162, 235, 0.5)",
               "rgba(255, 206, 86, 0.5)"
             ],
             "borderColor": [
               "rgba(75, 192, 192, 1)",
               "rgba(255, 99, 132, 1)",
-              "rgba(54, 162, 235, 1)",
               "rgba(255, 206, 86, 1)"
             ],
             "borderWidth": 1
@@ -99,4 +107,5 @@
     "chartHeight": "50%",
     "chartWidth": "100%"
   }
-} 
+}
+  

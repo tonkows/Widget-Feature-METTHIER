@@ -679,9 +679,26 @@ const ConfigForm = ({ isCollapsed }) => {
 
       {selectedButton === "custom" && (
         <WrapperDiv1>
-           <Breadcrumb style={{ color: 'var(--text--color)' }}>
+           <Breadcrumb>
         <Breadcrumb.Item>
-          <Link to="/">Home</Link>
+          <a onClick={(e) => {
+            e.preventDefault();
+            if (hasUnsavedChanges) {
+              Modal.confirm({
+                title: 'Unsaved Changes',
+                content: 'You have unsaved changes. Are you sure you want to go back to home?',
+                okText: 'Yes',
+                cancelText: 'No',
+                onOk: () => {
+                  navigate('/');
+                }
+              });
+            } else {
+              navigate('/');
+            }
+          }}>
+            Home
+          </a>
         </Breadcrumb.Item>
         <Breadcrumb.Item>
           {selectedButton === "default" ? "Default" : "Custom"}

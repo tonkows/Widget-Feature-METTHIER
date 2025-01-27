@@ -146,6 +146,26 @@
         "datatype_label": "Asset Type",
         "datarange": ["date", "week", "month", "year"],
         "widget": ["number", "doughnut chart", "bar chart", "time independence"]
+      },
+      {
+        "dataset": "elevators_and_transportation_systems",
+        "dataset_label": "Elevators and Transportation Systems",
+        "subject": "asset",
+        "subject_label": "Asset",
+        "datatype": "asset_type",
+        "datatype_label": "Asset Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
+      },
+      {
+        "dataset": "electrical_and_power_systems",
+        "dataset_label": "Electrical and Power Systems",
+        "subject": "asset",
+        "subject_label": "Asset",
+        "datatype": "asset_type",
+        "datatype_label": "Asset Type",
+        "datarange": ["date", "week", "month", "year"],
+        "widget": ["number", "doughnut chart", "bar chart", "time independence"]
       }
     ],
     "asset_maitenance": [

@@ -5,26 +5,16 @@
     {
       "id": "chart1",
       "type": "bar chart",
-      "title": "Incident Classification Status",
+      "title": "Asset Distribution by Type",
       "subtitle": "2024",
       "data": {
-        "labels": ["True Positive", "False Positive", "True Negative", "False Negative"],
+        "labels": ["Electrical", "HVAC", "Plumbing", "Fire Safety", "Security", "IT"],
         "datasets": [
           {
-            "label": "Number of Cases",
-            "data": [45, 15, 30, 10],
-            "backgroundColor": [
-              "rgba(75, 192, 192, 0.5)",
-              "rgba(255, 99, 132, 0.5)",
-              "rgba(54, 162, 235, 0.5)",
-              "rgba(255, 206, 86, 0.5)"
-            ],
-            "borderColor": [
-              "rgba(75, 192, 192, 1)",
-              "rgba(255, 99, 132, 1)",
-              "rgba(54, 162, 235, 1)",
-              "rgba(255, 206, 86, 1)"
-            ],
+            "label": "Number of Assets",
+            "data": [45, 30, 25, 20, 35, 40],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
             "borderWidth": 1
           }
         ]
@@ -42,13 +32,13 @@
           "x": {
             "title": {
               "display": true,
-              "text": "Classification"
+              "text": "Asset Types"
             }
           },
           "y": {
             "title": {
               "display": true,
-              "text": "Number of Cases"
+              "text": "Count"
             }
           }
         }
@@ -57,24 +47,28 @@
     {
       "id": "chart2",
       "type": "doughnut chart",
-      "title": "Classification Distribution",
+      "title": "Asset Value Distribution",
       "subtitle": "2024",
       "data": {
-        "labels": ["True Positive", "False Positive", "True Negative", "False Negative"],
+        "labels": ["Electrical", "HVAC", "Plumbing", "Fire Safety", "Security", "IT"],
         "datasets": [
           {
-            "data": [45, 15, 30, 10],
+            "data": [35, 25, 15, 10, 30, 45],
             "backgroundColor": [
               "rgba(75, 192, 192, 0.5)",
-              "rgba(255, 99, 132, 0.5)",
               "rgba(54, 162, 235, 0.5)",
-              "rgba(255, 206, 86, 0.5)"
+              "rgba(255, 206, 86, 0.5)",
+              "rgba(255, 99, 132, 0.5)",
+              "rgba(153, 102, 255, 0.5)",
+              "rgba(255, 159, 64, 0.5)"
             ],
             "borderColor": [
               "rgba(75, 192, 192, 1)",
-              "rgba(255, 99, 132, 1)",
               "rgba(54, 162, 235, 1)",
-              "rgba(255, 206, 86, 1)"
+              "rgba(255, 206, 86, 1)",
+              "rgba(255, 99, 132, 1)",
+              "rgba(153, 102, 255, 1)",
+              "rgba(255, 159, 64, 1)"
             ],
             "borderWidth": 1
           }

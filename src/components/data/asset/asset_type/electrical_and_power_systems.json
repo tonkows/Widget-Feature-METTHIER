@@ -1,0 +1,138 @@
+{
+    "dataset": "electrical_and_power_systems",
+    "dataset_label": "Electrical and Power Systems",
+    "dataByRange": {
+      "date": {
+        "labels": ["1/1/2025", "2/1/2025", "3/1/2025", "4/1/2025", "5/1/2025"],
+        "datasets": [
+          {
+            "label": "Main Distribution Board",
+            "data": [3, 5, 7, 4, 6],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Sub-Distribution Boards",
+            "data": [4, 6, 8, 5, 7],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Emergency Distribution Board",
+            "data": [2, 4, 5, 3, 4],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Distribution Panel",
+            "data": [5, 7, 9, 6, 8],
+            "backgroundColor": "rgba(255, 206, 86, 0.5)",
+            "borderColor": "rgba(255, 206, 86, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "week": {
+        "labels": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+        "datasets": [
+          {
+            "label": "Main Distribution Board",
+            "data": [10, 12, 15, 11, 13],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Sub-Distribution Boards",
+            "data": [14, 16, 18, 15, 17],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Emergency Distribution Board",
+            "data": [8, 9, 10, 7, 8],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Distribution Panel",
+            "data": [12, 14, 16, 13, 15],
+            "backgroundColor": "rgba(255, 206, 86, 0.5)",
+            "borderColor": "rgba(255, 206, 86, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "month": {
+        "labels": ["January", "February", "March", "April", "May", "June", "July", "August", "September"],
+        "datasets": [
+          {
+            "label": "Main Distribution Board",
+            "data": [30, 35, 40, 45, 50, 55, 60, 65, 70],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Sub-Distribution Boards",
+            "data": [40, 45, 50, 55, 60, 65, 70, 75, 80],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Emergency Distribution Board",
+            "data": [20, 25, 30, 35, 40, 45, 50, 55, 60],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Distribution Panel",
+            "data": [50, 55, 60, 65, 70, 75, 80, 85, 90],
+            "backgroundColor": "rgba(255, 206, 86, 0.5)",
+            "borderColor": "rgba(255, 206, 86, 1)",
+            "borderWidth": 1
+          }
+        ]
+      },
+      "year": {
+        "labels": ["2025"],
+        "datasets": [
+          {
+            "label": "Main Distribution Board",
+            "data": [350],
+            "backgroundColor": "rgba(75, 192, 192, 0.5)",
+            "borderColor": "rgba(75, 192, 192, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Sub-Distribution Boards",
+            "data": [400],
+            "backgroundColor": "rgba(255, 99, 132, 0.5)",
+            "borderColor": "rgba(255, 99, 132, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Emergency Distribution Board",
+            "data": [250],
+            "backgroundColor": "rgba(54, 162, 235, 0.5)",
+            "borderColor": "rgba(54, 162, 235, 1)",
+            "borderWidth": 1
+          },
+          {
+            "label": "Distribution Panel",
+            "data": [450],
+            "backgroundColor": "rgba(255, 206, 86, 0.5)",
+            "borderColor": "rgba(255, 206, 86, 1)",
+            "borderWidth": 1
+          }
+        ]
+      }
+    }
+  }
