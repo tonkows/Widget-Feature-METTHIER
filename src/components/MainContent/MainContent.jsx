@@ -211,7 +211,91 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
 
     if (!config) return null;
 
- 
+    if (config.type === "combined-display") {
+      return (
+        <CombinedContainer>
+          {config.items && (
+            <InfoSection>
+              <InfoDisplayContainer>
+                {config.items.map((item) => (
+                  <InfoItem
+                    key={item.id}
+                    style={{
+                      backgroundColor: item.style?.backgroundColor || 'var(--background-color)',
+                      borderColor: item.style?.borderColor || 'var(--border-color)',
+                      width: config.styles?.itemWidth || '150px'
+                    }}
+                  >
+                    <InfoIcon status={item.status}>
+                      {item.icon === 'camera' ? <CameraIcon /> : <CameraOffIcon />}
+                    </InfoIcon>
+                    <InfoContent>
+                      <InfoTitle style={{ color: item.style?.textColor || 'var(--text-color)' }}>
+                        {item.title}
+                      </InfoTitle>
+                      <InfoValue style={{ color: item.style?.textColor || 'var(--text-color)' }}>
+                        {item.value}
+                        <InfoUnit>{item.unit}</InfoUnit>
+                      </InfoValue>
+                    </InfoContent>
+                  </InfoItem>
+                ))}
+              </InfoDisplayContainer>
+            </InfoSection>
+          )}
+
+          {config.charts && (
+            <ChartSection>
+              <ChartContainer layout={config.layout}>
+                {config.charts.map((chart, index) => {
+                  const ChartComponent = {
+                    'bar chart': Bar,
+                    'line chart': Line,
+                    'doughnut chart': Doughnut
+                  }[chart.type];
+
+                  if (!ChartComponent) return null;
+
+                  return (
+                    <ChartWrapper 
+                      key={index}
+                      layout={config.layout}
+                    >
+                      <ChartComponent
+                        data={chart.data}
+                        options={{
+                          ...chart.options,
+                          maintainAspectRatio: false,
+                          responsive: true,
+                          plugins: {
+                            legend: {
+                              display: true,
+                              position: 'top',
+                              labels: {
+                                boxWidth: 10,
+                                padding: 5,
+                                font: { size: 8 }
+                              }
+                            },
+                            title: {
+                              display: true,
+                              text: [chart.title, chart.subtitle],
+                              font: { size: 10, weight: 'bold' },
+                              padding: { top: 5, bottom: 5 }
+                            }
+                          }
+                        }}
+                      />
+                    </ChartWrapper>
+                  );
+                })}
+              </ChartContainer>
+            </ChartSection>
+          )}
+        </CombinedContainer>
+      );
+    }
+
     if (config.type === "info-display") {
       return (
         <InfoDisplayContainer layout={config.layout}>
@@ -242,7 +326,6 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
       );
     }
 
-
     if (config.charts && Array.isArray(config.charts)) {
       return (
         <ChartContainer layout={config.layout || 'horizontal'}>
@@ -263,7 +346,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
                   width: config.layout === 'horizontal' ? '48%' : '100%',
                   height: config.layout === 'horizontal' ? '100%' : '48%'
                 }}
-              >dsfsf   
+              > 
                 <ChartComponent
                   data={chart.chartData || chart.data}
                   options={{
@@ -295,7 +378,6 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
         </ChartContainer>
       );
     }
-
 
     const chartType = config.chartType || config.selectedChart;
     const ChartComponent = {
@@ -598,16 +680,14 @@ const ChartContainer = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: ${props => props.layout === 'vertical' ? 'column' : 'row'};
-  gap: 15px;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  padding: 10px;
+  padding: 5px;
 `;
 
 const ChartWrapper = styled.div`
-  width: ${props => props.layout === 'horizontal' ? '48%' : '100%'};
-  height: ${props => props.layout === 'horizontal' ? '100%' : '48%'};
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -638,56 +718,93 @@ const ResetButton = styled.button`
   }
 `;
 
-const InfoDisplayContainer = styled.div`
-  display: flex;
-  flex-direction: ${props => props.layout === 'vertical' ? 'column' : 'row'};
-  gap: 15px;
-  width: 100%;
-  height: 100%;
-  padding: 15px;
-`;
-
-const InfoItem = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 20px;
-  border-radius: 8px;
-  border: 1px solid;
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-`;
-
-const InfoIcon = styled.div`
-  font-size: 24px;
-  margin-right: 15px;
-  opacity: ${props => props.status === 'active' ? 1 : 0.7};
-`;
-
 const InfoContent = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-const InfoTitle = styled.div`
+const CombinedContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  padding: 8px;
+`;
+
+const InfoSection = styled.div`
+  width: 200px;
+  height: 100%;
+  background: var(--background-color);
+  border-radius: 6px;
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  order: 2;
+`;
+
+const ChartSection = styled.div`
+  flex: 1;
+  height: 100%;
+  background: var(--background-color);
+  border-radius: 6px;
+  padding: 8px;
+  min-height: 0;
+  order: 1;
+`;
+
+const InfoDisplayContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+  
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+`;
+
+const InfoItem = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg-color);
+  width: 180px;
+  height: 60px;
+  flex-shrink: 0;
+`;
+
+const InfoIcon = styled.div`
   font-size: 16px;
+  margin-right: 8px;
+  opacity: ${props => props.status === 'active' ? 1 : 0.7};
+`;
+
+const InfoTitle = styled.div`
+  font-size: 12px;
   font-weight: 500;
-  margin-bottom: 5px;
+  margin-bottom: 2px;
 `;
 
 const InfoValue = styled.div`
-  font-size: 32px;
+  font-size: 18px;
   font-weight: 700;
   display: flex;
   align-items: baseline;
 `;
 
 const InfoUnit = styled.span`
-  font-size: 14px;
+  font-size: 10px;
   font-weight: 400;
-  margin-left: 5px;
+  margin-left: 4px;
   opacity: 0.8;
 `;

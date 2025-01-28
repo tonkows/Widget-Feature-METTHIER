@@ -1,29 +1,61 @@
 {
   "Left-TopLeft": {
     "layout": "horizontal",
-      
+    "type": "combined-display",
+    "items": [
+      {
+        "id": "item1",
+        "icon": "camera",
+        "title": "Total Devices",
+        "value": "156",
+        "unit": "units",
+        "status": "active",
+        "style": {
+          "backgroundColor": "rgba(75, 192, 192, 0.1)",
+          "borderColor": "rgba(75, 192, 192, 0.5)",
+          "textColor": "var(--text-color)"
+        }
+      },
+      {
+        "id": "item2",
+        "icon": "camera",
+        "title": "Active Devices",
+        "value": "142",
+        "unit": "units",
+        "status": "active",
+        "style": {
+          "backgroundColor": "rgba(54, 162, 235, 0.1)",
+          "borderColor": "rgba(54, 162, 235, 0.5)",
+          "textColor": "var(--text-color)"
+        }
+      }
+    ],
     "charts": [
       {
         "id": "chart1",
         "type": "bar chart",
-        "title": "Incident Frequency Comparison",
-        "subtitle": "2023 vs 2024",
+        "title": "Device Status Trend",
+        "subtitle": "Last 6 Months",
         "data": {
-          "labels": ["Blacklist", "VIP", "Intrusion", "Fire Alarm"],
+          "labels": ["Sep", "Oct", "Nov", "Dec", "Jan", "Feb"],
           "datasets": [
             {
-              "label": "2023",
-              "data": [15, 20, 12, 8],
-              "backgroundColor": "rgba(75, 192, 192, 0.5)",
+              "label": "Total Devices",
+              "data": [145, 148, 150, 152, 154, 156],
+              "backgroundColor": "rgba(75, 192, 192, 0.2)",
               "borderColor": "rgba(75, 192, 192, 1)",
-              "borderWidth": 1
+              "borderWidth": 2,
+              "tension": 0.4,
+              "fill": true
             },
             {
-              "label": "2024",
-              "data": [10, 18, 9, 6],
-              "backgroundColor": "rgba(255, 99, 132, 0.5)",
-              "borderColor": "rgba(255, 99, 132, 1)",
-              "borderWidth": 1
+              "label": "Active Devices",
+              "data": [138, 140, 141, 140, 142, 142],
+              "backgroundColor": "rgba(54, 162, 235, 0.2)",
+              "borderColor": "rgba(54, 162, 235, 1)",
+              "borderWidth": 2,
+              "tension": 0.4,
+              "fill": true
             }
           ]
         },
@@ -33,93 +65,41 @@
           "plugins": {
             "legend": {
               "display": true,
-              "position": "top"
+              "position": "top",
+              "labels": {
+                "usePointStyle": true,
+                "padding": 15,
+                "font": {
+                  "size": 11
+                }
+              }
             }
           },
           "scales": {
-            "x": {
-              "title": {
+            "y": {
+              "beginAtZero": false,
+              "min": 100,
+              "grid": {
                 "display": true,
-                "text": "Incident Types"
+                "drawBorder": false,
+                "color": "rgba(200, 200, 200, 0.1)"
               }
             },
-            "y": {
-              "title": {
-                "display": true,
-                "text": "Frequency"
+            "x": {
+              "grid": {
+                "display": false,
+                "drawBorder": false
               }
             }
           }
-        },
-        "metadata": {
-          "subject": "security",
-          "datatype": "incident_frequency_comparison",
-          "dataset": "incident_comparison",
-          "ranges": ["year"]
-        }
-      },
-      {
-        "id": "chart2",
-        "type": "bar chart",
-        "title": "Asset Maintenance Comparison",
-        "subtitle": "2023 vs 2024",
-        "data": {
-          "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
-          "datasets": [
-            {
-              "label": "2023",
-              "data": [12, 19, 15, 17, 20],
-              "backgroundColor": "rgba(75, 192, 192, 0.5)",
-              "borderColor": "rgba(75, 192, 192, 1)",
-              "borderWidth": 1
-            },
-            {
-              "label": "2024",
-              "data": [10, 12, 9, 7, 12],
-              "backgroundColor": "rgba(255, 99, 132, 0.5)",
-              "borderColor": "rgba(255, 99, 132, 1)",
-              "borderWidth": 1
-            }
-          ]
-        },
-        "options": {
-          "responsive": true,
-          "maintainAspectRatio": false,
-          "plugins": {
-            "legend": {
-              "display": true,
-              "position": "top"
-            }
-          },
-          "scales": {
-            "x": {
-              "title": {
-                "display": true,
-                "text": "Months"
-              }
-            },
-            "y": {
-              "title": {
-                "display": true,
-                "text": "Maintenance Costs"
-              }
-            }
-          }
-        },
-        "metadata": {
-          "subject": "asset",
-          "datatype": "asset_maintenance_comparison",
-          "dataset": "maintenance_cost_comparison",
-          "ranges": ["year"]
         }
       }
     ],
     "styles": {
-      "gap": "20px",
-      "padding": "15px",
-      "backgroundColor": "var(--card-bg-color)",
-      "chartHeight": "50%",
-      "chartWidth": "100%"
+      "itemWidth": "160px",
+      "chartHeight": "300px",
+      "gap": "15px",
+      "padding": "12px"
     }
   },
   "Right-TopRight": {
