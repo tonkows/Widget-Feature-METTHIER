@@ -104,82 +104,57 @@
   },
   "Right-TopRight": {
     "layout": "horizontal",
-    "charts": [
+    "type": "info-display",
+    "items": [
       {
-        "id": "chart1",
-        "type": "line chart",
-        "title": "Asset Maintenance",
-        "subtitle": "2024",
-        "data": {
-          "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
-          "datasets": [
-            {
-              "label": "asset maintenance",
-              "data": [12, 19, 15, 17, 20],
-              "backgroundColor": "rgba(54, 162, 235, 0.5)",
-              "borderColor": "rgba(54, 162, 235, 1)",
-              "borderWidth": 1
-            }
-          ]
-        },
-        "options": {
-          "responsive": true,
-          "maintainAspectRatio": false,
-          "plugins": {
-            "legend": {
-              "display": true,
-              "position": "top"
-            }
-          }
-        },
-        "metadata": {
-          "subject": "asset",
-          "datatype": "asset_maintenance",
-          "dataset": "maintenance_cost",
-          "ranges": ["month"]
+        "id": "item1",
+        "icon": "info",
+        "title": "Total Devices",
+        "value": "200",
+        "unit": "units",
+        "status": "active",
+        "style": {
+          "backgroundColor": "rgba(75, 192, 192, 0.1)",
+          "borderColor": "rgba(75, 192, 192, 0.5)",
+          "textColor": "var(--text-color)",
+          "width": "32%"
         }
       },
       {
-        "id": "chart2",
-        "type": "bar chart",
-        "title": "Asset Maintenance",
-        "subtitle": "2025",
-        "data": {
-          "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
-          "datasets": [
-            {
-              "label": "asset maintenance",
-              "data": [10, 12, 9, 7, 12],
-              "backgroundColor": "rgba(54, 162, 235, 0.5)",
-              "borderColor": "rgba(54, 162, 235, 1)",
-              "borderWidth": 1
-            }
-          ]
-        },
-        "options": {
-          "responsive": true,
-          "maintainAspectRatio": false,
-          "plugins": {
-            "legend": {
-              "display": true,
-              "position": "top"
-            }
-          }
-        },
-        "metadata": {
-          "subject": "asset",
-          "datatype": "asset_performance",
-          "dataset": "performance_score",
-          "ranges": ["year"]
+        "id": "item2",
+        "icon": "info",
+        "title": "Online Devices",
+        "value": "180",
+        "unit": "units",
+        "status": "online",
+        "style": {
+          "backgroundColor": "rgba(54, 162, 235, 0.1)",
+          "borderColor": "rgba(54, 162, 235, 0.5)",
+          "textColor": "var(--text-color)",
+          "width": "32%"
+        }
+      },
+      {
+        "id": "item3",
+        "icon": "info",
+        "title": "Offline Devices",
+        "value": "20",
+        "unit": "units",
+        "status": "offline",
+        "style": {
+          "backgroundColor": "rgba(255, 99, 132, 0.1)",
+          "borderColor": "rgba(255, 99, 132, 0.5)",
+          "textColor": "var(--text-color)",
+          "width": "32%"
         }
       }
     ],
     "styles": {
-      "gap": "15px",
-      "padding": "15px",
-      "backgroundColor": "var(--card-bg-color)",
-      "chartHeight": "100%",
-      "chartWidth": "50%"
+      "gap": "2%",
+      "padding": "10px",
+      "direction": "row",
+      "justify": "space-between",
+      "height": "80px"
     }
   },
   "Left-MiddleTopLeft": {
@@ -558,141 +533,66 @@
     }
   },
   "Left-BottomLeft": {
+    "type": "combined-display",
     "layout": "horizontal",
-    "charts": [
+    "items": [
       {
-        "id": "chart1",
-        "type": "line chart",
-        "title": "Energy Usage",
-        "subtitle": "2024",
-        "data": {
-          "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
-          "datasets": [
-            {
-              "label": "energy consumption",
-              "data": [1000, 1200, 1100, 1300, 1400],
-              "backgroundColor": "rgba(75, 192, 192, 0.5)",
-              "borderColor": "rgba(75, 192, 192, 1)",
-              "borderWidth": 1
-            }
-          ]
-        },
-        "options": {
-          "responsive": true,
-          "maintainAspectRatio": false,
-          "plugins": {
-            "legend": {
-              "display": true,
-              "position": "top"
-            }
-          }
-        },
-        "metadata": {
-          "subject": "energy",
-          "datatype": "usage",
-          "dataset": "consumption",
-          "ranges": ["month"]
+        "id": "item1",
+        "icon": "camera",
+        "title": "Total Devices",
+        "value": "156",
+        "unit": "units",
+        "status": "active",
+        "style": {
+          "backgroundColor": "rgba(75, 192, 192, 0.1)",
+          "borderColor": "rgba(75, 192, 192, 0.5)",
+          "textColor": "var(--text-color)"
         }
       },
       {
-        "id": "chart2",
-        "type": "bar chart",
-        "title": "Peak Demand",
-        "subtitle": "Daily 2024",
-        "data": {
-          "labels": ["Mon", "Tue", "Wed", "Thu", "Fri"],
-          "datasets": [
-            {
-              "label": "peak demand",
-              "data": [150, 180, 160, 170, 155],
-              "backgroundColor": "rgba(255, 99, 132, 0.5)",
-              "borderColor": "rgba(255, 99, 132, 1)",
-              "borderWidth": 1
-            }
-          ]
-        },
-        "options": {
-          "responsive": true,
-          "maintainAspectRatio": false,
-          "plugins": {
-            "legend": {
-              "display": true,
-              "position": "top"
-            }
-          }
-        },
-        "metadata": {
-          "subject": "energy",
-          "datatype": "demand",
-          "dataset": "daily_peak",
-          "ranges": ["week"]
+        "id": "item2",
+        "icon": "camera",
+        "title": "Active Devices",
+        "value": "142",
+        "unit": "units",
+        "status": "active",
+        "style": {
+          "backgroundColor": "rgba(54, 162, 235, 0.1)",
+          "borderColor": "rgba(54, 162, 235, 0.5)",
+          "textColor": "var(--text-color)"
+        }
+      },
+      {
+        "id": "item3",
+        "icon": "camera",
+        "title": "Inactive Devices",
+        "value": "14",
+        "unit": "units",
+        "status": "inactive",
+        "style": {
+          "backgroundColor": "rgba(255, 99, 132, 0.1)",
+          "borderColor": "rgba(255, 99, 132, 0.5)",
+          "textColor": "var(--text-color)"
         }
       }
     ],
-    "styles": {
-      "gap": "15px",
-      "padding": "15px",
-      "backgroundColor": "var(--card-bg-color)",
-      "chartHeight": "100%",
-      "chartWidth": "50%"
-    }
-  },
-  "Right-BottomRight": {
-    "layout": "horizontal",
     "charts": [
       {
         "id": "chart1",
-        "type": "bar chart",
-        "title": "Safety Incidents",
-        "subtitle": "2024",
-        "data": {
-          "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
-          "datasets": [
-            {
-              "label": "incidents",
-              "data": [5, 3, 4, 2, 1],
-              "backgroundColor": "rgba(255, 99, 132, 0.5)",
-              "borderColor": "rgba(255, 99, 132, 1)",
-              "borderWidth": 1
-            }
-          ]
-        },
-        "options": {
-          "responsive": true,
-          "maintainAspectRatio": false,
-          "plugins": {
-            "legend": {
-              "display": true,
-              "position": "top"
-            }
-          }
-        },
-        "metadata": {
-          "subject": "incident",
-          "datatype": "safety",
-          "dataset": "monthly_count",
-          "ranges": ["month"]
-        }
-      },
-      {
-        "id": "chart2",
         "type": "doughnut chart",
-        "title": "Incident Types",
-        "subtitle": "2024",
+        "title": "Device Status",
+        "subtitle": "Current Distribution",
         "data": {
-          "labels": ["Minor", "Moderate", "Major"],
+          "labels": ["Active", "Inactive"],
           "datasets": [
             {
-              "label": "incident types",
-              "data": [70, 25, 5],
+              "data": [142, 14],
               "backgroundColor": [
-                "rgba(75, 192, 192, 0.5)",
-                "rgba(255, 206, 86, 0.5)",
-                "rgba(255, 99, 132, 0.5)"
+                "rgba(54, 162, 235, 0.7)",
+                "rgba(255, 99, 132, 0.7)"
               ],
               "borderColor": [
-                "rgba(75, 192, 192, 1)",
-                "rgba(255, 206, 86, 1)",
+                "rgba(54, 162, 235, 1)",
                 "rgba(255, 99, 132, 1)"
               ],
               "borderWidth": 1
@@ -702,89 +602,90 @@
         "options": {
           "responsive": true,
           "maintainAspectRatio": false,
+          "cutout": "70%",
           "plugins": {
             "legend": {
               "display": true,
               "position": "right"
             }
           }
-        },
-        "metadata": {
-          "subject": "incident",
-          "datatype": "types",
-          "dataset": "distribution",
-          "ranges": ["year"]
         }
       }
     ],
     "styles": {
-      "gap": "15px",
-      "padding": "15px",
-      "backgroundColor": "var(--card-bg-color)",
+      "itemWidth": "160px",
       "chartHeight": "100%",
-      "chartWidth": "50%"
+      "gap": "15px",
+      "padding": "12px",
+      "infoSectionWidth": "35%",
+      "chartSectionWidth": "65%"
     }
   },
-  "BottomCenter-Left": {
+  "Right-BottomRight": {
+    "type": "combined-display",
     "layout": "horizontal",
-    "charts": [
+    "items": [
       {
-        "id": "chart1",
-        "type": "line chart",
-        "title": "Training Hours",
-        "subtitle": "2024",
-        "data": {
-          "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
-          "datasets": [
-            {
-              "label": "hours per employee",
-              "data": [8, 12, 10, 15, 14],
-              "backgroundColor": "rgba(54, 162, 235, 0.5)",
-              "borderColor": "rgba(54, 162, 235, 1)",
-              "borderWidth": 1
-            }
-          ]
-        },
-        "options": {
-          "responsive": true,
-          "maintainAspectRatio": false,
-          "plugins": {
-            "legend": {
-              "display": true,
-              "position": "top"
-            }
-          }
-        },
-        "metadata": {
-          "subject": "training",
-          "datatype": "hours",
-          "dataset": "monthly_average",
-          "ranges": ["month"]
+        "id": "item1",
+        "icon": "info",
+        "title": "Total Incidents",
+        "value": "500",
+        "unit": "cases",
+        "status": "total",
+        "style": {
+          "backgroundColor": "rgba(75, 192, 192, 0.1)",
+          "borderColor": "rgba(75, 192, 192, 0.5)",
+          "textColor": "var(--text-color)"
         }
       },
       {
-        "id": "chart2",
-        "type": "doughnut chart",
-        "title": "Training Categories",
-        "subtitle": "2024",
+        "id": "item2",
+        "icon": "info",
+        "title": "Incidents This Year",
+        "value": "300",
+        "unit": "cases",
+        "status": "current",
+        "style": {
+          "backgroundColor": "rgba(54, 162, 235, 0.1)",
+          "borderColor": "rgba(54, 162, 235, 0.5)",
+          "textColor": "var(--text-color)"
+        }
+      },
+      {
+        "id": "item3",
+        "icon": "info",
+        "title": "Incidents Last Year",
+        "value": "200",
+        "unit": "cases",
+        "status": "previous",
+        "style": {
+          "backgroundColor": "rgba(255, 205, 86, 0.1)",
+          "borderColor": "rgba(255, 205, 86, 0.5)",
+          "textColor": "var(--text-color)"
+        }
+      }
+    ],
+    "charts": [
+      {
+        "id": "chart1",
+        "type": "bar chart",
+        "title": "Incident Comparison",
+        "subtitle": "2023 vs 2024",
         "data": {
-          "labels": ["Safety", "Technical", "Soft Skills", "Compliance"],
+          "labels": ["January", "February", "March", "April", "May"],
           "datasets": [
             {
-              "label": "training distribution",
-              "data": [40, 30, 20, 10],
-              "backgroundColor": [
-                "rgba(255, 99, 132, 0.5)",
-                "rgba(54, 162, 235, 0.5)",
-                "rgba(255, 206, 86, 0.5)",
-                "rgba(75, 192, 192, 0.5)"
-              ],
-              "borderColor": [
-                "rgba(255, 99, 132, 1)",
-                "rgba(54, 162, 235, 1)",
-                "rgba(255, 206, 86, 1)",
-                "rgba(75, 192, 192, 1)"
-              ],
+              "label": "This Year",
+              "data": [50, 60, 70, 80, 40],
+              "backgroundColor": "rgba(54, 162, 235, 0.5)",
+              "borderColor": "rgba(54, 162, 235, 1)",
+              "borderWidth": 1
+            },
+            {
+              "label": "Last Year",
+              "data": [30, 40, 50, 60, 30],
+              "backgroundColor": "rgba(255, 205, 86, 0.5)",
+              "borderColor": "rgba(255, 205, 86, 1)",
               "borderWidth": 1
             }
           ]
@@ -795,24 +696,21 @@
           "plugins": {
             "legend": {
               "display": true,
-              "position": "right"
+              "position": "top",
+              "labels": {
+                "font": {
+                  "size": 11
+                }
+              }
             }
           }
-        },
-        "metadata": {
-          "subject": "training",
-          "datatype": "categories",
-          "dataset": "distribution",
-          "ranges": ["year"]
         }
       }
     ],
     "styles": {
-      "gap": "15px",
-      "padding": "15px",
-      "backgroundColor": "var(--card-bg-color)",
-      "chartHeight": "100%",
-      "chartWidth": "50%"
+      "gap": "12px",
+      "padding": "12px",
+      "chartHeight": "100%"
     }
   },
   "BottomCenter-Right": {
@@ -824,11 +722,11 @@
         "title": "Compliance Score",
         "subtitle": "2024",
         "data": {
-          "labels": ["Q1", "Q2", "Q3", "Q4"],
+          "labels": ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8"],
           "datasets": [
             {
               "label": "compliance score",
-              "data": [85, 88, 92, 90],
+              "data": [76, 88, 92, 67, 40, 30, 20, 10],
               "backgroundColor": "rgba(75, 192, 192, 0.5)",
               "borderColor": "rgba(75, 192, 192, 1)",
               "borderWidth": 1
@@ -838,10 +736,38 @@
         "options": {
           "responsive": true,
           "maintainAspectRatio": false,
+          "indexAxis": "y",
           "plugins": {
             "legend": {
               "display": true,
               "position": "top"
+            }
+          },
+          "scales": {
+            "x": {
+              "beginAtZero": true,
+              "max": 100,
+              "grid": {
+                "display": true,
+                "drawBorder": false,
+                "color": "rgba(200, 200, 200, 0.1)"
+              },
+              "ticks": {
+                "font": {
+                  "size": 10
+                }
+              }
+            },
+            "y": {
+              "grid": {
+                "display": false,
+                "drawBorder": false
+              },
+              "ticks": {
+                "font": {
+                  "size": 10
+                }
+              }
             }
           }
         },
@@ -854,7 +780,7 @@
       },
       {
         "id": "chart2",
-        "type": "line chart",
+        "type": "bar chart",
         "title": "Audit Findings",
         "subtitle": "2024",
         "data": {
@@ -893,6 +819,134 @@
       "backgroundColor": "var(--card-bg-color)",
       "chartHeight": "100%",
       "chartWidth": "50%"
+    }
+  },
+  "BottomCenter-Left": {
+    "layout": "horizontal",
+    "subject": "training",
+    "datatype": "performance",
+    "charts": [
+      {
+        "id": "chart1",
+        "type": "line chart",
+        "title": "Training Hours",
+        "subtitle": "Monthly Average",
+        "data": {
+          "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+          "datasets": [
+            {
+              "label": "Hours per Employee",
+              "data": [8, 12, 10, 15, 14, 16],
+              "backgroundColor": "rgba(75, 192, 192, 0.2)",
+              "borderColor": "rgba(75, 192, 192, 1)",
+              "borderWidth": 2,
+              "tension": 0.4,
+              "fill": true
+            }
+          ]
+        },
+        "options": {
+          "responsive": true,
+          "maintainAspectRatio": false,
+          "plugins": {
+            "legend": {
+              "display": true,
+              "position": "top",
+              "labels": {
+                "font": {
+                  "size": 11
+                }
+              }
+            }
+          },
+          "scales": {
+            "y": {
+              "beginAtZero": true,
+              "grid": {
+                "display": true,
+                "color": "rgba(200, 200, 200, 0.1)"
+              },
+              "ticks": {
+                "font": {
+                  "size": 10
+                }
+              }
+            },
+            "x": {
+              "grid": {
+                "display": false
+              },
+              "ticks": {
+                "font": {
+                  "size": 10
+                }
+              }
+            }
+          }
+        },
+        "metadata": {
+          "subject": "training",
+          "datatype": "hours",
+          "dataset": "monthly_average",
+          "ranges": ["month"]
+        }
+      },
+      {
+        "id": "chart2",
+        "type": "doughnut chart",
+        "title": "Training Categories",
+        "subtitle": "Distribution",
+        "data": {
+          "labels": ["Safety", "Technical", "Soft Skills", "Compliance"],
+          "datasets": [
+            {
+              "data": [40, 30, 20, 10],
+              "backgroundColor": [
+                "rgba(75, 192, 192, 0.7)",
+                "rgba(54, 162, 235, 0.7)",
+                "rgba(255, 206, 86, 0.7)",
+                "rgba(255, 99, 132, 0.7)"
+              ],
+              "borderColor": [
+                "rgba(75, 192, 192, 1)",
+                "rgba(54, 162, 235, 1)",
+                "rgba(255, 206, 86, 1)",
+                "rgba(255, 99, 132, 1)"
+              ],
+              "borderWidth": 1
+            }
+          ]
+        },
+        "options": {
+          "responsive": true,
+          "maintainAspectRatio": false,
+          "cutout": "70%",
+          "plugins": {
+            "legend": {
+              "display": true,
+              "position": "right",
+              "labels": {
+                "font": {
+                  "size": 11
+                }
+              }
+            }
+          }
+        },
+        "metadata": {
+          "subject": "training",
+          "datatype": "categories",
+          "dataset": "distribution",
+          "ranges": ["year"]
+        }
+      }
+    ],
+    "styles": {
+      "gap": "15px",
+      "padding": "15px",
+      "backgroundColor": "var(--card-bg-color)",
+      "chartHeight": "100%",
+      "chartWidth": "48%"
     }
   }
 }

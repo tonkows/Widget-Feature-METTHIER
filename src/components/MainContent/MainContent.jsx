@@ -215,7 +215,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
       return (
         <CombinedContainer>
           {config.items && (
-            <InfoSection>
+            <InfoSection width={config.styles?.infoSectionWidth}>
               <InfoDisplayContainer>
                 {config.items.map((item) => (
                   <InfoItem
@@ -223,7 +223,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
                     style={{
                       backgroundColor: item.style?.backgroundColor || 'var(--background-color)',
                       borderColor: item.style?.borderColor || 'var(--border-color)',
-                      width: config.styles?.itemWidth || '150px'
+                      width: '100%'
                     }}
                   >
                     <InfoIcon status={item.status}>
@@ -245,7 +245,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
           )}
 
           {config.charts && (
-            <ChartSection>
+            <ChartSection width={config.styles?.chartSectionWidth}>
               <ChartContainer layout={config.layout}>
                 {config.charts.map((chart, index) => {
                   const ChartComponent = {
@@ -298,31 +298,35 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
 
     if (config.type === "info-display") {
       return (
-        <InfoDisplayContainer layout={config.layout}>
-          {config.items.map((item) => (
-            <InfoItem
-              key={item.id}
-              style={{
-                backgroundColor: item.style.backgroundColor,
-                borderColor: item.style.borderColor,
-                width: config.styles.itemWidth
-              }}
-            >
-              <InfoIcon status={item.status}>
-                {item.icon === 'camera' ? <CameraIcon /> : <CameraOffIcon />}
-              </InfoIcon>
-              <InfoContent>
-                <InfoTitle style={{ color: item.style.textColor }}>
-                  {item.title}
-                </InfoTitle>
-                <InfoValue style={{ color: item.style.textColor }}>
-                  {item.value}
-                  <InfoUnit>{item.unit}</InfoUnit>
-                </InfoValue>
-              </InfoContent>
-            </InfoItem>
-          ))}
-        </InfoDisplayContainer>
+        <CombinedContainer>
+          <InfoSection width={config.styles?.infoSectionWidth || "100%"}>
+            <InfoDisplayContainer layout={config.layout}>
+              {config.items.map((item) => (
+                <InfoItem
+                  key={item.id}
+                  style={{
+                    backgroundColor: item.style?.backgroundColor || 'var(--background-color)',
+                    borderColor: item.style?.borderColor || 'var(--border-color)',
+                    width: item.style?.width || 'calc(33.33% - 8px)'
+                  }}
+                >
+                  <InfoIcon status={item.status}>
+                    {item.icon === 'camera' ? <CameraIcon /> : <InfoIcon />}
+                  </InfoIcon>
+                  <InfoContent>
+                    <InfoTitle style={{ color: item.style?.textColor || 'var(--text-color)' }}>
+                      {item.title}
+                    </InfoTitle>
+                    <InfoValue style={{ color: item.style?.textColor || 'var(--text-color)' }}>
+                      {item.value}
+                      <InfoUnit>{item.unit}</InfoUnit>
+                    </InfoValue>
+                  </InfoContent>
+                </InfoItem>
+              ))}
+            </InfoDisplayContainer>
+          </InfoSection>
+        </CombinedContainer>
       );
     }
 
@@ -721,6 +725,9 @@ const ResetButton = styled.button`
 const InfoContent = styled.div`
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
 `;
 
 const CombinedContainer = styled.div`
@@ -733,11 +740,11 @@ const CombinedContainer = styled.div`
 `;
 
 const InfoSection = styled.div`
-  width: 200px;
+  width: ${props => props.width || '200px'};
   height: 100%;
   background: var(--background-color);
-  border-radius: 6px;
-  padding: 8px;
+  border-radius: 8px;
+  padding: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -745,54 +752,71 @@ const InfoSection = styled.div`
 `;
 
 const ChartSection = styled.div`
-  flex: 1;
+  width: ${props => props.width || 'auto'};
+  flex: ${props => props.width ? 'none' : 1};
   height: 100%;
   background: var(--background-color);
-  border-radius: 6px;
-  padding: 8px;
+  border-radius: 8px;
+  padding: 12px;
   min-height: 0;
   order: 1;
 `;
 
 const InfoDisplayContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  flex-direction: ${props => props.layout === 'horizontal' ? 'row' : 'column'};
+  gap: 12px;
   width: 100%;
   height: 100%;
-  justify-content: center;
-  align-items: center;
-  overflow-y: auto;
-  
-  ::-webkit-scrollbar {
-    display: none;
-  }
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  justify-content: ${props => props.layout === 'horizontal' ? 'space-between' : 'flex-start'};
+  align-items: ${props => props.layout === 'horizontal' ? 'center' : 'stretch'};
+  padding: 8px;
+  overflow: hidden;
 `;
 
 const InfoItem = styled.div`
   display: flex;
   align-items: center;
-  padding: 8px 12px;
-  border-radius: 6px;
+  padding: 12px;
+  border-radius: 8px;
   border: 1px solid var(--border-color);
   background: var(--card-bg-color);
-  width: 180px;
-  height: 60px;
-  flex-shrink: 0;
+  height: 70px;
+  min-width: 0;
+  flex-shrink: 1;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const InfoIcon = styled.div`
   font-size: 16px;
   margin-right: 8px;
-  opacity: ${props => props.status === 'active' ? 1 : 0.7};
+  flex-shrink: 0;
+  opacity: ${props => props.status === 'active' ? 1 : 0.8};
+  color: ${props => {
+    switch(props.status) {
+      case 'total': return 'rgba(75, 192, 192, 1)';
+      case 'online': return 'rgba(54, 162, 235, 1)';
+      case 'offline': return 'rgba(255, 99, 132, 1)';
+      default: return 'var(--text-color)';
+    }
+  }};
 `;
 
 const InfoTitle = styled.div`
   font-size: 12px;
   font-weight: 500;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
+  color: var(--text-color);
+  opacity: 0.8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const InfoValue = styled.div`
@@ -800,11 +824,16 @@ const InfoValue = styled.div`
   font-weight: 700;
   display: flex;
   align-items: baseline;
+  color: var(--text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const InfoUnit = styled.span`
   font-size: 10px;
   font-weight: 400;
   margin-left: 4px;
-  opacity: 0.8;
+  opacity: 0.7;
+  color: var(--text-color);
 `;

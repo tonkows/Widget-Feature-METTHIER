@@ -1055,32 +1055,106 @@ const ConfigForm = ({ isCollapsed }) => {
             justifyContent: "center",
             alignItems: "center"
           }}>
-            {defaultContent.type === "info-display" ? (
-              <InfoDisplayContainer layout={defaultContent.layout}>
-                {defaultContent.items.map((item) => (
-                  <InfoItem
-                    key={item.id}
-                    style={{
-                      backgroundColor: item.style.backgroundColor,
-                      borderColor: item.style.borderColor,
-                      width: defaultContent.styles.itemWidth
-                    }}
-                  >
-                    <InfoIcon status={item.status}>
-                      {item.icon === 'camera' ? <CameraIcon /> : <CameraOffIcon />}
-                    </InfoIcon>
-                    <InfoContent>
-                      <InfoTitle style={{ color: item.style.textColor }}>
-                        {item.title}
-                      </InfoTitle>
-                      <InfoValue style={{ color: item.style.textColor }}>
-                        {item.value}
-                        <InfoUnit>{item.unit}</InfoUnit>
-                      </InfoValue>
-                    </InfoContent>
-                  </InfoItem>
-                ))}
-              </InfoDisplayContainer>
+            {defaultContent.type === "combined-display" ? (
+              <CombinedPreviewContainer>
+                <InfoSection width={defaultContent.styles?.infoSectionWidth}>
+                  <InfoDisplayContainer>
+                    {defaultContent.items.map((item) => (
+                      <InfoItem
+                        key={item.id}
+                        style={{
+                          backgroundColor: item.style?.backgroundColor || 'var(--background-color)',
+                          borderColor: item.style?.borderColor || 'var(--border-color)',
+                          width: '100%'
+                        }}
+                      >
+                        <InfoIcon status={item.status}>
+                          {item.icon === 'camera' ? <CameraIcon /> : <InfoIcon />}
+                        </InfoIcon>
+                        <InfoContent>
+                          <InfoTitle>
+                            {item.title}
+                          </InfoTitle>
+                          <InfoValue>
+                            {item.value}
+                            <InfoUnit>{item.unit}</InfoUnit>
+                          </InfoValue>
+                        </InfoContent>
+                      </InfoItem>
+                    ))}
+                  </InfoDisplayContainer>
+                </InfoSection>
+
+                <ChartSection width={defaultContent.styles?.chartSectionWidth}>
+                  <ChartGrid layout={defaultContent.layout}>
+                    {defaultContent.charts.map((chart, index) => {
+                      const ChartComponent = {
+                        'bar chart': Bar,
+                        'line chart': Line,
+                        'doughnut chart': Doughnut
+                      }[chart.type];
+
+                      if (!ChartComponent) return null;
+
+                      return (
+                        <ChartBox key={index} layout={defaultContent.layout}>
+                          <ChartComponent
+                            data={chart.data}
+                            options={{
+                              ...chart.options,
+                              maintainAspectRatio: false,
+                              responsive: true,
+                              plugins: {
+                                legend: {
+                                  display: true,
+                                  position: 'top',
+                                  labels: {
+                                    font: { size: 11 }
+                                  }
+                                },
+                                title: {
+                                  display: true,
+                                  text: [chart.title, chart.subtitle],
+                                  font: { size: 12, weight: 'bold' },
+                                  padding: { top: 10, bottom: 10 }
+                                }
+                              }
+                            }}
+                          />
+                        </ChartBox>
+                      );
+                    })}
+                  </ChartGrid>
+                </ChartSection>
+              </CombinedPreviewContainer>
+            ) : defaultContent.type === "info-display" ? (
+              <InfoDisplayPreview>
+                <InfoDisplayContainer layout={defaultContent.layout}>
+                  {defaultContent.items.map((item) => (
+                    <InfoItem
+                      key={item.id}
+                      style={{
+                        backgroundColor: item.style?.backgroundColor || 'var(--background-color)',
+                        borderColor: item.style?.borderColor || 'var(--border-color)',
+                        width: item.style?.width || 'calc(33.33% - 8px)'
+                      }}
+                    >
+                      <InfoIcon status={item.status}>
+                        {item.icon === 'camera' ? <CameraIcon /> : <InfoIcon />}
+                      </InfoIcon>
+                      <InfoContent>
+                        <InfoTitle>
+                          {item.title}
+                        </InfoTitle>
+                        <InfoValue>
+                          {item.value}
+                          <InfoUnit>{item.unit}</InfoUnit>
+                        </InfoValue>
+                      </InfoContent>
+                    </InfoItem>
+                  ))}
+                </InfoDisplayContainer>
+              </InfoDisplayPreview>
             ) : (
               <ChartPreviewContainer>
                 <ChartGrid layout={defaultContent.layout}>
@@ -1312,25 +1386,41 @@ const ChartBox = styled.div`
   }
 `;
 
-const InfoDisplayContainer = styled.div`
-  padding: 20px;
+const InfoDisplayPreview = styled.div`
+  width: 100%;
+  padding: 16px;
   background: var(--card-bg-color);
   border-radius: 8px;
-  margin-top: 20px;
-  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+const InfoDisplayContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  flex-direction: ${props => props.layout === 'horizontal' ? 'row' : 'column'};
+  gap: 12px;
+  width: 100%;
+  justify-content: ${props => props.layout === 'horizontal' ? 'space-between' : 'flex-start'};
+  align-items: ${props => props.layout === 'horizontal' ? 'center' : 'stretch'};
+  overflow: hidden;
 `;
 
 const InfoItem = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 10px;
-  border: 1px solid ${props => props.style.borderColor};
+  padding: 12px;
   border-radius: 8px;
-  width: ${props => props.style.itemWidth || '200px'};
+  border: 1px solid var(--border-color);
+  background: var(--card-bg-color);
+  height: 70px;
+  min-width: 0;
+  flex-shrink: 1;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const InfoIcon = styled.div`
@@ -1342,19 +1432,64 @@ const InfoContent = styled.div`
   text-align: left;
 `;
 
-const InfoTitle = styled.h4`
-  margin-bottom: 5px;
-  color: ${props => props.style.textColor || 'var(--text-color)'};
+const InfoTitle = styled.div`
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: var(--text-color);
+  opacity: 0.8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const InfoValue = styled.div`
-  font-size: 24px;
-  font-weight: bold;
-  color: ${props => props.style.textColor || 'var(--text-color)'};
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: baseline;
+  color: var(--text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const InfoUnit = styled.span`
-  font-size: 14px;
-  margin-left: 5px;
-  color: ${props => props.style.textColor || 'var(--text-color)'};
+  font-size: 10px;
+  font-weight: 400;
+  margin-left: 4px;
+  opacity: 0.7;
+  color: var(--text-color);
+`;
+
+const CombinedPreviewContainer = styled.div`
+  width: 100%;
+  height: 400px;
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background: var(--card-bg-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+const InfoSection = styled.div`
+  width: ${props => props.width || '35%'};
+  height: 100%;
+  background: var(--background-color);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  order: 2;
+`;
+
+const ChartSection = styled.div`
+  width: ${props => props.width || '65%'};
+  height: 100%;
+  background: var(--background-color);
+  border-radius: 8px;
+  padding: 12px;
+  order: 1;
 `;
