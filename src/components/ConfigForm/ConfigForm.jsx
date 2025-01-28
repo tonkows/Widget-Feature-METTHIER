@@ -4,7 +4,7 @@ import { Link, useSearchParams, useNavigate, Prompt } from "react-router-dom";
 import styled from "styled-components";
 import moment from "moment";
 import { Bar, Line, Doughnut } from "react-chartjs-2";
-import { BiCamera as CameraIcon, BiCameraOff as CameraOffIcon } from "react-icons/bi";
+import { BiCamera as CameraIcon, FiCamera ,BiCameraOff as CameraOffIcon } from "react-icons/bi";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -167,7 +167,7 @@ const ConfigForm = ({ isCollapsed }) => {
               setSavedDefaultContent(defaultConfig);
             }
           } else {
-            // ถ้าเป็น default ให้ใช้ข้อมูลจาก localStorage โดยตรง
+            
             setDefaultContent(config);
             setSavedDefaultContent(config);
           }
@@ -192,14 +192,7 @@ const ConfigForm = ({ isCollapsed }) => {
     }
   }, [subject1, datatype1, dataset1, selectedRanges, chartData, defaultContent, blockId, selectedButton]);
 
-  useEffect(() => {
-    if (blockId) {
-      const savedTab = localStorage.getItem(`selected-tab-${blockId}`);
-      if (savedTab) {
-        setSelectedButton(savedTab);
-      }
-    }
-  }, [blockId]);
+ 
 
   useEffect(() => {
     const savedSubject = localStorage.getItem('selectedSubject');
@@ -253,7 +246,7 @@ const ConfigForm = ({ isCollapsed }) => {
           setSelectedRanges([]);
           }
           setSelectedButton(buttonType);
-          localStorage.setItem(`selected-tab-${blockId}`, buttonType);
+          
         },
       });
     } else {
@@ -277,7 +270,7 @@ const ConfigForm = ({ isCollapsed }) => {
         }
         setSavedDefaultContent(defaultContent);
         setSelectedButton(buttonType);
-        localStorage.setItem(`selected-tab-${blockId}`, buttonType);
+       
       } else {
         const lastDefaultConfig = localStorage.getItem(`block-${blockId}-last-default`);
         if (lastDefaultConfig) {
@@ -287,7 +280,7 @@ const ConfigForm = ({ isCollapsed }) => {
         setDataset1(null);
       setSelectedRanges([]);
       setSelectedButton(buttonType);
-      localStorage.setItem(`selected-tab-${blockId}`, buttonType);
+   
       }
     }
   };
@@ -524,7 +517,7 @@ const ConfigForm = ({ isCollapsed }) => {
   const handlePreview = () => {
     if (!blockId) return;
   
-    // ล้าง preview data ทั้งหมดที่มีอยู่ใน localStorage
+ 
     Object.keys(localStorage).forEach(key => {
       if (key.startsWith('preview-')) {
         localStorage.removeItem(key);
@@ -590,9 +583,9 @@ const ConfigForm = ({ isCollapsed }) => {
         }))
       };
     }
-  
-    // เก็บ preview data ใหม่
+
     localStorage.setItem(`preview-${blockId}`, JSON.stringify(previewData));
+    window.removeEventListener('beforeunload', () => {});
     navigate(`/preview?block=${blockId}`);
   };
   
@@ -636,25 +629,47 @@ const ConfigForm = ({ isCollapsed }) => {
         title: 'Success',
         content: 'Chart has been generated successfully',
         onOk: () => {
+          window.removeEventListener('beforeunload', () => {});
           navigate('/');
         }
       });
     }
   };
 
-  const handleDefaultSubjectChange = (value) => {
-    setDefaultContent(prev => ({
-      ...prev,
-      subject: value,
-      datatype: null
-    }));
+  const handleDefaultSubjectChange = async (value) => {
+    try {
+    
+      const clearedContent = {
+        subject: value,
+        datatype: null,
+        type: null,
+        layout: null,
+        charts: [],
+        items: [],
+        styles: {}
+      };
+      
+      setDefaultContent(clearedContent);
 
-    const config = {
-      selectedButton: "default",
-      subject: value,
-      datatype: null
-    };
-    localStorage.setItem(`block-config-${blockId}`, JSON.stringify(config));
+     
+      localStorage.removeItem(`block-${blockId}-last-default`);
+      
+     
+      const config = {
+        selectedButton: "default",
+        subject: value,
+        datatype: null
+      };
+      localStorage.setItem(`block-config-${blockId}`, JSON.stringify(config));
+
+      
+    } catch (error) {
+      console.error("Error handling subject change:", error);
+      Modal.error({
+        title: 'Error',
+        content: 'Failed to change subject'
+      });
+    }
   };
 
   const handleDefaultDatatypeChange = async (value) => {
@@ -710,6 +725,19 @@ const ConfigForm = ({ isCollapsed }) => {
 
   useEffect(() => {
     localStorage.setItem('previousPath', '/config-form');
+  }, []);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+
+    window.removeEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, []);
 
   return (
@@ -1006,8 +1034,28 @@ const ConfigForm = ({ isCollapsed }) => {
 {selectedButton === "default" && defaultContent && (
         <WrapperDiv2>
            <Breadcrumb>
-        <Breadcrumb.Item>
-          <Link to="/">Home</Link>
+           <Breadcrumb.Item>
+          <a onClick={(e) => {
+            e.preventDefault();
+            if (selectedButton === "default") {
+              Modal.confirm({
+                title: 'Unsaved Changes',
+                content: 'You have unsaved changes. Are you sure you want to go back to home?',
+                okText: 'Yes',
+                cancelText: 'No',
+                onOk: () => {
+                 
+                  localStorage.removeItem(`block-${blockId}-last-default`);
+                  setDefaultContent(savedDefaultContent);
+                  navigate('/');
+                }
+              });
+            } else {
+              navigate('/');
+            }
+          }}>
+            Home
+          </a>
         </Breadcrumb.Item>
         <Breadcrumb.Item>Default</Breadcrumb.Item>
       </Breadcrumb>
@@ -1158,45 +1206,47 @@ const ConfigForm = ({ isCollapsed }) => {
             ) : (
               <ChartPreviewContainer>
                 <ChartGrid layout={defaultContent.layout}>
-                  {defaultContent.charts?.map((chart, index) => (
-                    <ChartBox 
-                      key={index}
-                      layout={defaultContent.layout}
-                      style={{
-                        width: defaultContent.styles?.chartWidth || '100%',
-                        height: defaultContent.styles?.chartHeight || '100%'
-                      }}
-                    >
-                      {(() => {
-                        const ChartComponent = {
-                          'bar chart': Bar,
-                          'line chart': Line,
-                          'doughnut chart': Doughnut
-                        }[chart.type];
+                  {defaultContent?.charts ? (
+                    defaultContent.charts.map((chart, index) => {
+                      const ChartComponent = {
+                        'bar chart': Bar,
+                        'line chart': Line,
+                        'doughnut chart': Doughnut
+                      }[chart.type];
 
-                        return ChartComponent ? (
-                          <ChartComponent
-                            data={chart.data}
-                            options={{
-                              ...chart.options,
-                              maintainAspectRatio: false,
-                              responsive: true,
-                              plugins: {
-                                ...chart.options.plugins,
-                                title: {
-                                  display: true,
-                                  text: [chart.title, chart.subtitle],
-                                  position: 'top',
-                                  align: 'start',
-                                  font: { size: 12, weight: 'bold' }
+                      if (!ChartComponent) return null;
+
+                      return (
+                        <ChartCard key={index}>
+                          <div className="chart-header">
+                            <div className="chart-title">{chart.title}</div>
+                            <div className="chart-subtitle">{chart.subtitle}</div>
+                          </div>
+                          <div className="chart-content">
+                            <ChartComponent
+                              data={chart.data}
+                              options={{
+                                ...chart.options,
+                                maintainAspectRatio: false,
+                                responsive: true,
+                                plugins: {
+                                  legend: {
+                                    display: true,
+                                    position: 'top',
+                                    labels: {
+                                      boxWidth: 10,
+                                      padding: 5,
+                                      font: { size: 11 }
+                                    }
+                                  }
                                 }
-                              }
-                            }}
-                          />
-                        ) : null;
-                      })()}
-                    </ChartBox>
-                  ))}
+                              }}
+                            />
+                          </div>
+                        </ChartCard>
+                      );
+                    })
+                  ) : null}
                 </ChartGrid>
               </ChartPreviewContainer>
             )}
@@ -1247,8 +1297,8 @@ const WrapperDiv1 = styled.div`
   border: 1px solid var(--border-color);
   position: relative;
   margin-top: 20px;
-  min-height: 1000px;
-  height: 1000px;
+  min-height: 800px;
+  height: 800px;
   label {
     color: var(--text-color);
   }
@@ -1265,8 +1315,8 @@ const WrapperDiv2 = styled.div`
   border: 1px solid var(--border-color);
   position: relative;
   margin-top: 20px;
-  min-height: 1000px;
-  height: 1000px;
+  min-height: 800px;
+  height: 800px;
   label {
     color: var(--text-color);
   }
@@ -1352,12 +1402,46 @@ const ButtonsContainer = styled.div`
 `;
 
 const ChartPreviewContainer = styled.div`
-  width: 800px;
-  height: 400px;
-  background: var(--card-bg-color);
+  width: 50%;
+  height: 300px;
   border-radius: 8px;
-  padding: 20px;
+  padding: 16px;
   margin: 0 auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+const ChartCard = styled.div`
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+
+  .chart-header {
+    margin-bottom: 8px;
+    padding: 0 8px;
+
+    .chart-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    .chart-subtitle {
+      font-size: 10px;
+      color: var(--text-color);
+      opacity: 0.8;
+    }
+  }
+
+  .chart-content {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 const ChartGrid = styled.div`
@@ -1365,7 +1449,7 @@ const ChartGrid = styled.div`
   height: 100%;
   display: flex;
   flex-direction: ${props => props.layout === 'vertical' ? 'column' : 'row'};
-  gap: 20px;
+  gap: 12px;
   justify-content: center;
   align-items: center;
 `;
@@ -1463,12 +1547,11 @@ const InfoUnit = styled.span`
 `;
 
 const CombinedPreviewContainer = styled.div`
-  width: 100%;
-  height: 400px;
+  width: 50%;
+  height: 300px;
   display: flex;
   gap: 12px;
   padding: 16px;
-  background: var(--card-bg-color);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;

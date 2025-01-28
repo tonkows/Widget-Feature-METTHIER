@@ -213,173 +213,178 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
 
     if (config.type === "combined-display") {
       return (
-        <CombinedContainer>
-          {config.items && (
-            <InfoSection width={config.styles?.infoSectionWidth}>
-              <InfoDisplayContainer>
-                {config.items.map((item) => (
-                  <InfoItem
-                    key={item.id}
-                    style={{
-                      backgroundColor: item.style?.backgroundColor || 'var(--background-color)',
-                      borderColor: item.style?.borderColor || 'var(--border-color)',
-                      width: '100%'
-                    }}
-                  >
-                    <InfoIcon status={item.status}>
-                      {item.icon === 'camera' ? <CameraIcon /> : <CameraOffIcon />}
-                    </InfoIcon>
-                    <InfoContent>
-                      <InfoTitle style={{ color: item.style?.textColor || 'var(--text-color)' }}>
-                        {item.title}
-                      </InfoTitle>
-                      <InfoValue style={{ color: item.style?.textColor || 'var(--text-color)' }}>
-                        {item.value}
-                        <InfoUnit>{item.unit}</InfoUnit>
-                      </InfoValue>
-                    </InfoContent>
-                  </InfoItem>
-                ))}
-              </InfoDisplayContainer>
-            </InfoSection>
-          )}
-
-          {config.charts && (
-            <ChartSection width={config.styles?.chartSectionWidth}>
-              <ChartContainer layout={config.layout}>
-                {config.charts.map((chart, index) => {
-                  const ChartComponent = {
-                    'bar chart': Bar,
-                    'line chart': Line,
-                    'doughnut chart': Doughnut
-                  }[chart.type];
-
-                  if (!ChartComponent) return null;
-
-                  return (
-                    <ChartWrapper 
-                      key={index}
-                      layout={config.layout}
+        <Block>
+          <SubjectLabel>{config.subject?.replace(/_/g, ' ')}</SubjectLabel>
+          <CombinedContainer>
+            {config.items && (
+              <InfoSection>
+                <InfoDisplayContainer>
+                  {config.items.map((item) => (
+                    <InfoItem
+                      key={item.id}
+                      style={{
+                        backgroundColor: item.style?.backgroundColor || 'var(--background-color)',
+                        borderColor: item.style?.borderColor || 'var(--border-color)',
+                        width: config.styles?.itemWidth || '150px'
+                      }}
                     >
-                      <ChartComponent
-                        data={chart.data}
-                        options={{
-                          ...chart.options,
-                          maintainAspectRatio: false,
-                          responsive: true,
-                          plugins: {
-                            legend: {
-                              display: true,
-                              position: 'top',
-                              labels: {
-                                boxWidth: 10,
-                                padding: 5,
-                                font: { size: 8 }
+                      <InfoIcon status={item.status}>
+                        {item.icon === 'camera' ? <CameraIcon /> : <CameraOffIcon />}
+                      </InfoIcon>
+                      <InfoContent>
+                        <InfoTitle style={{ color: item.style?.textColor || 'var(--text-color)' }}>
+                          {item.title}
+                        </InfoTitle>
+                        <InfoValue style={{ color: item.style?.textColor || 'var(--text-color)' }}>
+                          {item.value}
+                          <InfoUnit>{item.unit}</InfoUnit>
+                        </InfoValue>
+                      </InfoContent>
+                    </InfoItem>
+                  ))}
+                </InfoDisplayContainer>
+              </InfoSection>
+            )}
+
+            {config.charts && (
+              <ChartSection>
+                <ChartContainer layout={config.layout}>
+                  {config.charts.map((chart, index) => {
+                    const ChartComponent = {
+                      'bar chart': Bar,
+                      'line chart': Line,
+                      'doughnut chart': Doughnut
+                    }[chart.type];
+
+                    if (!ChartComponent) return null;
+
+                    return (
+                      <ChartWrapper 
+                        key={index}
+                        layout={config.layout}
+                      >
+                        <ChartComponent
+                          data={chart.data}
+                          options={{
+                            ...chart.options,
+                            maintainAspectRatio: false,
+                            responsive: true,
+                            plugins: {
+                              legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                  boxWidth: 10,
+                                  padding: 5,
+                                  font: { size: 8 }
+                                }
+                              },
+                              title: {
+                                display: true,
+                                text: [chart.title, chart.subtitle],
+                                font: { size: 10, weight: 'bold' },
+                                padding: { top: 5, bottom: 5 }
                               }
-                            },
-                            title: {
-                              display: true,
-                              text: [chart.title, chart.subtitle],
-                              font: { size: 10, weight: 'bold' },
-                              padding: { top: 5, bottom: 5 }
                             }
-                          }
-                        }}
-                      />
-                    </ChartWrapper>
-                  );
-                })}
-              </ChartContainer>
-            </ChartSection>
-          )}
-        </CombinedContainer>
+                          }}
+                        />
+                      </ChartWrapper>
+                    );
+                  })}
+                </ChartContainer>
+              </ChartSection>
+            )}
+          </CombinedContainer>
+        </Block>
       );
     }
 
     if (config.type === "info-display") {
       return (
-        <CombinedContainer>
-          <InfoSection width={config.styles?.infoSectionWidth || "100%"}>
-            <InfoDisplayContainer layout={config.layout}>
-              {config.items.map((item) => (
-                <InfoItem
-                  key={item.id}
-                  style={{
-                    backgroundColor: item.style?.backgroundColor || 'var(--background-color)',
-                    borderColor: item.style?.borderColor || 'var(--border-color)',
-                    width: item.style?.width || 'calc(33.33% - 8px)'
-                  }}
-                >
-                  <InfoIcon status={item.status}>
-                    {item.icon === 'camera' ? <CameraIcon /> : <InfoIcon />}
-                  </InfoIcon>
-                  <InfoContent>
-                    <InfoTitle style={{ color: item.style?.textColor || 'var(--text-color)' }}>
-                      {item.title}
-                    </InfoTitle>
-                    <InfoValue style={{ color: item.style?.textColor || 'var(--text-color)' }}>
-                      {item.value}
-                      <InfoUnit>{item.unit}</InfoUnit>
-                    </InfoValue>
-                  </InfoContent>
-                </InfoItem>
-              ))}
-            </InfoDisplayContainer>
-          </InfoSection>
-        </CombinedContainer>
+        <Block>
+          <SubjectLabel>{config.subject?.replace(/_/g, ' ')}</SubjectLabel>
+          <InfoDisplayContainer layout={config.layout}>
+            {config.items.map((item) => (
+              <InfoItem
+                key={item.id}
+                style={{
+                  backgroundColor: item.style.backgroundColor,
+                  borderColor: item.style.borderColor,
+                  width: config.styles.itemWidth
+                }}
+              >
+                <InfoIcon status={item.status}>
+                  {item.icon === 'camera' ? <CameraIcon /> : <CameraOffIcon />}
+                </InfoIcon>
+                <InfoContent>
+                  <InfoTitle style={{ color: item.style.textColor }}>
+                    {item.title}
+                  </InfoTitle>
+                  <InfoValue style={{ color: item.style.textColor }}>
+                    {item.value}
+                    <InfoUnit>{item.unit}</InfoUnit>
+                  </InfoValue>
+                </InfoContent>
+              </InfoItem>
+            ))}
+          </InfoDisplayContainer>
+        </Block>
       );
     }
 
     if (config.charts && Array.isArray(config.charts)) {
       return (
-        <ChartContainer layout={config.layout || 'horizontal'}>
-          {config.charts.map((chart, index) => {
-            const ChartComponent = {
-              'bar chart': Bar,
-              'line chart': Line,
-              'doughnut chart': Doughnut
-            }[chart.type || chart.selectedChart];
+        <Block>
+          <SubjectLabel>{config.subject?.replace(/_/g, ' ')}</SubjectLabel>
+          <ChartContainer layout={config.layout || 'horizontal'}>
+            {config.charts.map((chart, index) => {
+              const ChartComponent = {
+                'bar chart': Bar,
+                'line chart': Line,
+                'doughnut chart': Doughnut
+              }[chart.type || chart.selectedChart];
 
-            if (!ChartComponent) return null;
+              if (!ChartComponent) return null;
 
-            return (
-              <ChartWrapper 
-                key={index}
-                layout={config.layout || 'horizontal'}
-                style={{
-                  width: config.layout === 'horizontal' ? '48%' : '100%',
-                  height: config.layout === 'horizontal' ? '100%' : '48%'
-                }}
-              > 
-                <ChartComponent
-                  data={chart.chartData || chart.data}
-                  options={{
-                    ...chart.chartOptions || chart.options,
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    plugins: {
-                      legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                          boxWidth: 10,
-                          padding: 5,
-                          font: { size: 8 }
-                        }
-                      },
-                      title: {
-                        display: true,
-                        text: [chart.subject_label || chart.title, chart.subtitle],
-                        font: { size: 10, weight: 'bold' },
-                        padding: { top: 5, bottom: 5 }
-                      }
-                    }
+              return (
+                <ChartWrapper 
+                  key={index}
+                  layout={config.layout || 'horizontal'}
+                  style={{
+                    width: config.layout === 'horizontal' ? '48%' : '100%',
+                    height: config.layout === 'horizontal' ? '100%' : '48%'
                   }}
-                />
-              </ChartWrapper>
-            );
-          })}
-        </ChartContainer>
+                > 
+                  <ChartComponent
+                    data={chart.chartData || chart.data}
+                    options={{
+                      ...chart.chartOptions || chart.options,
+                      maintainAspectRatio: false,
+                      responsive: true,
+                      plugins: {
+                        legend: {
+                          display: true,
+                          position: 'top',
+                          labels: {
+                            boxWidth: 10,
+                            padding: 5,
+                            font: { size: 8 }
+                          }
+                        },
+                        title: {
+                          display: true,
+                          text: [chart.subject_label || chart.title, chart.subtitle],
+                          font: { size: 10, weight: 'bold' },
+                          padding: { top: 5, bottom: 5 }
+                        }
+                      }
+                    }}
+                  />
+                </ChartWrapper>
+              );
+            })}
+          </ChartContainer>
+        </Block>
       );
     }
 
@@ -393,33 +398,36 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
     if (!ChartComponent) return null;
 
     return (
-      <ChartWrapper>
-        <ChartComponent
-          data={config.chartData}
-          options={{
-            ...config.chartOptions,
-            maintainAspectRatio: false,
-            responsive: true,
-            plugins: {
-              legend: {
-                display: true,
-                position: 'top',
-                labels: {
-                  boxWidth: 10,
-                  padding: 5,
-                  font: { size: 8 }
+      <Block>
+        <SubjectLabel>{config.subject?.replace(/_/g, ' ')}</SubjectLabel>
+        <ChartWrapper>
+          <ChartComponent
+            data={config.chartData}
+            options={{
+              ...config.chartOptions,
+              maintainAspectRatio: false,
+              responsive: true,
+              plugins: {
+                legend: {
+                  display: true,
+                  position: 'top',
+                  labels: {
+                    boxWidth: 10,
+                    padding: 5,
+                    font: { size: 8 }
+                  }
+                },
+                title: {
+                  display: true,
+                  text: [config.subject_label, config.subtitle],
+                  font: { size: 10, weight: 'bold' },
+                  padding: { top: 5, bottom: 5 }
                 }
-              },
-              title: {
-                display: true,
-                text: [config.subject_label, config.subtitle],
-                font: { size: 10, weight: 'bold' },
-                padding: { top: 5, bottom: 5 }
               }
-            }
-          }}
-        />
-      </ChartWrapper>
+            }}
+          />
+        </ChartWrapper>
+      </Block>
     );
   };
 
@@ -484,8 +492,9 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
         setBlockContents(defaultContents);
         setModifiedPositions({});
         setSelectedBlock(null);
- 
+
         window.location.reload();
+ 
       }
     });
   };
@@ -742,7 +751,6 @@ const CombinedContainer = styled.div`
 const InfoSection = styled.div`
   width: ${props => props.width || '200px'};
   height: 100%;
-  background: var(--background-color);
   border-radius: 8px;
   padding: 12px;
   display: flex;
@@ -755,7 +763,6 @@ const ChartSection = styled.div`
   width: ${props => props.width || 'auto'};
   flex: ${props => props.width ? 'none' : 1};
   height: 100%;
-  background: var(--background-color);
   border-radius: 8px;
   padding: 12px;
   min-height: 0;
@@ -836,4 +843,16 @@ const InfoUnit = styled.span`
   margin-left: 4px;
   opacity: 0.7;
   color: var(--text-color);
+`;
+
+const SubjectLabel = styled.div`
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-color);
+  opacity: 0;
+  text-transform: capitalize;
+  z-index: 1;
 `;

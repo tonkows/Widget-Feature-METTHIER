@@ -2,6 +2,8 @@
   "Left-TopLeft": {
     "layout": "horizontal",
     "type": "combined-display",
+    "subject": "device",
+    "datatype": "status",
     "items": [
       {
         "id": "item1",
@@ -9,7 +11,7 @@
         "title": "Total Devices",
         "value": "156",
         "unit": "units",
-        "status": "active",
+        "status": "total",
         "style": {
           "backgroundColor": "rgba(75, 192, 192, 0.1)",
           "borderColor": "rgba(75, 192, 192, 0.5)",
@@ -22,7 +24,7 @@
         "title": "Active Devices",
         "value": "142",
         "unit": "units",
-        "status": "active",
+        "status": "online",
         "style": {
           "backgroundColor": "rgba(54, 162, 235, 0.1)",
           "borderColor": "rgba(54, 162, 235, 0.5)",
@@ -105,6 +107,8 @@
   "Right-TopRight": {
     "layout": "horizontal",
     "type": "info-display",
+    "subject": "device",
+    "datatype": "device_status",
     "items": [
       {
         "id": "item1",
@@ -159,8 +163,8 @@
   },
   "Left-MiddleTopLeft": {
     "layout": "horizontal",
-    "subject": "water",
-    "datatype": "consumption",
+    "subject": "asset",
+    "datatype": "asset_maintenance",
     "charts": [
       {
         "id": "chart1",
@@ -442,6 +446,8 @@
   },
   "Right-MiddleBottomRight": {
     "layout": "horizontal",
+    "subject": "training",
+    "datatype": "training_hours",
     "charts": [
       {
         "id": "chart1",
@@ -534,6 +540,8 @@
   },
   "Left-BottomLeft": {
     "type": "combined-display",
+    "subject": "device",
+    "datatype": "status",
     "layout": "horizontal",
     "items": [
       {
@@ -542,11 +550,12 @@
         "title": "Total Devices",
         "value": "156",
         "unit": "units",
-        "status": "active",
+        "status": "total",
         "style": {
           "backgroundColor": "rgba(75, 192, 192, 0.1)",
           "borderColor": "rgba(75, 192, 192, 0.5)",
-          "textColor": "var(--text-color)"
+          "textColor": "var(--text-color)",
+          "width": "100%"
         }
       },
       {
@@ -555,11 +564,12 @@
         "title": "Active Devices",
         "value": "142",
         "unit": "units",
-        "status": "active",
+        "status": "online",
         "style": {
           "backgroundColor": "rgba(54, 162, 235, 0.1)",
           "borderColor": "rgba(54, 162, 235, 0.5)",
-          "textColor": "var(--text-color)"
+          "textColor": "var(--text-color)",
+          "width": "100%"
         }
       },
       {
@@ -568,11 +578,12 @@
         "title": "Inactive Devices",
         "value": "14",
         "unit": "units",
-        "status": "inactive",
+        "status": "offline",
         "style": {
           "backgroundColor": "rgba(255, 99, 132, 0.1)",
           "borderColor": "rgba(255, 99, 132, 0.5)",
-          "textColor": "var(--text-color)"
+          "textColor": "var(--text-color)",
+          "width": "100%"
         }
       }
     ],
@@ -606,97 +617,7 @@
           "plugins": {
             "legend": {
               "display": true,
-              "position": "right"
-            }
-          }
-        }
-      }
-    ],
-    "styles": {
-      "itemWidth": "160px",
-      "chartHeight": "100%",
-      "gap": "15px",
-      "padding": "12px",
-      "infoSectionWidth": "35%",
-      "chartSectionWidth": "65%"
-    }
-  },
-  "Right-BottomRight": {
-    "type": "combined-display",
-    "layout": "horizontal",
-    "items": [
-      {
-        "id": "item1",
-        "icon": "info",
-        "title": "Total Incidents",
-        "value": "500",
-        "unit": "cases",
-        "status": "total",
-        "style": {
-          "backgroundColor": "rgba(75, 192, 192, 0.1)",
-          "borderColor": "rgba(75, 192, 192, 0.5)",
-          "textColor": "var(--text-color)"
-        }
-      },
-      {
-        "id": "item2",
-        "icon": "info",
-        "title": "Incidents This Year",
-        "value": "300",
-        "unit": "cases",
-        "status": "current",
-        "style": {
-          "backgroundColor": "rgba(54, 162, 235, 0.1)",
-          "borderColor": "rgba(54, 162, 235, 0.5)",
-          "textColor": "var(--text-color)"
-        }
-      },
-      {
-        "id": "item3",
-        "icon": "info",
-        "title": "Incidents Last Year",
-        "value": "200",
-        "unit": "cases",
-        "status": "previous",
-        "style": {
-          "backgroundColor": "rgba(255, 205, 86, 0.1)",
-          "borderColor": "rgba(255, 205, 86, 0.5)",
-          "textColor": "var(--text-color)"
-        }
-      }
-    ],
-    "charts": [
-      {
-        "id": "chart1",
-        "type": "bar chart",
-        "title": "Incident Comparison",
-        "subtitle": "2023 vs 2024",
-        "data": {
-          "labels": ["January", "February", "March", "April", "May"],
-          "datasets": [
-            {
-              "label": "This Year",
-              "data": [50, 60, 70, 80, 40],
-              "backgroundColor": "rgba(54, 162, 235, 0.5)",
-              "borderColor": "rgba(54, 162, 235, 1)",
-              "borderWidth": 1
-            },
-            {
-              "label": "Last Year",
-              "data": [30, 40, 50, 60, 30],
-              "backgroundColor": "rgba(255, 205, 86, 0.5)",
-              "borderColor": "rgba(255, 205, 86, 1)",
-              "borderWidth": 1
-            }
-          ]
-        },
-        "options": {
-          "responsive": true,
-          "maintainAspectRatio": false,
-          "plugins": {
-            "legend": {
-              "display": true,
-              "position": "top",
+              "position": "right",
               "labels": {
                 "font": {
                   "size": 11
@@ -710,7 +631,101 @@
     "styles": {
       "gap": "12px",
       "padding": "12px",
-      "chartHeight": "100%"
+      "infoSectionWidth": "35%",
+      "chartSectionWidth": "65%"
+    }
+  },
+  "Right-BottomRight": {
+    "type": "combined-display",
+    "subject": "training",
+    "datatype": "training_hours",
+    "layout": "horizontal",
+    "items": [
+      {
+        "id": "item1",
+        "icon": "info",
+        "title": "Total Training Hours",
+        "value": "2,450",
+        "unit": "hrs",
+        "status": "total",
+        "style": {
+          "backgroundColor": "rgba(75, 192, 192, 0.1)",
+          "borderColor": "rgba(75, 192, 192, 0.5)",
+          "textColor": "var(--text-color)",
+          "width": "100%",
+          "height": "45%"
+        }
+      },
+      {
+        "id": "item2",
+        "icon": "info",
+        "title": "Average per Employee",
+        "value": "16.5",
+        "unit": "hrs",
+        "status": "online",
+        "style": {
+          "backgroundColor": "rgba(54, 162, 235, 0.1)",
+          "borderColor": "rgba(54, 162, 235, 0.5)",
+          "textColor": "var(--text-color)",
+          "width": "100%",
+          "height": "45%"
+        }
+      }
+    ],
+    "charts": [
+      {
+        "id": "chart1",
+        "type": "doughnut chart",
+        "title": "Training Categories",
+        "subtitle": "Distribution",
+        "data": {
+          "labels": ["Safety", "Technical", "Soft Skills", "Compliance"],
+          "datasets": [
+            {
+              "data": [40, 30, 20, 10],
+              "backgroundColor": [
+                "rgba(75, 192, 192, 0.7)",
+                "rgba(54, 162, 235, 0.7)",
+                "rgba(255, 206, 86, 0.7)",
+                "rgba(255, 99, 132, 0.7)"
+              ],
+              "borderColor": [
+                "rgba(75, 192, 192, 1)",
+                "rgba(54, 162, 235, 1)",
+                "rgba(255, 206, 86, 1)",
+                "rgba(255, 99, 132, 1)"
+              ],
+              "borderWidth": 1
+            }
+          ]
+        },
+        "options": {
+          "responsive": true,
+          "maintainAspectRatio": false,
+          "cutout": "70%",
+          "plugins": {
+            "legend": {
+              "display": true,
+              "position": "right",
+              "labels": {
+                "font": {
+                  "size": 11
+                }
+              }
+            }
+          }
+        }
+      }
+    ],
+    "styles": {
+      "gap": "12px",
+      "padding": "12px",
+      "infoSectionWidth": "35%",
+      "chartSectionWidth": "65%",
+      "infoOrder": "1",
+      "chartOrder": "2",
+      "direction": "column",
+      "justify": "space-between"
     }
   },
   "BottomCenter-Right": {

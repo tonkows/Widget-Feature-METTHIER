@@ -1,5 +1,50 @@
 {
-  "layout": "vertical",
+  "type": "combined-display",
+  "layout": "horizontal",
+  "items": [
+    {
+      "id": "item1",
+      "icon": "info",
+      "title": "Total Incidents",
+      "value": "102",
+      "unit": "cases",
+      "status": "total",
+      "style": {
+        "backgroundColor": "rgba(75, 192, 192, 0.1)",
+        "borderColor": "rgba(75, 192, 192, 0.5)",
+        "textColor": "var(--text-color)",
+        "width": "100%"
+      }
+    },
+    {
+      "id": "item2",
+      "icon": "info",
+      "title": "Average Response Time",
+      "value": "7.2",
+      "unit": "mins",
+      "status": "online",
+      "style": {
+        "backgroundColor": "rgba(153, 102, 255, 0.1)",
+        "borderColor": "rgba(153, 102, 255, 0.5)",
+        "textColor": "var(--text-color)",
+        "width": "100%"
+      }
+    },
+    {
+      "id": "item3",
+      "icon": "info",
+      "title": "Active Alerts",
+      "value": "15",
+      "unit": "cases",
+      "status": "offline",
+      "style": {
+        "backgroundColor": "rgba(255, 99, 132, 0.1)",
+        "borderColor": "rgba(255, 99, 132, 0.5)",
+        "textColor": "var(--text-color)",
+        "width": "100%"
+      }
+    }
+  ],
   "charts": [
     {
       "id": "chart1",
@@ -87,6 +132,14 @@
           "legend": {
             "display": true,
             "position": "top"
+          },
+          "title": {
+            "display": true,
+            "text": "Incident Response Time Comparison",
+            "font": {
+              "size": 18,
+              "weight": "bold"
+            }
           }
         },
         "scales": {
@@ -113,10 +166,12 @@
     }
   ],
   "styles": {
-    "gap": "20px",
-    "padding": "15px",
+    "gap": "12px",
+    "padding": "12px",
     "backgroundColor": "var(--card-bg-color)",
-    "chartHeight": "50%",
-    "chartWidth": "100%"
+    "infoSectionWidth": "35%",
+    "chartSectionWidth": "65%",
+    "infoOrder": "1",
+    "chartOrder": "2"
   }
 }

@@ -71,25 +71,5 @@
         "widget": ["number", "line chart", "bar chart", "time dependence", "time independence"]
       }
     ]
-  },
-  "energy": {
-    "consumption": {
-      "title": "Consumption",
-      "description": "Energy consumption analysis"
-    },
-    "cost": {
-      "title": "Cost",
-      "description": "Energy cost analysis"
-    }
-  },
-  "water": {
-    "usage": {
-      "title": "Usage",
-      "description": "Water usage analysis"
-    },
-    "quality": {
-      "title": "Quality",
-      "description": "Water quality metrics"
-    }
   }
 }

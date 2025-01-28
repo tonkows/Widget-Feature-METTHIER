@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col } from "antd";
+import { Row, Col, Button, Modal } from "antd";
 import styled from "styled-components";
 import { BiArrowBack, BiCamera as CameraIcon, BiCameraOff as CameraOffIcon } from "react-icons/bi";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -33,6 +33,63 @@ const Preview = ({ isCollapsed }) => {
     if (previewData) {
       const config = JSON.parse(previewData);
 
+      if (config.type === "combined-display") {
+        return (
+          <Block>
+            <CombinedContainer>
+              <InfoSection width={config.styles?.infoSectionWidth}>
+                <InfoDisplayContainer>
+                  {config.items.map((item) => (
+                    <InfoItem
+                      key={item.id}
+                      style={{
+                        backgroundColor: item.style?.backgroundColor || 'var(--background-color)',
+                        borderColor: item.style?.borderColor || 'var(--border-color)',
+                        width: '100%'
+                      }}
+                    >
+                      <InfoIcon status={item.status}>
+                        {item.icon === 'camera' ? <CameraIcon /> : <InfoIcon />}
+                      </InfoIcon>
+                      <InfoContent>
+                        <InfoTitle>
+                          {item.title}
+                        </InfoTitle>
+                        <InfoValue>
+                          {item.value}
+                          <InfoUnit>{item.unit}</InfoUnit>
+                        </InfoValue>
+                      </InfoContent>
+                    </InfoItem>
+                  ))}
+                </InfoDisplayContainer>
+              </InfoSection>
+
+              <ChartSection width={config.styles?.chartSectionWidth}>
+                {config.charts.map((chart, index) => {
+                  const ChartComponent = {
+                    'bar chart': Bar,
+                    'line chart': Line,
+                    'doughnut chart': Doughnut
+                  }[chart.type];
+
+                  if (!ChartComponent) return null;
+
+                  return (
+                    <ChartWrapper key={index}>
+                      <ChartComponent
+                        data={chart.data}
+                        options={chart.options}
+                      />
+                    </ChartWrapper>
+                  );
+                })}
+              </ChartSection>
+            </CombinedContainer>
+          </Block>
+        );
+      }
+
       if (config.type === "info-display") {
         return (
           <Block>
@@ -41,19 +98,19 @@ const Preview = ({ isCollapsed }) => {
                 <InfoItem
                   key={item.id}
                   style={{
-                    backgroundColor: item.style.backgroundColor,
-                    borderColor: item.style.borderColor,
-                    width: config.styles.itemWidth
+                    backgroundColor: item.style?.backgroundColor || 'var(--background-color)',
+                    borderColor: item.style?.borderColor || 'var(--border-color)',
+                    width: item.style?.width || 'calc(33.33% - 8px)'
                   }}
                 >
                   <InfoIcon status={item.status}>
-                    {item.icon === 'camera' ? <CameraIcon /> : <CameraOffIcon />}
+                    {item.icon === 'camera' ? <CameraIcon /> : <InfoIcon />}
                   </InfoIcon>
                   <InfoContent>
-                    <InfoTitle style={{ color: item.style.textColor }}>
+                    <InfoTitle>
                       {item.title}
                     </InfoTitle>
-                    <InfoValue style={{ color: item.style.textColor }}>
+                    <InfoValue>
                       {item.value}
                       <InfoUnit>{item.unit}</InfoUnit>
                     </InfoValue>
@@ -251,19 +308,19 @@ const Preview = ({ isCollapsed }) => {
               <InfoItem
                 key={item.id}
                 style={{
-                  backgroundColor: item.style.backgroundColor,
-                  borderColor: item.style.borderColor,
-                  width: defaultConfig.styles.itemWidth
+                  backgroundColor: item.style?.backgroundColor || 'var(--background-color)',
+                  borderColor: item.style?.borderColor || 'var(--border-color)',
+                  width: item.style?.width || 'calc(33.33% - 8px)'
                 }}
               >
                 <InfoIcon status={item.status}>
-                  {item.icon === 'camera' ? <CameraIcon /> : <CameraOffIcon />}
+                  {item.icon === 'camera' ? <CameraIcon /> : <InfoIcon />}
                 </InfoIcon>
                 <InfoContent>
-                  <InfoTitle style={{ color: item.style.textColor }}>
+                  <InfoTitle>
                     {item.title}
                   </InfoTitle>
-                  <InfoValue style={{ color: item.style.textColor }}>
+                  <InfoValue>
                     {item.value}
                     <InfoUnit>{item.unit}</InfoUnit>
                   </InfoValue>
@@ -344,7 +401,7 @@ const Preview = ({ isCollapsed }) => {
         navigate('/');
       } else {
         const selectedTab = previewData.selectedButton || "default";
-        localStorage.setItem(`selected-tab-${blockId}`, selectedTab);
+      
         
         if (selectedTab === "default") {
           const config = {
@@ -374,14 +431,37 @@ const Preview = ({ isCollapsed }) => {
     }
   };
 
+  const handleGenerate = () => {
+    const previewData = localStorage.getItem(`preview-${blockId}`);
+    if (previewData) {
+      const config = JSON.parse(previewData);
+      
+      localStorage.setItem(`block-${blockId}`, JSON.stringify(config));
+
+      Modal.success({
+        title: 'Success',
+        content: 'Widget has been generated successfully',
+        onOk: () => {
+          window.removeEventListener('beforeunload', () => {});
+          navigate('/');
+        }
+      });
+    }
+  };
+
   return (
     <Container className={isCollapsed ? "isCollapsed" : "notCollapsed"}>
       <BackButton 
-        onClick={handleBack} 
-        className={isCollapsed ? "isCollapsed" : "notCollapsed"}
+        onClick={handleBack}
+        isCollapsed={isCollapsed}
       >
         <BiArrowBack /> Back
       </BackButton>
+      <ButtonContainer>
+        <GenerateButton onClick={handleGenerate}>
+          Generate
+        </GenerateButton>
+      </ButtonContainer>
       <WrapperDiv>
         <StyledRow gutter={[8, 8]}>
           <StyledCol span={6}>{renderColumnContent("Left")}</StyledCol>
@@ -494,7 +574,7 @@ const WrapperDiv = styled.div`
 const BackButton = styled.button`
   position: absolute;
   top: 10px;
-  left: 10px;
+  left: ${props => props.isCollapsed ? "60px" : "230px"};
   background: var(--button-color);
   border: none;
   border-radius: 4px;
@@ -503,15 +583,6 @@ const BackButton = styled.button`
   color: white;
   cursor: pointer;
   transition: all 0.3s ease;
-
-  &.isCollapsed {
-    left: 60px;
-  }
-
-  &.notCollapsed {
-    left: 230px;
-  }
-
   display: flex;
   align-items: center;
   gap: 8px;
@@ -520,6 +591,9 @@ const BackButton = styled.button`
     font-size: 16px;
   }
 
+  &:hover {
+    background: var(--button-hover-color);
+  }
 
   &:active {
     transform: scale(0.98);
@@ -558,22 +632,28 @@ const ChartWrapper = styled.div`
 
 const InfoDisplayContainer = styled.div`
   display: flex;
-  flex-direction: ${props => props.layout === 'vertical' ? 'column' : 'row'};
-  gap: 15px;
+  flex-direction: ${props => props.layout === 'horizontal' ? 'row' : 'column'};
+  gap: 12px;
   width: 100%;
   height: 100%;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
+  justify-content: ${props => props.layout === 'horizontal' ? 'space-between' : 'flex-start'};
+  align-items: ${props => props.layout === 'horizontal' ? 'center' : 'stretch'};
+  padding: 8px;
+  overflow: hidden;
 `;
 
 const InfoItem = styled.div`
   display: flex;
   align-items: center;
-  padding: 20px;
+  padding: 12px;
   border-radius: 8px;
-  border: 1px solid;
-  transition: all 0.3s ease;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg-color);
+  height: 70px;
+  min-width: 0;
+  flex-shrink: 1;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 
   &:hover {
     transform: translateY(-2px);
@@ -582,32 +662,127 @@ const InfoItem = styled.div`
 `;
 
 const InfoIcon = styled.div`
-  font-size: 24px;
-  margin-right: 15px;
-  opacity: ${props => props.status === 'active' ? 1 : 0.7};
+  font-size: 16px;
+  margin-right: 8px;
+  flex-shrink: 0;
+  opacity: ${props => props.status === 'active' ? 1 : 0.8};
+  color: ${props => {
+    switch(props.status) {
+      case 'total': return 'rgba(75, 192, 192, 1)';
+      case 'online': return 'rgba(54, 162, 235, 1)';
+      case 'offline': return 'rgba(255, 99, 132, 1)';
+      default: return 'var(--text-color)';
+    }
+  }};
 `;
 
 const InfoContent = styled.div`
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
 `;
 
 const InfoTitle = styled.div`
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 500;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
+  color: var(--text-color);
+  opacity: 0.8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const InfoValue = styled.div`
-  font-size: 32px;
+  font-size: 18px;
   font-weight: 700;
   display: flex;
   align-items: baseline;
+  color: var(--text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const InfoUnit = styled.span`
-  font-size: 14px;
+  font-size: 10px;
   font-weight: 400;
-  margin-left: 5px;
-  opacity: 0.8;
+  margin-left: 4px;
+  opacity: 0.7;
+  color: var(--text-color);
+`;
+
+const CombinedContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+`;
+
+const InfoSection = styled.div`
+  width: ${props => props.width || '35%'};
+  height: 100%;
+  background: var(--background-color);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  order: 2;
+`;
+
+const ChartSection = styled.div`
+  width: ${props => props.width || '65%'};
+  height: 100%;
+  background: var(--background-color);
+  border-radius: 8px;
+  padding: 12px;
+  order: 1;
+`;
+
+const ButtonContainer = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+  transition: all 0.3s ease;
+
+  &.isCollapsed {
+    right: 20px;
+  }
+
+  &.notCollapsed {
+    right: 20px;
+  }
+`;
+
+const GenerateButton = styled.button`
+  background: var(--button-color);
+  border: none;
+  border-radius: 4px;
+  padding: 9px 14px;
+  font-size: 14px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &:hover {
+    background: var(--button-hover-color);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--text-color);
+  }
 `;
