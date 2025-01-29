@@ -1,42 +1,14 @@
 {
   "Left-TopLeft": {
     "layout": "horizontal",
-    "type": "combined-display",
+    "type": "multi-chart",
     "subject": "device",
-    "datatype": "status",
-    "items": [
-      {
-        "id": "item1",
-        "icon": "camera",
-        "title": "Total Devices",
-        "value": "156",
-        "unit": "units",
-        "status": "total",
-        "style": {
-          "backgroundColor": "rgba(75, 192, 192, 0.1)",
-          "borderColor": "rgba(75, 192, 192, 0.5)",
-          "textColor": "var(--text-color)"
-        }
-      },
-      {
-        "id": "item2",
-        "icon": "camera",
-        "title": "Active Devices",
-        "value": "142",
-        "unit": "units",
-        "status": "online",
-        "style": {
-          "backgroundColor": "rgba(54, 162, 235, 0.1)",
-          "borderColor": "rgba(54, 162, 235, 0.5)",
-          "textColor": "var(--text-color)"
-        }
-      }
-    ],
+    "datatype": "device_status",
     "charts": [
       {
         "id": "chart1",
         "type": "bar chart",
-        "title": "Device Status Trend",
+        "title": "Device Overview",
         "subtitle": "Last 6 Months",
         "data": {
           "labels": ["Sep", "Oct", "Nov", "Dec", "Jan", "Feb"],
@@ -49,15 +21,6 @@
               "borderWidth": 2,
               "tension": 0.4,
               "fill": true
-            },
-            {
-              "label": "Active Devices",
-              "data": [138, 140, 141, 140, 142, 142],
-              "backgroundColor": "rgba(54, 162, 235, 0.2)",
-              "borderColor": "rgba(54, 162, 235, 1)",
-              "borderWidth": 2,
-              "tension": 0.4,
-              "fill": true
             }
           ]
         },
@@ -67,99 +30,97 @@
           "plugins": {
             "legend": {
               "display": true,
-              "position": "top",
-              "labels": {
-                "usePointStyle": true,
-                "padding": 15,
-                "font": {
-                  "size": 11
-                }
-              }
+              "position": "top"
             }
-          },
-          "scales": {
-            "y": {
-              "beginAtZero": false,
-              "min": 100,
-              "grid": {
-                "display": true,
-                "drawBorder": false,
-                "color": "rgba(200, 200, 200, 0.1)"
-              }
-            },
-            "x": {
-              "grid": {
-                "display": false,
-                "drawBorder": false
-              }
+          }
+        }
+      },
+      {
+        "id": "chart2",
+        "type": "doughnut chart",
+        "title": "Device Distribution",
+        "subtitle": "Current Status",
+        "data": {
+          "labels": ["Active", "Inactive"],
+          "datasets": [
+            {
+              "data": [142, 14],
+              "backgroundColor": [
+                "rgba(54, 162, 235, 0.7)",
+                "rgba(255, 99, 132, 0.7)"
+              ],
+              "borderColor": [
+                "rgba(54, 162, 235, 1)",
+                "rgba(255, 99, 132, 1)"
+              ],
+              "borderWidth": 1
+            }
+          ]
+        },
+        "options": {
+          "responsive": true,
+          "maintainAspectRatio": false,
+          "plugins": {
+            "legend": {
+              "display": true,
+              "position": "right"
             }
           }
         }
       }
-    ],
-    "styles": {
-      "itemWidth": "160px",
-      "chartHeight": "300px",
-      "gap": "15px",
-      "padding": "12px"
-    }
+    ]
   },
   "Right-TopRight": {
     "layout": "horizontal",
-    "type": "info-display",
-    "subject": "device",
-    "datatype": "device_status",
-    "items": [
+    "type": "multi-chart",
+    "subject": "asset",
+    "datatype": "maintenance",
+    "charts": [
       {
-        "id": "item1",
-        "icon": "info",
-        "title": "Total Devices",
-        "value": "200",
-        "unit": "units",
-        "status": "active",
-        "style": {
-          "backgroundColor": "rgba(75, 192, 192, 0.1)",
-          "borderColor": "rgba(75, 192, 192, 0.5)",
-          "textColor": "var(--text-color)",
-          "width": "32%"
+        "id": "chart1",
+        "type": "bar chart",
+        "title": "Maintenance Tasks",
+        "subtitle": "By Priority",
+        "data": {
+          "labels": ["High", "Medium", "Low"],
+          "datasets": [
+            {
+              "label": "Tasks",
+              "data": [15, 25, 10],
+              "backgroundColor": [
+                "rgba(255, 99, 132, 0.5)",
+                "rgba(54, 162, 235, 0.5)",
+                "rgba(75, 192, 192, 0.5)"
+              ]
+            }
+          ]
+        },
+        "options": {
+          "responsive": true,
+          "maintainAspectRatio": false
         }
       },
       {
-        "id": "item2",
-        "icon": "info",
-        "title": "Online Devices",
-        "value": "180",
-        "unit": "units",
-        "status": "online",
-        "style": {
-          "backgroundColor": "rgba(54, 162, 235, 0.1)",
-          "borderColor": "rgba(54, 162, 235, 0.5)",
-          "textColor": "var(--text-color)",
-          "width": "32%"
-        }
-      },
-      {
-        "id": "item3",
-        "icon": "info",
-        "title": "Offline Devices",
-        "value": "20",
-        "unit": "units",
-        "status": "offline",
-        "style": {
-          "backgroundColor": "rgba(255, 99, 132, 0.1)",
-          "borderColor": "rgba(255, 99, 132, 0.5)",
-          "textColor": "var(--text-color)",
-          "width": "32%"
+        "id": "chart2",
+        "type": "line chart",
+        "title": "Completion Rate",
+        "subtitle": "Monthly Trend",
+        "data": {
+          "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
+          "datasets": [
+            {
+              "label": "Completed",
+              "data": [85, 88, 92, 89, 91],
+              "borderColor": "rgba(75, 192, 192, 1)"
+            }
+          ]
+        },
+        "options": {
+          "responsive": true,
+          "maintainAspectRatio": false
         }
       }
-    ],
-    "styles": {
-      "gap": "2%",
-      "padding": "10px",
-      "direction": "row",
-      "justify": "space-between",
-      "height": "80px"
-    }
+    ]
   },
   "Left-MiddleTopLeft": {
     "layout": "horizontal",
@@ -169,13 +130,13 @@
       {
         "id": "chart1",
         "type": "line chart",
-        "title": "Water Usage",
-        "subtitle": "2024",
+        "title": "Asset Maintenance Status",
+        "subtitle": "Monthly Trend",
         "data": {
           "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
           "datasets": [
             {
-              "label": "water usage",
+              "label": "Completed",
               "data": [100, 120, 110, 130, 140],
               "backgroundColor": "rgba(75, 192, 192, 0.5)",
               "borderColor": "rgba(75, 192, 192, 1)",
@@ -192,37 +153,21 @@
               "position": "top"
             }
           }
-        },
-        "metadata": {
-          "subject": "water",
-          "datatype": "consumption",
-          "dataset": "usage_volume",
-          "ranges": ["month"]
         }
       },
       {
         "id": "chart2",
-        "type": "doughnut chart",
-        "title": "Water Sources",
-        "subtitle": "2024",
+        "type": "bar chart",
+        "title": "Maintenance by Type",
+        "subtitle": "Current Period",
         "data": {
-          "labels": ["Surface", "Ground", "Recycled", "Other"],
+          "labels": ["Preventive", "Corrective", "Predictive", "Emergency"],
           "datasets": [
             {
-              "label": "water sources",
-              "data": [40, 30, 20, 10],
-              "backgroundColor": [
-                "rgba(75, 192, 192, 0.5)",
-                "rgba(54, 162, 235, 0.5)",
-                "rgba(255, 206, 86, 0.5)",
-                "rgba(255, 99, 132, 0.5)"
-              ],
-              "borderColor": [
-                "rgba(75, 192, 192, 1)",
-                "rgba(54, 162, 235, 1)",
-                "rgba(255, 206, 86, 1)",
-                "rgba(255, 99, 132, 1)"
-              ],
+              "label": "Count",
+              "data": [45, 25, 20, 10],
+              "backgroundColor": "rgba(75, 192, 192, 0.5)",
+              "borderColor": "rgba(75, 192, 192, 1)",
               "borderWidth": 1
             }
           ]
@@ -230,18 +175,29 @@
         "options": {
           "responsive": true,
           "maintainAspectRatio": false,
+          "indexAxis": "y",
           "plugins": {
             "legend": {
               "display": true,
               "position": "top"
             }
+          },
+          "scales": {
+            "x": {
+              "beginAtZero": true,
+              "grid": {
+                "display": true,
+                "drawBorder": false,
+                "color": "rgba(200, 200, 200, 0.1)"
+              }
+            },
+            "y": {
+              "grid": {
+                "display": false,
+                "drawBorder": false
+              }
+            }
           }
-        },
-        "metadata": {
-          "subject": "water",
-          "datatype": "sources",
-          "dataset": "distribution",
-          "ranges": ["year"]
         }
       }
     ],
@@ -250,7 +206,7 @@
       "padding": "15px",
       "backgroundColor": "var(--card-bg-color)",
       "chartHeight": "100%",
-      "chartWidth": "50%"
+      "chartWidth": "48%"
     }
   },
   "Right-MiddleTopRight": {
@@ -539,58 +495,14 @@
     }
   },
   "Left-BottomLeft": {
-    "type": "combined-display",
+    "type": "multi-chart",
+    "layout": "horizontal",
     "subject": "device",
     "datatype": "status",
-    "layout": "horizontal",
-    "items": [
-      {
-        "id": "item1",
-        "icon": "camera",
-        "title": "Total Devices",
-        "value": "156",
-        "unit": "units",
-        "status": "total",
-        "style": {
-          "backgroundColor": "rgba(75, 192, 192, 0.1)",
-          "borderColor": "rgba(75, 192, 192, 0.5)",
-          "textColor": "var(--text-color)",
-          "width": "100%"
-        }
-      },
-      {
-        "id": "item2",
-        "icon": "camera",
-        "title": "Active Devices",
-        "value": "142",
-        "unit": "units",
-        "status": "online",
-        "style": {
-          "backgroundColor": "rgba(54, 162, 235, 0.1)",
-          "borderColor": "rgba(54, 162, 235, 0.5)",
-          "textColor": "var(--text-color)",
-          "width": "100%"
-        }
-      },
-      {
-        "id": "item3",
-        "icon": "camera",
-        "title": "Inactive Devices",
-        "value": "14",
-        "unit": "units",
-        "status": "offline",
-        "style": {
-          "backgroundColor": "rgba(255, 99, 132, 0.1)",
-          "borderColor": "rgba(255, 99, 132, 0.5)",
-          "textColor": "var(--text-color)",
-          "width": "100%"
-        }
-      }
-    ],
     "charts": [
       {
         "id": "chart1",
-        "type": "doughnut chart",
+        "type": "bar chart",
         "title": "Device Status",
         "subtitle": "Current Distribution",
         "data": {
@@ -636,46 +548,56 @@
     }
   },
   "Right-BottomRight": {
-    "type": "combined-display",
+    "type": "multi-chart",
+    "layout": "horizontal",
     "subject": "training",
     "datatype": "training_hours",
-    "layout": "horizontal",
-    "items": [
-      {
-        "id": "item1",
-        "icon": "info",
-        "title": "Total Training Hours",
-        "value": "2,450",
-        "unit": "hrs",
-        "status": "total",
-        "style": {
-          "backgroundColor": "rgba(75, 192, 192, 0.1)",
-          "borderColor": "rgba(75, 192, 192, 0.5)",
-          "textColor": "var(--text-color)",
-          "width": "100%",
-          "height": "45%"
-        }
-      },
-      {
-        "id": "item2",
-        "icon": "info",
-        "title": "Average per Employee",
-        "value": "16.5",
-        "unit": "hrs",
-        "status": "online",
-        "style": {
-          "backgroundColor": "rgba(54, 162, 235, 0.1)",
-          "borderColor": "rgba(54, 162, 235, 0.5)",
-          "textColor": "var(--text-color)",
-          "width": "100%",
-          "height": "45%"
-        }
-      }
-    ],
     "charts": [
       {
         "id": "chart1",
-        "type": "doughnut chart",
+        "type": "bar chart",
+        "title": "Total Training Hours",
+        "subtitle": "2024",
+        "data": {
+          "labels": ["Total", "Online", "Offline"],
+          "datasets": [
+            {
+              "label": "Training Hours",
+              "data": [2450, 1800, 200],
+              "backgroundColor": [
+                "rgba(75, 192, 192, 0.5)",
+                "rgba(54, 162, 235, 0.5)",
+                "rgba(255, 99, 132, 0.5)"
+              ],
+              "borderColor": [
+                "rgba(75, 192, 192, 1)",
+                "rgba(54, 162, 235, 1)",
+                "rgba(255, 99, 132, 1)"
+              ],
+              "borderWidth": 1
+            }
+          ]
+        },
+        "options": {
+          "responsive": true,
+          "maintainAspectRatio": false,
+          "plugins": {
+            "legend": {
+              "display": true,
+              "position": "top"
+            }
+          }
+        },
+        "metadata": {
+          "subject": "training",
+          "datatype": "hours",
+          "dataset": "total_hours",
+          "ranges": ["year"]
+        }
+      },
+      {
+        "id": "chart2",
+        "type": "bar chart",
         "title": "Training Categories",
         "subtitle": "Distribution",
         "data": {
@@ -714,6 +636,12 @@
               }
             }
           }
+        },
+        "metadata": {
+          "subject": "training",
+          "datatype": "categories",
+          "dataset": "distribution",
+          "ranges": ["year"]
         }
       }
     ],

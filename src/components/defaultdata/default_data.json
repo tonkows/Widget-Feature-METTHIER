@@ -58,18 +58,6 @@
         "datarange": ["date", "week", "month", "year"],
         "widget": ["number", "pie chart", "bar chart", "time dependence", "time independence"]
       }
-    ],
-    "usage": [
-      {
-        "dataset": "videowall_usage_statistics",
-        "dataset_label": "Videowall Usage Statistics",
-        "subject": "videowall",
-        "subject_label": "Videowall",
-        "datatype": "usage",
-        "datatype_label": "Usage",
-        "datarange": ["date", "week", "month", "year"],
-        "widget": ["number", "line chart", "bar chart", "time dependence", "time independence"]
-      }
     ]
   }
 }

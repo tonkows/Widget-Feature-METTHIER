@@ -416,8 +416,43 @@
               "widget": ["number","doughnut chart","bar chart","time dependence", "time independence"]
             }
           ]
-        }
-       
+        },
+        "bas": {
+        "visitor": [
+            {
+              "dataset": "visitor_count",
+              "dataset_label": "Visitor Count",
+              "subject": "bas",
+              "subject_label": "BAS",
+              "datatype": "visitor",
+              "datatype_label": "Visitor",
+              "datarange": ["date", "week", "month", "year"],
+              "widget": ["number","doughnut chart","bar chart","line chart","time dependence", "time independence"]
+            }
+          ],
+          "schedule": [
+            {
+              "dataset": "schedule_system",
+              "dataset_label": "Most Scheduled Devices",
+              "subject": "bas",
+              "subject_label": "BAS",
+              "datatype": "schedule",
+              "datatype_label": "Schedule",
+              "datarange": ["date", "week", "month", "year"],
+              "widget": ["number","doughnut chart","bar chart","line chart","time dependence", "time independence"]
+            },
+            {
+              "dataset": "usage_schedule",
+              "dataset_label": "Most Frequent Usage Time",
+              "subject": "bas",
+              "subject_label": "BAS",
+              "datatype": "schedule",
+              "datatype_label": "Schedule",
+              "datarange": ["date", "week", "month", "year"],
+              "widget": ["number","doughnut chart","bar chart","line chart","time dependence", "time independence"]
+            }
+          ]
+          }
       }
   
  
