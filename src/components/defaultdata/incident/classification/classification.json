@@ -32,6 +32,7 @@
       "options": {
         "responsive": true,
         "maintainAspectRatio": false,
+        "indexAxis": "y",
         "plugins": {
           "legend": {
             "display": true,
@@ -56,13 +57,14 @@
     },
     {
       "id": "chart2",
-      "type": "doughnut chart",
+      "type": "bar chart",
       "title": "Classification Distribution",
       "subtitle": "2024",
       "data": {
         "labels": ["True Positive", "False Positive", "True Negative", "False Negative"],
         "datasets": [
           {
+            "label": "Number of Cases",
             "data": [45, 15, 30, 10],
             "backgroundColor": [
               "rgba(75, 192, 192, 0.5)",

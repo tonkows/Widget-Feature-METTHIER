@@ -29,347 +29,132 @@ const Preview = ({ isCollapsed }) => {
   const renderChart = (blockId) => {
     const previewData = localStorage.getItem(`preview-${blockId}`);
     const blockConfig = localStorage.getItem(`block-${blockId}`);
+    const currentBlockId = searchParams.get('block');
+    const configTemp = localStorage.getItem(`config-temp-${blockId}`);
+    const defaultData = defaultBlockContents[blockId];
+    const mainContentConfig = localStorage.getItem(`block-${blockId}`);
     
-    if (previewData) {
-      const config = JSON.parse(previewData);
+    if (blockId === currentBlockId) {
+      if (previewData) {
+        const config = JSON.parse(previewData);
+        const mainConfig = mainContentConfig ? JSON.parse(mainContentConfig) : null;
 
-      if (config.type === "combined-display") {
-        return (
-          <Block>
-            <CombinedContainer>
-              <InfoSection width={config.styles?.infoSectionWidth}>
-                <InfoDisplayContainer>
-                  {config.items.map((item) => (
-                    <InfoItem
-                      key={item.id}
-                      style={{
-                        backgroundColor: item.style?.backgroundColor || 'var(--background-color)',
-                        borderColor: item.style?.borderColor || 'var(--border-color)',
-                        width: '100%'
-                      }}
-                    >
-                      <InfoIcon status={item.status}>
-                        {item.icon === 'camera' ? <CameraIcon /> : <InfoIcon />}
-                      </InfoIcon>
-                      <InfoContent>
-                        <InfoTitle>
-                          {item.title}
-                        </InfoTitle>
-                        <InfoValue>
-                          {item.value}
-                          <InfoUnit>{item.unit}</InfoUnit>
-                        </InfoValue>
-                      </InfoContent>
-                    </InfoItem>
-                  ))}
-                </InfoDisplayContainer>
-              </InfoSection>
+        if (configTemp) {
+          const tempConfig = JSON.parse(configTemp);
+          return renderDefaultChart({
+            ...defaultData,
+            charts: defaultData.charts.map(chart => ({
+              ...chart,
+              title: tempConfig.subject || mainConfig?.subject || chart.title,
+              subtitle: tempConfig.datatype || mainConfig?.datatype || chart.subtitle,
+              data: tempConfig.chartData || mainConfig?.chartData || chart.data,
+              options: {
+                ...chart.options,
+                ...tempConfig.chartOptions,
+                maintainAspectRatio: false,
+                responsive: true
+              }
+            }))
+          });
+        }
 
-              <ChartSection width={config.styles?.chartSectionWidth}>
-                {config.charts.map((chart, index) => {
-                  const ChartComponent = {
-                    'bar chart': Bar,
-                    'line chart': Line,
-                    'doughnut chart': Doughnut
-                  }[chart.type];
-
-                  if (!ChartComponent) return null;
-
-                  return (
-                    <ChartWrapper key={index}>
-                      <ChartComponent
-                        data={chart.data}
-                        options={chart.options}
-                      />
-                    </ChartWrapper>
-                  );
-                })}
-              </ChartSection>
-            </CombinedContainer>
-          </Block>
-        );
-      }
-
-      if (config.type === "info-display") {
-        return (
-          <Block>
-            <InfoDisplayContainer layout={config.layout}>
-              {config.items.map((item) => (
-                <InfoItem
-                  key={item.id}
-                  style={{
-                    backgroundColor: item.style?.backgroundColor || 'var(--background-color)',
-                    borderColor: item.style?.borderColor || 'var(--border-color)',
-                    width: item.style?.width || 'calc(33.33% - 8px)'
-                  }}
-                >
-                  <InfoIcon status={item.status}>
-                    {item.icon === 'camera' ? <CameraIcon /> : <InfoIcon />}
-                  </InfoIcon>
-                  <InfoContent>
-                    <InfoTitle>
-                      {item.title}
-                    </InfoTitle>
-                    <InfoValue>
-                      {item.value}
-                      <InfoUnit>{item.unit}</InfoUnit>
-                    </InfoValue>
-                  </InfoContent>
-                </InfoItem>
-              ))}
-            </InfoDisplayContainer>
-          </Block>
-        );
-      }
-
-  
-      if (config.type === "chart-with-description") {
-        const ChartComponent = {
-          'bar chart': Bar,
-          'line chart': Line,
-          'doughnut chart': Doughnut
-        }[config.chart.type];
-
-        if (!ChartComponent) return null;
-
-        return (
-          <Block>
-            <ChartContainer>
-              <ChartWrapper style={{ width: '100%', height: '100%' }}>
-                <ChartComponent
-                  data={config.chart.data}
-                  options={{
-                    ...config.chart.options,
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    plugins: {
-                      ...config.chart.options?.plugins,
-                      title: {
-                        display: true,
-                        text: [config.chart.title, config.chart.subtitle],
-                        position: 'top',
-                        align: 'start',
-                        font: { size: 12, weight: 'bold' }
-                      }
-                    }
-                  }}
-                />
-              </ChartWrapper>
-            </ChartContainer>
-          </Block>
-        );
-      }
-
-
-      if (config.type === "multi-chart") {
-        return (
-          <Block>
-            <ChartContainer layout={config.layout}>
-              {config.charts.map((chart, index) => {
-                const ChartComponent = {
-                  'bar chart': Bar,
-                  'line chart': Line,
-                  'doughnut chart': Doughnut
-                }[chart.type];
-
-                if (!ChartComponent) return null;
-
-                return (
-                  <ChartWrapper 
-                    key={index}
-                    layout={config.layout}
-                    style={{
-                      width: config.layout === 'horizontal' ? '48%' : '100%',
-                      height: config.layout === 'horizontal' ? '100%' : '48%'
-                    }}
-                  >
-                    <ChartComponent
-                      data={chart.data}
-                      options={{
-                        ...chart.options,
-                        maintainAspectRatio: false,
-                        responsive: true
-                      }}
-                    />
-                  </ChartWrapper>
-                );
-              })}
-            </ChartContainer>
-          </Block>
-        );
-      }
-
-      const ChartComponent = {
-        'bar chart': Bar,
-        'line chart': Line,
-        'doughnut chart': Doughnut
-      }[config.type];
-
-      if (!ChartComponent) return null;
-
-      return (
-        <Block>
-          <ChartComponent
-            data={config.data}
-            options={{
-              ...config.options,
-              maintainAspectRatio: false,
-              responsive: true
-            }}
-          />
-        </Block>
-      );
-    } else if (blockConfig) {
-      const config = JSON.parse(blockConfig);
-      
-      if (config.selectedChart) {
-        const ChartComponent = {
-          'bar chart': Bar,
-          'line chart': Line,
-          'doughnut chart': Doughnut
-        }[config.selectedChart];
-
-        if (!ChartComponent) return null;
-
-        return (
-          <Block>
-            <ChartContainer>
-              <ChartWrapper style={{ width: '100%', height: '100%' }}>
-                <ChartComponent
-                  data={config.chartData}
-                  options={{
-                    ...config.chartOptions,
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    plugins: {
-                      ...config.chartOptions?.plugins,
-                      title: {
-                        display: true,
-                        text: [config.subject_label, config.subtitle],
-                        position: 'top',
-                        align: 'start',
-                        font: { size: 12, weight: 'bold' }
-                      }
-                    }
-                  }}
-                />
-              </ChartWrapper>
-            </ChartContainer>
-          </Block>
-        );
-      } else if (config.charts) {
-        return (
-          <Block>
-            <ChartContainer layout={config.layout}>
-              {config.charts.map((chart, index) => {
-                const ChartComponent = {
-                  'bar chart': Bar,
-                  'line chart': Line,
-                  'doughnut chart': Doughnut
-                }[chart.type];
-
-                if (!ChartComponent) return null;
-
-                return (
-                  <ChartWrapper 
-                    key={index}
-                    layout={config.layout}
-                    style={{
-                      width: config.layout === 'horizontal' ? '48%' : '100%',
-                      height: config.layout === 'horizontal' ? '100%' : '48%'
-                    }}
-                  >
-                    <ChartComponent
-                      data={chart.data}
-                      options={{
-                        ...chart.options,
-                        maintainAspectRatio: false,
-                        responsive: true
-                      }}
-                    />
-                  </ChartWrapper>
-                );
-              })}
-            </ChartContainer>
-          </Block>
-        );
+        if (mainConfig) {
+          return renderDefaultChart({
+            ...defaultData,
+            charts: defaultData.charts.map(chart => ({
+              ...chart,
+              title: mainConfig.subject || chart.title,
+              subtitle: mainConfig.datatype || chart.subtitle,
+              data: mainConfig.chartData || chart.data,
+              options: {
+                ...chart.options,
+                ...mainConfig.chartOptions,
+                maintainAspectRatio: false,
+                responsive: true
+              }
+            }))
+          });
+        }
       }
     }
 
-    const defaultConfig = defaultBlockContents[blockId];
-    if (!defaultConfig) return null;
+    if (mainContentConfig) {
+      const config = JSON.parse(mainContentConfig);
+      return renderDefaultChart({
+        ...defaultData,
+        charts: defaultData.charts.map(chart => ({
+          ...chart,
+          title: config.subject || chart.title,
+          subtitle: config.datatype || chart.subtitle,
+          data: config.chartData || chart.data,
+          options: {
+            ...chart.options,
+            ...config.chartOptions,
+            maintainAspectRatio: false,
+            responsive: true
+          }
+        }))
+      });
+    }
 
- 
-    if (defaultConfig.type === "info-display") {
-      return (
-        <Block>
-          <InfoDisplayContainer layout={defaultConfig.layout}>
-            {defaultConfig.items.map((item) => (
-              <InfoItem
-                key={item.id}
+    return renderDefaultChart(defaultData);
+  };
+
+  const renderDefaultChart = (defaultContent) => {
+    if (!defaultContent) return null;
+
+    return (
+      <Block>
+        <ChartContainer layout={defaultContent.layout}>
+          {defaultContent.charts && defaultContent.charts.map((chart, index) => {
+            const ChartComponent = {
+              'bar chart': Bar,
+              'line chart': Line,
+              'doughnut chart': Doughnut
+            }[chart.type];
+
+            if (!ChartComponent) return null;
+
+            return (
+              <ChartWrapper 
+                key={index}
+                layout={defaultContent.layout}
                 style={{
-                  backgroundColor: item.style?.backgroundColor || 'var(--background-color)',
-                  borderColor: item.style?.borderColor || 'var(--border-color)',
-                  width: item.style?.width || 'calc(33.33% - 8px)'
+                  width: defaultContent.layout === 'horizontal' ? '100%' : '100%',
+                  height: defaultContent.layout === 'horizontal' ? '100%' : '100%'
                 }}
               >
-                <InfoIcon status={item.status}>
-                  {item.icon === 'camera' ? <CameraIcon /> : <InfoIcon />}
-                </InfoIcon>
-                <InfoContent>
-                  <InfoTitle>
-                    {item.title}
-                  </InfoTitle>
-                  <InfoValue>
-                    {item.value}
-                    <InfoUnit>{item.unit}</InfoUnit>
-                  </InfoValue>
-                </InfoContent>
-              </InfoItem>
-            ))}
-          </InfoDisplayContainer>
-        </Block>
-      );
-    }
-
-
-    if (defaultConfig.charts && Array.isArray(defaultConfig.charts)) {
-      return (
-        <Block>
-          <ChartContainer layout={defaultConfig.layout}>
-            {defaultConfig.charts.map((chart, index) => {
-              const ChartComponent = {
-                'bar chart': Bar,
-                'line chart': Line,
-                'doughnut chart': Doughnut
-              }[chart.type];
-
-              if (!ChartComponent) return null;
-
-              return (
-                <ChartWrapper 
-                  key={index}
-                  layout={defaultConfig.layout}
-                  style={{
-                    width: defaultConfig.layout === 'horizontal' ? '48%' : '100%',
-                    height: defaultConfig.layout === 'horizontal' ? '100%' : '48%'
+                <ChartComponent
+                  data={chart.data}
+                  options={{
+                    ...chart.options,
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    plugins: {
+                      legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                          boxWidth: 10,
+                          padding: 5,
+                          font: { size: 8 }
+                        }
+                      },
+                      title: {
+                        display: true,
+                        text: [chart.title, chart.subtitle],
+                        font: { size: 10, weight: 'bold' },
+                        padding: { top: 5, bottom: 5 }
+                      }
+                    }
                   }}
-                >
-                  <ChartComponent
-                    data={chart.data}
-                    options={{
-                      ...chart.options,
-                      maintainAspectRatio: false,
-                      responsive: true
-                    }}
-                  />
-                </ChartWrapper>
-              );
-            })}
-          </ChartContainer>
-        </Block>
-      );
-    }
+                />
+              </ChartWrapper>
+            );
+          })}
+        </ChartContainer>
+      </Block>
+    );
   };
 
   const renderColumnContent = (columnId) => {
@@ -458,9 +243,7 @@ const Preview = ({ isCollapsed }) => {
         <BiArrowBack /> Back
       </BackButton>
       <ButtonContainer>
-        <GenerateButton onClick={handleGenerate}>
-          Generate
-        </GenerateButton>
+        
       </ButtonContainer>
       <WrapperDiv>
         <StyledRow gutter={[8, 8]}>

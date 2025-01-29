@@ -505,7 +505,7 @@ const ConfigForm = ({ isCollapsed }) => {
   const handlePreview = () => {
     if (!blockId) return;
   
-    // เก็บข้อมูลปัจจุบันไว้ใน localStorage
+    
     const currentConfig = {
       selectedButton,
       subject1,
@@ -523,7 +523,6 @@ const ConfigForm = ({ isCollapsed }) => {
     };
     localStorage.setItem(`config-temp-${blockId}`, JSON.stringify(currentConfig));
   
-    // ส่วนที่เหลือคงเดิม
     Object.keys(localStorage).forEach(key => {
       if (key.startsWith('preview-')) {
         localStorage.removeItem(key);
@@ -567,6 +566,7 @@ const ConfigForm = ({ isCollapsed }) => {
         layout: defaultContent.layout,
         charts: defaultContent.charts
       };
+      
       localStorage.setItem(`block-config-${blockId}`, JSON.stringify(defaultConfigToSave));
 
       previewData = {
@@ -750,7 +750,7 @@ const ConfigForm = ({ isCollapsed }) => {
         setDatatype1(config.datatype1);
         setDataset1(config.dataset1);
         
-        // แปลง date string กลับเป็น moment object
+     
         if (config.selectedRanges[0] === 'date' && config.selectedRanges[1]) {
           const dates = [
             moment(config.selectedRanges[1][0], 'YYYY-MM-DD'),
@@ -765,7 +765,7 @@ const ConfigForm = ({ isCollapsed }) => {
         setChartData(config.chartData);
         setChartOptions(config.chartOptions);
 
-        // โหลด dataset data
+     
         if (config.subject1 && config.datatype1 && config.dataset1) {
           try {
             const response = await import(`../data/${config.subject1}/${config.datatype1}/${config.dataset1}.json`);
@@ -789,16 +789,16 @@ const ConfigForm = ({ isCollapsed }) => {
       return;
     }
 
-    // เก็บ selectedRanges ในรูปแบบที่ต้องการทันที
+   
     const formattedDates = [
       moment(dates[0]).format('YYYY-MM-DD'),
       moment(dates[1]).format('YYYY-MM-DD')
     ];
     
-    // อัพเดท state
+ 
     setSelectedRanges(['date', dates]);
 
-    // บันทึกลง localStorage
+
     const currentConfig = {
       selectedButton,
       subject1,
@@ -811,7 +811,7 @@ const ConfigForm = ({ isCollapsed }) => {
     };
     localStorage.setItem(`config-temp-${blockId}`, JSON.stringify(currentConfig));
 
-    // สร้าง chartData ทันทีที่เลือก date range
+
     if (dataset1 && datasetData) {
       const newChartData = generateChartData(dataset1, 'date');
       setChartData(newChartData);

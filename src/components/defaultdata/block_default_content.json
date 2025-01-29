@@ -71,61 +71,61 @@
     ]
   },
   "Right-TopRight": {
-    "layout": "horizontal",
     "type": "multi-chart",
-    "subject": "asset",
-    "datatype": "maintenance",
+    "layout": "horizontal",
+    "subject": "device",
+    "datatype": "status",
     "charts": [
       {
-        "id": "chart1",
         "type": "bar chart",
-        "title": "Maintenance Tasks",
-        "subtitle": "By Priority",
+        "title": "Operational Status",
+        "subtitle": "Monthly Data for 2024",
         "data": {
-          "labels": ["High", "Medium", "Low"],
+          "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
           "datasets": [
             {
-              "label": "Tasks",
-              "data": [15, 25, 10],
-              "backgroundColor": [
-                "rgba(255, 99, 132, 0.5)",
-                "rgba(54, 162, 235, 0.5)",
-                "rgba(75, 192, 192, 0.5)"
-              ]
+              "label": "Online Devices",
+              "data": [120, 115, 118, 122, 125, 130, 128, 127, 126, 124, 122, 121],
+              "backgroundColor": "rgba(75, 192, 192, 0.5)",
+              "borderColor": "rgba(75, 192, 192, 1)",
+              "borderWidth": 1
+            },
+            {
+              "label": "Offline Devices",
+              "data": [30, 35, 32, 28, 25, 20, 22, 23, 24, 26, 28, 29],
+              "backgroundColor": "rgba(255, 99, 132, 0.5)",
+              "borderColor": "rgba(255, 99, 132, 1)",
+              "borderWidth": 1
             }
           ]
         },
         "options": {
           "responsive": true,
-          "maintainAspectRatio": false
-        }
-      },
-      {
-        "id": "chart2",
-        "type": "line chart",
-        "title": "Completion Rate",
-        "subtitle": "Monthly Trend",
-        "data": {
-          "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
-          "datasets": [
-            {
-              "label": "Completed",
-              "data": [85, 88, 92, 89, 91],
-              "borderColor": "rgba(75, 192, 192, 1)"
+          "maintainAspectRatio": false,
+          "indexAxis": "x",
+          "plugins": {
+            "legend": {
+              "display": true,
+              "position": "top"
             }
-          ]
-        },
-        "options": {
-          "responsive": true,
-          "maintainAspectRatio": false
+          }
         }
       }
-    ]
+    ],
+    "styles": {
+      "padding": "0",
+      "backgroundColor": "var(--card-bg-color)",
+      "height": "100%",
+      "width": "100%",
+      "display": "flex",
+      "alignItems": "center",
+      "justifyContent": "center"
+    }
   },
   "Left-MiddleTopLeft": {
     "layout": "horizontal",
     "subject": "asset",
-    "datatype": "asset_maintenance",
+    "datatype": "Asset Maintenance",
     "charts": [
       {
         "id": "chart1",
@@ -211,31 +211,26 @@
   },
   "Right-MiddleTopRight": {
     "layout": "horizontal",
-    "subject": "ghg",
-    "datatype": "emission",
+    "subject": "incident",
+    "datatype": "incident_type",
     "charts": [
       {
         "id": "chart1",
         "type": "bar chart",
-        "title": "GHG Emissions by Source",
+        "title": "Incident Type Count",
         "subtitle": "2024",
         "data": {
-          "labels": ["Factory", "Transport", "Office", "Others"],
+          "labels": ["VIP", "Fire", "Intrusion", "Blacklist "],
           "datasets": [
             {
-              "label": "CO2 Emissions (tons)",
+              "label": "",
+
               "data": [120, 80, 40, 20],
               "backgroundColor": [
-                "rgba(255, 99, 132, 0.5)",
-                "rgba(54, 162, 235, 0.5)",
-                "rgba(255, 206, 86, 0.5)",
-                "rgba(75, 192, 192, 0.5)"
+                "rgba(255, 99, 132, 0.5)"
               ],
               "borderColor": [
-                "rgba(255, 99, 132, 1)",
-                "rgba(54, 162, 235, 1)",
-                "rgba(255, 206, 86, 1)",
-                "rgba(75, 192, 192, 1)"
+                "rgba(255, 99, 132, 1)"
               ],
               "borderWidth": 1
             }
@@ -259,82 +254,22 @@
         }
       },
       {
-        "id": "chart2",
-        "type": "line chart",
-        "title": "Monthly Emission Trend",
-        "subtitle": "2024 vs 2023",
-        "data": {
-          "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
-          "datasets": [
-            {
-              "label": "2024",
-              "data": [260, 255, 250, 245, 240],
-              "borderColor": "rgba(255, 99, 132, 1)",
-              "borderWidth": 2,
-              "fill": false
-            },
-            {
-              "label": "2023",
-              "data": [280, 275, 270, 265, 260],
-              "borderColor": "rgba(54, 162, 235, 1)",
-              "borderWidth": 2,
-              "fill": false
-            }
-          ]
-        },
-        "options": {
-          "responsive": true,
-          "maintainAspectRatio": false,
-          "plugins": {
-            "legend": {
-              "display": true,
-              "position": "top"
-            }
-          }
-        },
-        "metadata": {
-          "subject": "ghg",
-          "datatype": "emission",
-          "dataset": "monthly_trend",
-          "ranges": ["month"]
-        }
-      }
-    ],
-    "styles": {
-      "gap": "15px",
-      "padding": "15px",
-      "backgroundColor": "var(--card-bg-color)",
-      "chartHeight": "100%",
-      "chartWidth": "50%"
-    }
-  },
-  "Left-MiddleBottomLeft": {
-    "layout": "horizontal",
-    "subject": "ghg",
-    "datatype": "emission",
-    "charts": [
-      {
-        "id": "chart1",
+       "id": "chart2",
         "type": "bar chart",
-        "title": "GHG Emissions by Source",
+        "title": "The Highest Resolution Time ",
         "subtitle": "2024",
         "data": {
-          "labels": ["Factory", "Transport", "Office", "Others"],
+          "labels": ["VIP", "Fire", "Intrusion", "Blacklist "],
           "datasets": [
             {
-              "label": "CO2 Emissions (tons)",
-              "data": [120, 80, 40, 20],
+              "label": "",
+
+              "data": [10, 50, 30, 20],
               "backgroundColor": [
-                "rgba(255, 99, 132, 0.5)",
-                "rgba(54, 162, 235, 0.5)",
-                "rgba(255, 206, 86, 0.5)",
-                "rgba(75, 192, 192, 0.5)"
+                "rgba(255, 99, 132, 0.5)"
               ],
               "borderColor": [
-                "rgba(255, 99, 132, 1)",
-                "rgba(54, 162, 235, 1)",
-                "rgba(255, 206, 86, 1)",
-                "rgba(75, 192, 192, 1)"
+                "rgba(255, 99, 132, 1)"
               ],
               "borderWidth": 1
             }
@@ -351,85 +286,39 @@
           }
         },
         "metadata": {
-          "subject": "ghg",
-          "datatype": "emission",
+          "subject": "incident",
+          "datatype": "incident_type",
           "dataset": "by_source",
           "ranges": ["year"]
-        }
-      },
-      {
-        "id": "chart2",
-        "type": "line chart",
-        "title": "Monthly Emission Trend",
-        "subtitle": "2024 vs 2023",
-        "data": {
-          "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
-          "datasets": [
-            {
-              "label": "2024",
-              "data": [260, 255, 250, 245, 240],
-              "borderColor": "rgba(255, 99, 132, 1)",
-              "borderWidth": 2,
-              "fill": false
-            },
-            {
-              "label": "2023",
-              "data": [280, 275, 270, 265, 260],
-              "borderColor": "rgba(54, 162, 235, 1)",
-              "borderWidth": 2,
-              "fill": false
-            }
-          ]
-        },
-        "options": {
-          "responsive": true,
-          "maintainAspectRatio": false,
-          "plugins": {
-            "legend": {
-              "display": true,
-              "position": "top"
-            }
-          }
-        },
-        "metadata": {
-          "subject": "ghg",
-          "datatype": "emission",
-          "dataset": "monthly_trend",
-          "ranges": ["month"]
         }
       }
     ]
   },
-  "Right-MiddleBottomRight": {
+  "Left-MiddleBottomLeft": {
     "layout": "horizontal",
-    "subject": "training",
-    "datatype": "training_hours",
+    "subject": "incident",
+    "datatype": "severity",
     "charts": [
       {
         "id": "chart1",
         "type": "bar chart",
-        "title": "incident",
-        "subtitle": "2024",
+        "title": "Incident Severity Comparison",
+        "subtitle": "2023 vs 2024",
         "data": {
-          "labels": ["Organic", "Plastic", "Metal", "Glass", "Paper"],
+          "labels": ["Critical", "High", "VIP"],
           "datasets": [
             {
-              "label": "waste recycled",
-              "data": [30, 20, 25, 15, 10],
-              "backgroundColor": [
-                "rgba(255, 99, 132, 0.5)",
-                "rgba(54, 162, 235, 0.5)",
-                "rgba(255, 206, 86, 0.5)",
-                "rgba(75, 192, 192, 0.5)",
-                "rgba(153, 102, 255, 0.5)"
-              ],
-              "borderColor": [
-                "rgba(255, 99, 132, 1)",
-                "rgba(54, 162, 235, 1)",
-                "rgba(255, 206, 86, 1)",
-                "rgba(75, 192, 192, 1)",
-                "rgba(153, 102, 255, 1)"
-              ],
+              "label": "2023",
+              "data": [120, 200, 50],
+              "backgroundColor": "rgba(255, 99, 132, 0.5)",
+              "borderColor": "rgba(255, 99, 132, 1)",
+              "borderWidth": 1
+            },
+            {
+              "label": "2024",
+              "data": [150, 180, 70],
+              "backgroundColor": "rgba(54, 162, 235, 0.5)",
+              "borderColor": "rgba(54, 162, 235, 1)",
               "borderWidth": 1
             }
           ]
@@ -445,25 +334,87 @@
           }
         },
         "metadata": {
-          "subject": "waste",
-          "datatype": "recycled",
-          "dataset": "by_type",
+          "subject": "incident_severity",
+          "datatype": "comparison",
+          "dataset": "yearly",
           "ranges": ["year"]
         }
       },
       {
         "id": "chart2",
-        "type": "doughnut chart",
-        "title": "Device",
-        "subtitle": "Monthly 2024",
+        "type": "line chart",
+        "title": "Monthly Severity Trend",
+        "subtitle": "2024",
         "data": {
           "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
           "datasets": [
             {
-              "label": "recycling rate",
-              "data": [65, 68, 70, 72, 75],
-              "backgroundColor": "rgba(75, 192, 192, 0.5)",
+              "label": "Critical",
+              "data": [25, 22, 20, 18, 15],
+              "borderColor": "rgba(255, 99, 132, 1)",
+              "borderWidth": 2,
+              "fill": false
+            },
+            {
+              "label": "High",
+              "data": [40, 38, 35, 32, 30],
+              "borderColor": "rgba(54, 162, 235, 1)",
+              "borderWidth": 2,
+              "fill": false
+            },
+            {
+              "label": "VIP",
+              "data": [15, 12, 10, 8, 5],
               "borderColor": "rgba(75, 192, 192, 1)",
+              "borderWidth": 2,
+              "fill": false
+            }
+          ]
+        },
+        "options": {
+          "responsive": true,
+          "maintainAspectRatio": false,
+          "plugins": {
+            "legend": {
+              "display": true,
+              "position": "right"
+            }
+          }
+        },
+        "metadata": {
+          "subject": "incident_severity",
+          "datatype": "trend",
+          "dataset": "monthly",
+          "ranges": ["month"]
+        }
+      }
+    ]
+  },
+  "Right-MiddleBottomRight": {
+    "layout": "horizontal",
+    "subject": "Asset",
+    "datatype": "Warranty Status",
+    "charts": [
+      {
+        "id": "chart1",
+        "type": "bar chart",
+        "title": "Warranty Status",
+        "subtitle": "2024",
+        "data": {
+          "labels": ["Chillers", "LED Lights", "Dome Cameras", "Light Switches"],
+          "datasets": [
+            {
+              "label": "Active Warranty",
+              "data": [12, 8, 15, 10],
+              "backgroundColor": "rgba(54, 162, 235, 0.5)",
+              "borderColor": "rgba(54, 162, 235, 1)",
+              "borderWidth": 1
+            },
+            {
+              "label": "Expired Warranty",
+              "data": [5, 7, 6, 8],
+              "backgroundColor": "rgba(255, 99, 132, 0.5)",
+              "borderColor": "rgba(255, 99, 132, 1)",
               "borderWidth": 1
             }
           ]
@@ -474,25 +425,70 @@
           "plugins": {
             "legend": {
               "display": true,
-              "position": "top"
+              "position": "right"
             }
           }
         },
         "metadata": {
-          "subject": "waste",
-          "datatype": "recycling",
-          "dataset": "monthly_rate",
-          "ranges": ["month"]
+          "subject": "assets",
+          "datatype": "warranty_status",
+          "dataset": "by_type",
+          "ranges": ["year"]
+        }
+      },
+      {
+        "id": "chart2",
+        "type": "doughnut chart",
+        "title": "Warranty Comparison",
+        "subtitle": "2023 vs 2024",
+        "data": {
+          "labels": ["Active Warranty", "Expired Warranty"],
+          "datasets": [
+            {
+              "label": "2023",
+              "data": [40, 20],
+              "backgroundColor": "rgba(75, 192, 192, 0.5)",
+              "borderColor": "rgba(75, 192, 192, 1)",
+              "borderWidth": 1
+            },
+            {
+              "label": "2024",
+              "data": [45, 25],
+              "backgroundColor": "rgba(255, 99, 132, 0.5)",
+              "borderColor": "rgba(255, 99, 132, 1)",
+              "borderWidth": 1
+            }
+          ]
+        },
+        "options": {
+          "responsive": true,
+          "maintainAspectRatio": false,
+          "indexAxis": "y",
+          "plugins": {
+            "legend": {
+              "display": true,
+              "position": "top"
+            }
+          },
+          "scales": {
+            "x": {
+              "stacked": false
+            },
+            "y": {
+              "stacked": false
+            }
+          }
+        },
+        "metadata": {
+          "subject": "warranty",
+          "datatype": "comparison",
+          "dataset": "yearly_status",
+          "ranges": ["year"]
         }
       }
-    ],
-    "styles": {
-      "gap": "15px",
-      "padding": "15px",
-      "backgroundColor": "var(--card-bg-color)",
-      "chartHeight": "48%",
-      "chartWidth": "100%"
-    }
+      
+      
+    ]
   },
   "Left-BottomLeft": {
     "type": "multi-chart",
@@ -550,30 +546,22 @@
   "Right-BottomRight": {
     "type": "multi-chart",
     "layout": "horizontal",
-    "subject": "training",
-    "datatype": "training_hours",
+    "subject": "device",
+    "datatype": "offline_status",
     "charts": [
       {
         "id": "chart1",
         "type": "bar chart",
-        "title": "Total Training Hours",
-        "subtitle": "2024",
+        "title": "Top 5 Offline Cameras",
+        "subtitle": "By Duration (Hours)",
         "data": {
-          "labels": ["Total", "Online", "Offline"],
+          "labels": ["CAM-A102", "CAM-B205", "CAM-C103", "CAM-D401", "CAM-E302"],
           "datasets": [
             {
-              "label": "Training Hours",
-              "data": [2450, 1800, 200],
-              "backgroundColor": [
-                "rgba(75, 192, 192, 0.5)",
-                "rgba(54, 162, 235, 0.5)",
-                "rgba(255, 99, 132, 0.5)"
-              ],
-              "borderColor": [
-                "rgba(75, 192, 192, 1)",
-                "rgba(54, 162, 235, 1)",
-                "rgba(255, 99, 132, 1)"
-              ],
+              "label": "Offline Hours",
+              "data": [48, 36, 24, 18, 12],
+              "backgroundColor": "rgba(255, 99, 132, 0.5)",
+              "borderColor": "rgba(255, 99, 132, 1)",
               "borderWidth": 1
             }
           ]
@@ -581,41 +569,63 @@
         "options": {
           "responsive": true,
           "maintainAspectRatio": false,
+          "indexAxis": "y",
           "plugins": {
             "legend": {
               "display": true,
               "position": "top"
             }
+          },
+          "scales": {
+            "x": {
+              "title": {
+                "display": true,
+                "text": "Hours"
+              },
+              "grid": {
+                "display": true,
+                "drawBorder": false,
+                "color": "rgba(200, 200, 200, 0.1)"
+              }
+            },
+            "y": {
+              "grid": {
+                "display": false,
+                "drawBorder": false
+              }
+            }
           }
         },
         "metadata": {
-          "subject": "training",
-          "datatype": "hours",
-          "dataset": "total_hours",
-          "ranges": ["year"]
+          "subject": "camera",
+          "datatype": "offline_duration",
+          "dataset": "top_5",
+          "ranges": ["day"]
         }
       },
       {
         "id": "chart2",
-        "type": "bar chart",
-        "title": "Training Categories",
-        "subtitle": "Distribution",
+        "type": "doughnut chart",
+        "title": "Offline Camera Distribution",
+        "subtitle": "By Building Zone",
         "data": {
-          "labels": ["Safety", "Technical", "Soft Skills", "Compliance"],
+          "labels": ["Zone A", "Zone B", "Zone C", "Zone D", "Zone E"],
           "datasets": [
             {
-              "data": [40, 30, 20, 10],
+              "data": [5, 4, 3, 2, 1],
               "backgroundColor": [
-                "rgba(75, 192, 192, 0.7)",
+                "rgba(255, 99, 132, 0.7)",
                 "rgba(54, 162, 235, 0.7)",
                 "rgba(255, 206, 86, 0.7)",
-                "rgba(255, 99, 132, 0.7)"
+                "rgba(75, 192, 192, 0.7)",
+                "rgba(153, 102, 255, 0.7)"
               ],
               "borderColor": [
-                "rgba(75, 192, 192, 1)",
+                "rgba(255, 99, 132, 1)",
                 "rgba(54, 162, 235, 1)",
                 "rgba(255, 206, 86, 1)",
-                "rgba(255, 99, 132, 1)"
+                "rgba(75, 192, 192, 1)",
+                "rgba(153, 102, 255, 1)"
               ],
               "borderWidth": 1
             }
@@ -624,7 +634,6 @@
         "options": {
           "responsive": true,
           "maintainAspectRatio": false,
-          "cutout": "70%",
           "plugins": {
             "legend": {
               "display": true,
@@ -638,38 +647,37 @@
           }
         },
         "metadata": {
-          "subject": "training",
-          "datatype": "categories",
-          "dataset": "distribution",
-          "ranges": ["year"]
+          "subject": "camera",
+          "datatype": "offline_distribution",
+          "dataset": "by_zone",
+          "ranges": ["current"]
         }
       }
     ],
     "styles": {
       "gap": "12px",
       "padding": "12px",
-      "infoSectionWidth": "35%",
-      "chartSectionWidth": "65%",
-      "infoOrder": "1",
-      "chartOrder": "2",
-      "direction": "column",
-      "justify": "space-between"
+      "backgroundColor": "var(--card-bg-color)",
+      "chartHeight": "100%",
+      "chartWidth": "48%"
     }
   },
   "BottomCenter-Right": {
     "layout": "horizontal",
+    "subject": "energy",
+    "datatype": "efficiency",
     "charts": [
       {
         "id": "chart1",
         "type": "bar chart",
-        "title": "Compliance Score",
-        "subtitle": "2024",
+        "title": "Energy Efficiency Rating",
+        "subtitle": "By Building Zone (2024)",
         "data": {
-          "labels": ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8"],
+          "labels": ["Zone A", "Zone B", "Zone C", "Zone D", "Zone E", "Zone F"],
           "datasets": [
             {
-              "label": "compliance score",
-              "data": [76, 88, 92, 67, 40, 30, 20, 10],
+              "label": "Efficiency Score",
+              "data": [92, 88, 85, 82, 78, 75],
               "backgroundColor": "rgba(75, 192, 192, 0.5)",
               "borderColor": "rgba(75, 192, 192, 1)",
               "borderWidth": 1
@@ -715,25 +723,25 @@
           }
         },
         "metadata": {
-          "subject": "compliance",
-          "datatype": "score",
-          "dataset": "quarterly",
-          "ranges": ["quarter"]
+          "subject": "energy",
+          "datatype": "efficiency",
+          "dataset": "zone_rating",
+          "ranges": ["zone"]
         }
       },
       {
         "id": "chart2",
         "type": "bar chart",
-        "title": "Audit Findings",
-        "subtitle": "2024",
+        "title": "Peak Energy Usage",
+        "subtitle": "Last 5 Months",
         "data": {
           "labels": ["Jan", "Feb", "Mar", "Apr", "May"],
           "datasets": [
             {
-              "label": "findings",
-              "data": [12, 10, 8, 6, 5],
-              "backgroundColor": "rgba(255, 99, 132, 0.5)",
-              "borderColor": "rgba(255, 99, 132, 1)",
+              "label": "kWh",
+              "data": [450, 420, 380, 360, 340],
+              "backgroundColor": "rgba(255, 165, 0, 0.5)",
+              "borderColor": "rgba(255, 165, 0, 1)",
               "borderWidth": 1
             }
           ]
@@ -749,9 +757,9 @@
           }
         },
         "metadata": {
-          "subject": "compliance",
-          "datatype": "audit",
-          "dataset": "findings",
+          "subject": "energy",
+          "datatype": "peak_usage",
+          "dataset": "monthly",
           "ranges": ["month"]
         }
       }
@@ -764,132 +772,133 @@
       "chartWidth": "50%"
     }
   },
-  "BottomCenter-Left": {
-    "layout": "horizontal",
-    "subject": "training",
-    "datatype": "performance",
-    "charts": [
-      {
-        "id": "chart1",
-        "type": "line chart",
-        "title": "Training Hours",
-        "subtitle": "Monthly Average",
-        "data": {
-          "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-          "datasets": [
-            {
-              "label": "Hours per Employee",
-              "data": [8, 12, 10, 15, 14, 16],
-              "backgroundColor": "rgba(75, 192, 192, 0.2)",
-              "borderColor": "rgba(75, 192, 192, 1)",
-              "borderWidth": 2,
-              "tension": 0.4,
-              "fill": true
-            }
-          ]
-        },
-        "options": {
-          "responsive": true,
-          "maintainAspectRatio": false,
-          "plugins": {
-            "legend": {
-              "display": true,
-              "position": "top",
-              "labels": {
-                "font": {
-                  "size": 11
+    "BottomCenter-Left": {
+      "layout": "horizontal",
+      "subject": "energy",
+      "datatype": "consumption",
+      "charts": [
+        {
+          "id": "chart1",
+          "type": "line chart",
+          "title": "Monthly Energy Consumption",
+          "subtitle": "Average Usage (kWh)",
+          "data": {
+            "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+            "datasets": [
+              {
+                "label": "kWh per Household",
+                "data": [320, 300, 290, 310, 330, 340],
+                "backgroundColor": "rgba(255, 165, 0, 0.2)",
+                "borderColor": "rgba(255, 165, 0, 1)",
+                "borderWidth": 2,
+                "tension": 0.4,
+                "fill": true
+              }
+            ]
+          },
+          "options": {
+            "responsive": true,
+            "maintainAspectRatio": false,
+            "plugins": {
+              "legend": {
+                "display": true,
+                "position": "top",
+                "labels": {
+                  "font": {
+                    "size": 11
+                  }
+                }
+              }
+            },
+            "scales": {
+              "y": {
+                "beginAtZero": true,
+                "grid": {
+                  "display": true,
+                  "color": "rgba(200, 200, 200, 0.1)"
+                },
+                "ticks": {
+                  "font": {
+                    "size": 10
+                  }
+                }
+              },
+              "x": {
+                "grid": {
+                  "display": false
+                },
+                "ticks": {
+                  "font": {
+                    "size": 10
+                  }
                 }
               }
             }
           },
-          "scales": {
-            "y": {
-              "beginAtZero": true,
-              "grid": {
+          "metadata": {
+            "subject": "energy",
+            "datatype": "consumption",
+            "dataset": "monthly_average",
+            "ranges": ["month"]
+          }
+        },
+        {
+          "id": "chart2",
+          "type": "doughnut chart",
+          "title": "Energy Sources",
+          "subtitle": "Usage Distribution",
+          "data": {
+            "labels": ["Solar", "Wind", "Hydro", "Fossil Fuels"],
+            "datasets": [
+              {
+                "data": [35, 25, 20, 20],
+                "backgroundColor": [
+                  "rgba(255, 165, 0, 0.7)",
+                  "rgba(54, 162, 235, 0.7)",
+                  "rgba(75, 192, 192, 0.7)",
+                  "rgba(255, 99, 132, 0.7)"
+                ],
+                "borderColor": [
+                  "rgba(255, 165, 0, 1)",
+                  "rgba(54, 162, 235, 1)",
+                  "rgba(75, 192, 192, 1)",
+                  "rgba(255, 99, 132, 1)"
+                ],
+                "borderWidth": 1
+              }
+            ]
+          },
+          "options": {
+            "responsive": true,
+            "maintainAspectRatio": false,
+            "cutout": "70%",
+            "plugins": {
+              "legend": {
                 "display": true,
-                "color": "rgba(200, 200, 200, 0.1)"
-              },
-              "ticks": {
-                "font": {
-                  "size": 10
-                }
-              }
-            },
-            "x": {
-              "grid": {
-                "display": false
-              },
-              "ticks": {
-                "font": {
-                  "size": 10
+                "position": "right",
+                "labels": {
+                  "font": {
+                    "size": 11
+                  }
                 }
               }
             }
+          },
+          "metadata": {
+            "subject": "energy",
+            "datatype": "sources",
+            "dataset": "distribution",
+            "ranges": ["year"]
           }
-        },
-        "metadata": {
-          "subject": "training",
-          "datatype": "hours",
-          "dataset": "monthly_average",
-          "ranges": ["month"]
         }
-      },
-      {
-        "id": "chart2",
-        "type": "doughnut chart",
-        "title": "Training Categories",
-        "subtitle": "Distribution",
-        "data": {
-          "labels": ["Safety", "Technical", "Soft Skills", "Compliance"],
-          "datasets": [
-            {
-              "data": [40, 30, 20, 10],
-              "backgroundColor": [
-                "rgba(75, 192, 192, 0.7)",
-                "rgba(54, 162, 235, 0.7)",
-                "rgba(255, 206, 86, 0.7)",
-                "rgba(255, 99, 132, 0.7)"
-              ],
-              "borderColor": [
-                "rgba(75, 192, 192, 1)",
-                "rgba(54, 162, 235, 1)",
-                "rgba(255, 206, 86, 1)",
-                "rgba(255, 99, 132, 1)"
-              ],
-              "borderWidth": 1
-            }
-          ]
-        },
-        "options": {
-          "responsive": true,
-          "maintainAspectRatio": false,
-          "cutout": "70%",
-          "plugins": {
-            "legend": {
-              "display": true,
-              "position": "right",
-              "labels": {
-                "font": {
-                  "size": 11
-                }
-              }
-            }
-          }
-        },
-        "metadata": {
-          "subject": "training",
-          "datatype": "categories",
-          "dataset": "distribution",
-          "ranges": ["year"]
-        }
+      ],
+      "styles": {
+        "gap": "15px",
+        "padding": "15px",
+        "backgroundColor": "var(--card-bg-color)",
+        "chartHeight": "100%",
+        "chartWidth": "48%"
       }
-    ],
-    "styles": {
-      "gap": "15px",
-      "padding": "15px",
-      "backgroundColor": "var(--card-bg-color)",
-      "chartHeight": "100%",
-      "chartWidth": "48%"
     }
-  }
 }
+  

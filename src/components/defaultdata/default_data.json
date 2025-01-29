@@ -1,9 +1,5 @@
 {
   "incident": {
-    "incident_type": {
-      "title": "Incident Type",
-      "description": "Incident type analysis"
-    },
     "classification": {
       "title": "Classification",
       "description": "Incident classification analysis"
@@ -22,38 +18,11 @@
         "widget": ["number", "pie chart", "bar chart", "time dependence", "time independence"]
       }
     ]
-
   },
   "asset": {
     "asset_type": {
       "title": "Asset Type",
       "description": "Asset type distribution"
-    },
-    "usage": [
-      {
-        "dataset": "asset_usage_statistics",
-        "dataset_label": "Asset Usage Statistics",
-        "subject": "asset",
-        "subject_label": "Asset",
-        "datatype": "usage",
-        "datatype_label": "Usage",
-        "datarange": ["date", "week", "month", "year"],
-        "widget": ["number", "line chart", "bar chart", "time dependence", "time independence"]
-      }
-    ]
-  },
-  "videowall": {
-    "screen_status": [
-      {
-        "dataset": "videowall_screen_availability",
-        "dataset_label": "Videowall Screen Availability",
-        "subject": "videowall",
-        "subject_label": "Videowall",
-        "datatype": "screen_status",
-        "datatype_label": "Screen Status",
-        "datarange": ["date", "week", "month", "year"],
-        "widget": ["number", "pie chart", "bar chart", "time dependence", "time independence"]
-      }
-    ]
+    }
   }
 }

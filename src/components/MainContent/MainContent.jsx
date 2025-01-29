@@ -211,6 +211,50 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
 
     if (!config) return null;
 
+    if (config.type === "single-chart") {
+      const chart = config.chart;
+      const ChartComponent = {
+        'bar chart': Bar,
+        'line chart': Line,
+        'doughnut chart': Doughnut
+      }[chart.type];
+
+      if (!ChartComponent) return null;
+
+      return (
+        <Block>
+          <SubjectLabel>{config.subject?.replace(/_/g, ' ')}</SubjectLabel>
+          <ChartWrapper style={config.styles}>
+            <ChartComponent
+              data={chart.data}
+              options={{
+                ...chart.options,
+                maintainAspectRatio: false,
+                responsive: true,
+                plugins: {
+                  legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                      boxWidth: 10,
+                      padding: 5,
+                      font: { size: 8 }
+                    }
+                  },
+                  title: {
+                    display: true,
+                    text: [chart.title, chart.subtitle],
+                    font: { size: 10, weight: 'bold' },
+                    padding: { top: 5, bottom: 5 }
+                  }
+                }
+              }}
+            />
+          </ChartWrapper>
+        </Block>
+      );
+    }
+
     if (config.type === "combined-display") {
       return (
         <Block>
@@ -351,7 +395,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
                   key={index}
                   layout={config.layout || 'horizontal'}
                   style={{
-                    width: config.layout === 'horizontal' ? '48%' : '100%',
+                   
                     height: config.layout === 'horizontal' ? '100%' : '48%'
                   }}
                 > 
