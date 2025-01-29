@@ -427,11 +427,7 @@ const ConfigForm = ({ isCollapsed }) => {
   
     const data = datasetData.dataByRange[range];
   
-    if (range === "date") {
-      if (!selectedRanges[1] || !selectedRanges[1][0] || !selectedRanges[1][1]) {
-        return chartData;
-      }
-
+    if (range === "date" && selectedRanges[1]) {
       const selectedStartDate = selectedRanges[1][0]?.toDate();
       const selectedEndDate = selectedRanges[1][1]?.toDate();
   
@@ -468,18 +464,10 @@ const ConfigForm = ({ isCollapsed }) => {
   
   useEffect(() => {
     if (dataset1 && selectedRanges.length > 0 && datasetData) {
-      if (selectedRanges[0] === "date") {
-        if (!selectedRanges[1] || !selectedRanges[1][0] || !selectedRanges[1][1]) {
-          setChartData(null);
-          setSelectedChart(null);
-          return;
-        }
-      }
       const data = generateChartData(dataset1, selectedRanges[0]);
       setChartData(data);
     }
   }, [dataset1, selectedRanges, datasetData]);
-  
 
   const handleChartClick = (chartType) => {
     setSelectedChart(chartType);
@@ -517,7 +505,25 @@ const ConfigForm = ({ isCollapsed }) => {
   const handlePreview = () => {
     if (!blockId) return;
   
- 
+    // เก็บข้อมูลปัจจุบันไว้ใน localStorage
+    const currentConfig = {
+      selectedButton,
+      subject1,
+      datatype1,
+      dataset1,
+      selectedRanges: selectedRanges[0] === 'date' ? 
+        ['date', [
+          selectedRanges[1][0].format('YYYY-MM-DD'),
+          selectedRanges[1][1].format('YYYY-MM-DD')
+        ]] : 
+        selectedRanges,
+      selectedChart,
+      chartData,
+      chartOptions
+    };
+    localStorage.setItem(`config-temp-${blockId}`, JSON.stringify(currentConfig));
+  
+    // ส่วนที่เหลือคงเดิม
     Object.keys(localStorage).forEach(key => {
       if (key.startsWith('preview-')) {
         localStorage.removeItem(key);
@@ -539,7 +545,7 @@ const ConfigForm = ({ isCollapsed }) => {
         chart: {
           type: selectedChart,
           title: subject1,
-          subtitle: `${datatype1} - ${selectedRanges?.join(", ")}`,
+          subtitle: datatype1,
           data: chartData,
           options: chartOptions || defaultChartOptions
         },
@@ -547,7 +553,6 @@ const ConfigForm = ({ isCollapsed }) => {
           title: "Custom Analysis",
           content: `Analysis of ${subject1} data for ${datatype1}`,
           highlights: [
-            `Period: ${selectedRanges?.join(", ")}`,
             `Dataset: ${dataset1}`,
             `Type: ${selectedChart}`
           ]
@@ -592,13 +597,9 @@ const ConfigForm = ({ isCollapsed }) => {
 
   const handleGenerate = () => {
     if (selectedButton === "default") {
-    
       localStorage.setItem(`block-${blockId}`, JSON.stringify(defaultContent));
-
-     
       navigate('/');
     } else {
-      
       if (!selectedChart || !chartData) {
         Modal.error({
           title: 'Error',
@@ -617,14 +618,12 @@ const ConfigForm = ({ isCollapsed }) => {
         chartOptions: chartOptions || defaultChartOptions,
         subject_label: subject1,
         dataset_label: dataset1,
-        subtitle: `${datatype1} - ${selectedRanges.join(", ")}`
+        subtitle: datatype1
       };
 
-     
       localStorage.setItem(`block-${blockId}`, JSON.stringify(customData));
       localStorage.setItem(`block-${blockId}-last-default`, JSON.stringify(defaultContent));
 
-    
       Modal.success({
         title: 'Success',
         content: 'Chart has been generated successfully',
@@ -739,6 +738,85 @@ const ConfigForm = ({ isCollapsed }) => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
+
+  useEffect(() => {
+    const loadSavedConfig = async () => {
+      const savedConfig = localStorage.getItem(`config-temp-${blockId}`);
+      if (savedConfig) {
+        const config = JSON.parse(savedConfig);
+        
+        setSelectedButton(config.selectedButton);
+        setSubject1(config.subject1);
+        setDatatype1(config.datatype1);
+        setDataset1(config.dataset1);
+        
+        // แปลง date string กลับเป็น moment object
+        if (config.selectedRanges[0] === 'date' && config.selectedRanges[1]) {
+          const dates = [
+            moment(config.selectedRanges[1][0], 'YYYY-MM-DD'),
+            moment(config.selectedRanges[1][1], 'YYYY-MM-DD')
+          ];
+          setSelectedRanges(['date', dates]);
+        } else {
+          setSelectedRanges(config.selectedRanges);
+        }
+
+        setSelectedChart(config.selectedChart);
+        setChartData(config.chartData);
+        setChartOptions(config.chartOptions);
+
+        // โหลด dataset data
+        if (config.subject1 && config.datatype1 && config.dataset1) {
+          try {
+            const response = await import(`../data/${config.subject1}/${config.datatype1}/${config.dataset1}.json`);
+            setDatasetData(response.default);
+          } catch (error) {
+            console.error("Error loading dataset:", error);
+          }
+        }
+
+        localStorage.removeItem(`config-temp-${blockId}`);
+      }
+    };
+
+    loadSavedConfig();
+  }, [blockId]);
+
+  const handleDateRangeChange = (dates) => {
+    if (!dates) {
+      setSelectedRanges(['date', null]);
+      setChartData(null);
+      return;
+    }
+
+    // เก็บ selectedRanges ในรูปแบบที่ต้องการทันที
+    const formattedDates = [
+      moment(dates[0]).format('YYYY-MM-DD'),
+      moment(dates[1]).format('YYYY-MM-DD')
+    ];
+    
+    // อัพเดท state
+    setSelectedRanges(['date', dates]);
+
+    // บันทึกลง localStorage
+    const currentConfig = {
+      selectedButton,
+      subject1,
+      datatype1,
+      dataset1,
+      selectedRanges: ['date', formattedDates],
+      selectedChart,
+      chartData,
+      chartOptions
+    };
+    localStorage.setItem(`config-temp-${blockId}`, JSON.stringify(currentConfig));
+
+    // สร้าง chartData ทันทีที่เลือก date range
+    if (dataset1 && datasetData) {
+      const newChartData = generateChartData(dataset1, 'date');
+      setChartData(newChartData);
+    }
+  };
 
   return (
     <Container isCollapsed={isCollapsed}>
@@ -861,14 +939,12 @@ const ConfigForm = ({ isCollapsed }) => {
               <div style={{ width: "100%", marginTop: "1px" }}>
                 <RangePicker
                   value={selectedRanges[1]}
-                  onChange={(dates) => {
-                    setSelectedRanges(["date", dates]);
-                    setSelectedChart(null);
-                  }}
+                  onChange={handleDateRangeChange}
                   disabledDate={(current) =>
                     current && current > moment().endOf("day")
                   }
                   style={{ marginTop: "16px" }}
+                  format="DD/MM/YYYY"
                 />
               </div>
               {selectedRanges[0] === "date" && 
@@ -1297,8 +1373,8 @@ const WrapperDiv1 = styled.div`
   border: 1px solid var(--border-color);
   position: relative;
   margin-top: 20px;
-  min-height: 800px;
-  height: 800px;
+  min-height: 1000px;
+  height: 1000px;
   label {
     color: var(--text-color);
   }
@@ -1315,8 +1391,8 @@ const WrapperDiv2 = styled.div`
   border: 1px solid var(--border-color);
   position: relative;
   margin-top: 20px;
-  min-height: 800px;
-  height: 800px;
+  min-height: 1000px;
+  height: 1000px;
   label {
     color: var(--text-color);
   }

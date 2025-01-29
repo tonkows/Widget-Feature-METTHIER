@@ -29,10 +29,6 @@
       "title": "Asset Type",
       "description": "Asset type distribution"
     },
-    "asset_maintenance": {
-      "title": "Asset Maintenance",
-      "description": "Asset maintenance analysis"
-    },
     "usage": [
       {
         "dataset": "asset_usage_statistics",
