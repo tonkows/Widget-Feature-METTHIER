@@ -3,7 +3,7 @@
     "layout": "horizontal",
     "type": "multi-chart",
     "subject": "device",
-    "datatype": "device_status",
+    "datatype": "Device Status",
     "charts": [
       {
         "id": "chart1",

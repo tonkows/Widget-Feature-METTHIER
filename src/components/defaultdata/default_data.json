@@ -8,7 +8,7 @@
   "device": {
     "device_type": [
       {
-        "dataset": "device_type",
+        "dataset": "Device Type",
         "dataset_label": "Device Availability Status",
         "subject": "device",
         "subject_label": "Device",

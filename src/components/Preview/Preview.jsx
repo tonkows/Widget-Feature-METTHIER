@@ -550,7 +550,7 @@ const Preview = ({ isCollapsed }) => {
           <StyledCol span={12}>
             <SpacedRow style={{ height: "70%" }}>
               <Col span={24}>
-                <Block>3D Model</Block>
+                <Block>Preview</Block>
               </Col>
             </SpacedRow>
             <SpacedRow style={{ height: "30%" }} gutter={[6, 0]}>

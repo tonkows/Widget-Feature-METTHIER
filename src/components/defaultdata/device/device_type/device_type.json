@@ -47,20 +47,6 @@
             "display": true,
             "position": "top"
           }
-        },
-        "scales": {
-          "x": {
-            "title": {
-              "display": true,
-              "text": "Device Types"
-            }
-          },
-          "y": {
-            "title": {
-              "display": true,
-              "text": "Count"
-            }
-          }
         }
       }
     },
