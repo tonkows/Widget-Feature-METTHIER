@@ -79,7 +79,28 @@ const Preview = ({ isCollapsed }) => {
                     <ChartWrapper key={index}>
                       <ChartComponent
                         data={chart.data}
-                        options={chart.options}
+                        options={{
+                          ...chart.options,
+                          maintainAspectRatio: false,
+                          responsive: true,
+                          plugins: {
+                            legend: {
+                              display: true,
+                              position: 'top',
+                              labels: {
+                                boxWidth: 10,
+                                padding: 5,
+                                font: { size: 8 }
+                              }
+                            },
+                            title: {
+                              display: true,
+                              text: [chart.title, chart.subtitle],
+                              font: { size: 10, weight: 'bold' },
+                              padding: { top: 5, bottom: 5 }
+                            }
+                          }
+                        }}
                       />
                     </ChartWrapper>
                   );
@@ -180,7 +201,7 @@ const Preview = ({ isCollapsed }) => {
                     layout={config.layout}
                     style={{
                       width: config.layout === 'horizontal' ? '100%' : '100%',
-                      height: config.layout === 'horizontal' ? '100%' : '48%'
+                      height: config.layout === 'horizontal' ? '100%' : '100%'
                     }}
                   >
                     <ChartComponent
@@ -188,7 +209,25 @@ const Preview = ({ isCollapsed }) => {
                       options={{
                         ...chart.options,
                         maintainAspectRatio: false,
-                        responsive: true
+                        responsive: true,
+                        plugins: {
+                          legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                              boxWidth: 10,
+                              padding: 5,
+                              font: { size: 8 }
+                            }
+                          },
+                          title: {
+                            display: true,
+                            text: [chart.title, chart.subtitle],
+                            font: { size: 10, weight: 'bold' },
+                            padding: { top: 5, bottom: 5 }
+                          }
+                        }
+        
                       }}
                     />
                   </ChartWrapper>
@@ -242,7 +281,15 @@ const Preview = ({ isCollapsed }) => {
                     maintainAspectRatio: false,
                     responsive: true,
                     plugins: {
-                      ...config.chartOptions?.plugins,
+                      legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                          boxWidth: 10,
+                          padding: 5,
+                          font: { size: 8 }
+                        }
+                      },
                       title: {
                         display: true,
                         text: [config.subject_label, config.subtitle],
@@ -284,7 +331,24 @@ const Preview = ({ isCollapsed }) => {
                       options={{
                         ...chart.options,
                         maintainAspectRatio: false,
-                        responsive: true
+                        responsive: true,
+                        plugins: {
+                          legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                              boxWidth: 10,
+                              padding: 5,
+                              font: { size: 8 }
+                            }
+                          },
+                          title: {
+                            display: true,
+                            text: [config.subject_label, config.subtitle],
+                            font: { size: 10, weight: 'bold' },
+                            padding: { top: 5, bottom: 5 }
+                          }
+                        }
                       }}
                     />
                   </ChartWrapper>
@@ -346,13 +410,20 @@ const Preview = ({ isCollapsed }) => {
 
               if (!ChartComponent) return null;
 
+              const compareData = chart.data;
+
+          
+                console.log('inpreview---')
+                console.log(compareData);
+              
+
               return (
                 <ChartWrapper 
                   key={index}
                   layout={defaultConfig.layout}
                   style={{
-                    width: defaultConfig.layout === 'horizontal' ? '100%' : '100%',
-                    height: defaultConfig.layout === 'horizontal' ? '100%' : '48%'
+                    width: defaultConfig.layout === 'horizontal' ? '300px' : '300px',
+                    height: defaultConfig.layout === 'horizontal' ? '200px' : '48%'
                   }}
                 >
                   <ChartComponent
@@ -360,7 +431,24 @@ const Preview = ({ isCollapsed }) => {
                     options={{
                       ...chart.options,
                       maintainAspectRatio: false,
-                      responsive: true
+                      responsive: true,
+                      plugins: {
+                        legend: {
+                          display: true,
+                          position: 'top',
+                          labels: {
+                            boxWidth: 10,
+                            padding: 5,
+                            font: { size: 8 }
+                          }
+                        },
+                        title: {
+                          display: true,
+                          text: [chart.subject_label || chart.title, chart.subtitle],
+                          font: { size: 10, weight: 'bold' },
+                          padding: { top: 5, bottom: 5 }
+                        }
+                      }
                     }}
                   />
                 </ChartWrapper>
@@ -457,11 +545,6 @@ const Preview = ({ isCollapsed }) => {
       >
         <BiArrowBack /> Back
       </BackButton>
-      <ButtonContainer>
-        <GenerateButton onClick={handleGenerate}>
-          Generate
-        </GenerateButton>
-      </ButtonContainer>
       <WrapperDiv>
         <StyledRow gutter={[8, 8]}>
           <StyledCol span={6}>{renderColumnContent("Left")}</StyledCol>
@@ -617,8 +700,8 @@ const ChartContainer = styled.div`
 `;
 
 const ChartWrapper = styled.div`
-  width: ${props => props.layout === 'horizontal' ? '48%' : '100%'};
-  height: ${props => props.layout === 'horizontal' ? '100%' : '48%'};
+  width: ${props => props.layout === 'horizontal' ? '100%' : '100%'};
+  height: ${props => props.layout === 'horizontal' ? '100%' : '100%'};
   display: flex;
   justify-content: center;
   align-items: center;

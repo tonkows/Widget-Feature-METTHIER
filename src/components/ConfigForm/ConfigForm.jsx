@@ -243,45 +243,18 @@ const ConfigForm = ({ isCollapsed }) => {
               setDefaultContent(lastDefault);
             }
             setDataset1(null);
-          setSelectedRanges([]);
+            setSelectedRanges([]);
           }
           setSelectedButton(buttonType);
           
+          localStorage.removeItem(`config-temp-${blockId}`);
         },
       });
     } else {
       clearWidget();
-      if (buttonType === "custom") {
-        const blockConfig = localStorage.getItem(`block-${blockId}`);
-        if (blockConfig) {
-          const config = JSON.parse(blockConfig);
-          setSubject1(config.subject);
-          setDatatype1(config.datatype);
-          setDataset1(config.dataset);
-          setSelectedRanges(config.ranges || []);
-          if (config.subject && config.datatype && config.dataset) {
-            loadDatasetData(config.subject, config.datatype, config.dataset);
-          }
-        } else {
-        setSubject1(null);
-        setDatatype1(null);
-        setDataset1(null);
-          setSelectedRanges([]);
-        }
-        setSavedDefaultContent(defaultContent);
-        setSelectedButton(buttonType);
-       
-      } else {
-        const lastDefaultConfig = localStorage.getItem(`block-${blockId}-last-default`);
-        if (lastDefaultConfig) {
-          const lastDefault = JSON.parse(lastDefaultConfig);
-          setDefaultContent(lastDefault);
-        }
-        setDataset1(null);
-      setSelectedRanges([]);
       setSelectedButton(buttonType);
-   
-      }
+      
+      localStorage.removeItem(`config-temp-${blockId}`);
     }
   };
 
@@ -300,40 +273,115 @@ const ConfigForm = ({ isCollapsed }) => {
   const handleSubjectChange1 = (value) => {
     setSubject1(value);
     setDatatype1(null);
-    setDataset1(null);
-    setSelectedRanges([]);
-    setChartData(null);
-    setDatasetData(null);
-    setSelectedChart(null);
-    setIsPreviewVisible(false);
 
-    const configData = {
-      subject: value,
-      datatype: null,
-      dataset: null,
-      ranges: [],
-      selectedChart: null
-    };
-    localStorage.setItem('configFormData', JSON.stringify(configData));
+    if (selectedButton === "default") {
+      const defaultData = defaultBlockContents[blockId];
+      
+      const tempConfig = {
+        selectedButton: "default",
+        subject: value,
+        datatype: null,
+        type: defaultData.type,
+        layout: defaultData.layout,
+        charts: defaultData.charts.map(chart => ({
+          type: chart.type,
+          title: value || chart.title,
+          subtitle: chart.subtitle,
+          data: {
+            labels: chart.data.labels,
+            datasets: chart.data.datasets.map(dataset => ({
+              ...dataset,
+              label: value || dataset.label
+            }))
+          },
+          options: {
+            ...chart.options,
+            plugins: {
+              ...chart.options.plugins,
+              title: {
+                display: true,
+                text: [value || chart.title, chart.subtitle],
+                font: { size: 10, weight: 'bold' }
+              }
+            }
+          }
+        }))
+      };
+
+      localStorage.setItem(`config-temp-${blockId}`, JSON.stringify(tempConfig));
+      localStorage.setItem(`block-${blockId}`, JSON.stringify(tempConfig));
+      
+      setDefaultContent(tempConfig);
+    }
   };
 
-  const handleDatatypeChange1 = (value) => {
+  const handleDatatypeChange1 = async (value) => {
     setDatatype1(value);
-    setDataset1(null);
-    setSelectedRanges([]);
-    setChartData(null);
-    setDatasetData(null);
-    setSelectedChart(null);
-    setIsPreviewVisible(false);
 
-    const configData = {
-      subject: subject1,
-      datatype: value,
-      dataset: null,
-      ranges: [],
-      selectedChart: null
-    };
-    localStorage.setItem('configFormData', JSON.stringify(configData));
+    if (selectedButton === "default") {
+      const defaultData = defaultBlockContents[blockId];
+      
+      const tempConfig = {
+        selectedButton: "default",
+        subject: subject1,
+        datatype: value,
+        type: defaultData.type,
+        layout: defaultData.layout,
+        charts: defaultData.charts.map(chart => ({
+          type: chart.type,
+          title: subject1 || chart.title,
+          subtitle: value || chart.subtitle,
+          data: {
+            labels: chart.data.labels,
+            datasets: chart.data.datasets.map(dataset => ({
+              ...dataset,
+              label: subject1 || dataset.label
+            }))
+          },
+          options: {
+            ...chart.options,
+            plugins: {
+              ...chart.options.plugins,
+              title: {
+                display: true,
+                text: [subject1 || chart.title, value || chart.subtitle],
+                font: { size: 10, weight: 'bold' }
+              }
+            }
+          }
+        }))
+      };
+
+      try {
+        const response = await import(`../defaultdata/${subject1}/${value}/${value}.json`);
+        const chartData = response.default;
+        if (chartData) {
+          tempConfig.charts = chartData.charts.map(chart => ({
+            ...chart,
+            title: subject1 || chart.title,
+            subtitle: value || chart.subtitle,
+            options: {
+              ...chart.options,
+              plugins: {
+                ...chart.options.plugins,
+                title: {
+                  display: true,
+                  text: [subject1 || chart.title, value || chart.subtitle],
+                  font: { size: 10, weight: 'bold' }
+                }
+              }
+            }
+          }));
+        }
+      } catch (error) {
+        console.log("No JSON data found, using default data");
+      }
+
+      localStorage.setItem(`config-temp-${blockId}`, JSON.stringify(tempConfig));
+      localStorage.setItem(`block-${blockId}`, JSON.stringify(tempConfig));
+      
+      setDefaultContent(tempConfig);
+    }
   };
 
   const handleDatasetChange1 = (value) => {

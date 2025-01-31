@@ -211,50 +211,6 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
 
     if (!config) return null;
 
-    if (config.type === "single-chart") {
-      const chart = config.chart;
-      const ChartComponent = {
-        'bar chart': Bar,
-        'line chart': Line,
-        'doughnut chart': Doughnut
-      }[chart.type];
-
-      if (!ChartComponent) return null;
-
-      return (
-        <Block>
-          <SubjectLabel>{config.subject?.replace(/_/g, ' ')}</SubjectLabel>
-          <ChartWrapper style={config.styles}>
-            <ChartComponent
-              data={chart.data}
-              options={{
-                ...chart.options,
-                maintainAspectRatio: false,
-                responsive: true,
-                plugins: {
-                  legend: {
-                    display: true,
-                    position: 'top',
-                    labels: {
-                      boxWidth: 10,
-                      padding: 5,
-                      font: { size: 8 }
-                    }
-                  },
-                  title: {
-                    display: true,
-                    text: [chart.title, chart.subtitle],
-                    font: { size: 10, weight: 'bold' },
-                    padding: { top: 5, bottom: 5 }
-                  }
-                }
-              }}
-            />
-          </ChartWrapper>
-        </Block>
-      );
-    }
-
     if (config.type === "combined-display") {
       return (
         <Block>
@@ -343,39 +299,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
       );
     }
 
-    if (config.type === "info-display") {
-      return (
-        <Block>
-          <SubjectLabel>{config.subject?.replace(/_/g, ' ')}</SubjectLabel>
-          <InfoDisplayContainer layout={config.layout}>
-            {config.items.map((item) => (
-              <InfoItem
-                key={item.id}
-                style={{
-                  backgroundColor: item.style.backgroundColor,
-                  borderColor: item.style.borderColor,
-                  width: config.styles.itemWidth
-                }}
-              >
-                <InfoIcon status={item.status}>
-                  {item.icon === 'camera' ? <CameraIcon /> : <CameraOffIcon />}
-                </InfoIcon>
-                <InfoContent>
-                  <InfoTitle style={{ color: item.style.textColor }}>
-                    {item.title}
-                  </InfoTitle>
-                  <InfoValue style={{ color: item.style.textColor }}>
-                    {item.value}
-                    <InfoUnit>{item.unit}</InfoUnit>
-                  </InfoValue>
-                </InfoContent>
-              </InfoItem>
-            ))}
-          </InfoDisplayContainer>
-        </Block>
-      );
-    }
-
+    
     if (config.charts && Array.isArray(config.charts)) {
       return (
         <Block>
@@ -388,15 +312,26 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
                 'doughnut chart': Doughnut
               }[chart.type || chart.selectedChart];
 
+              console.log('main-----');
+              const compareData = chart.chartData || chart.data;
+              if(index === 4){
+                console.log('inmain---')
+               
+              }
+
+              console.log(index);
+              console.log(compareData);
               if (!ChartComponent) return null;
+
+              
 
               return (
                 <ChartWrapper 
                   key={index}
                   layout={config.layout || 'horizontal'}
                   style={{
-                   
-                    height: config.layout === 'horizontal' ? '100%' : '48%'
+                    width: config.layout === 'horizontal' ? '300px' : '300px',
+                    height: config.layout === 'horizontal' ? '200px' : '200px'
                   }}
                 > 
                   <ChartComponent
