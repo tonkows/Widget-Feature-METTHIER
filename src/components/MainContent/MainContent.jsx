@@ -281,7 +281,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
                               },
                               title: {
                                 display: true,
-                                text: [chart.title, chart.subtitle],
+                                text: [chart.subject_label || chart.title, chart.subtitle],
                                 font: { size: 10, weight: 'bold' },
                                 padding: { top: 5, bottom: 5 }
                               }
@@ -330,8 +330,8 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
                   key={index}
                   layout={config.layout || 'horizontal'}
                   style={{
-                    width: config.layout === 'horizontal' ? '300px' : '300px',
-                    height: config.layout === 'horizontal' ? '200px' : '200px'
+                    width: config.layout === 'horizontal' ? '100%' : '100%',
+                    height: config.layout === 'horizontal' ? '100%' : '200px'
                   }}
                 > 
                   <ChartComponent

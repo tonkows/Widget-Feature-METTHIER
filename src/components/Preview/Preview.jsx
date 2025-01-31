@@ -205,31 +205,30 @@ const Preview = ({ isCollapsed }) => {
                     }}
                   >
                     <ChartComponent
-                      data={chart.data}
-                      options={{
-                        ...chart.options,
-                        maintainAspectRatio: false,
-                        responsive: true,
-                        plugins: {
-                          legend: {
-                            display: true,
-                            position: 'top',
-                            labels: {
-                              boxWidth: 10,
-                              padding: 5,
-                              font: { size: 8 }
+                          data={chart.data}
+                          options={{
+                            ...chart.options,
+                            maintainAspectRatio: false,
+                            responsive: true,
+                            plugins: {
+                              legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                  boxWidth: 10,
+                                  padding: 5,
+                                  font: { size: 8 }
+                                }
+                              },
+                              title: {
+                                display: true,
+                                text: [chart.title, chart.subtitle],
+                                font: { size: 10, weight: 'bold' },
+                                padding: { top: 5, bottom: 5 }
+                              }
                             }
-                          },
-                          title: {
-                            display: true,
-                            text: [chart.title, chart.subtitle],
-                            font: { size: 10, weight: 'bold' },
-                            padding: { top: 5, bottom: 5 }
-                          }
-                        }
-        
-                      }}
-                    />
+                          }}
+                        />
                   </ChartWrapper>
                 );
               })}
@@ -422,8 +421,8 @@ const Preview = ({ isCollapsed }) => {
                   key={index}
                   layout={defaultConfig.layout}
                   style={{
-                    width: defaultConfig.layout === 'horizontal' ? '300px' : '300px',
-                    height: defaultConfig.layout === 'horizontal' ? '200px' : '48%'
+                    width: defaultConfig.layout === 'horizontal' ? '100%' : '100%',
+                    height: defaultConfig.layout === 'horizontal' ? '100%' : '48%'
                   }}
                 >
                   <ChartComponent
@@ -444,7 +443,7 @@ const Preview = ({ isCollapsed }) => {
                         },
                         title: {
                           display: true,
-                          text: [chart.subject_label || chart.title, chart.subtitle],
+                         text: [chart.subject_label || chart.title, chart.subtitle],
                           font: { size: 10, weight: 'bold' },
                           padding: { top: 5, bottom: 5 }
                         }
