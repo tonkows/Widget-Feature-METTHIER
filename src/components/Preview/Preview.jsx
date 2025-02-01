@@ -361,37 +361,7 @@ const Preview = ({ isCollapsed }) => {
     if (!defaultConfig) return null;
 
  
-    if (defaultConfig.type === "info-display") {
-      return (
-        <Block>
-          <InfoDisplayContainer layout={defaultConfig.layout}>
-            {defaultConfig.items.map((item) => (
-              <InfoItem
-                key={item.id}
-                style={{
-                  backgroundColor: item.style?.backgroundColor || 'var(--background-color)',
-                  borderColor: item.style?.borderColor || 'var(--border-color)',
-                  width: item.style?.width || 'calc(33.33% - 8px)'
-                }}
-              >
-                <InfoIcon status={item.status}>
-                  {item.icon === 'camera' ? <CameraIcon /> : <InfoIcon />}
-                </InfoIcon>
-                <InfoContent>
-                  <InfoTitle>
-                    {item.title}
-                  </InfoTitle>
-                  <InfoValue>
-                    {item.value}
-                    <InfoUnit>{item.unit}</InfoUnit>
-                  </InfoValue>
-                </InfoContent>
-              </InfoItem>
-            ))}
-          </InfoDisplayContainer>
-        </Block>
-      );
-    }
+    
 
 
     if (defaultConfig.charts && Array.isArray(defaultConfig.charts)) {
@@ -517,17 +487,43 @@ const Preview = ({ isCollapsed }) => {
   };
 
   const handleGenerate = () => {
+    if (!blockId) return;
+
     const previewData = localStorage.getItem(`preview-${blockId}`);
-    if (previewData) {
-      const config = JSON.parse(previewData);
-      
-      localStorage.setItem(`block-${blockId}`, JSON.stringify(config));
+    if (!previewData) return;
+
+    const data = JSON.parse(previewData);
+
+    if (data.selectedButton === "default") {
+      localStorage.setItem(`block-${blockId}`, JSON.stringify({
+        selectedButton: "default",
+        subject: data.subject,
+        datatype: data.datatype,
+        type: data.type,
+        layout: data.layout,
+        charts: data.charts
+      }));
+      navigate('/');
+    } else {
+
+      const customData = {
+        subject: data.chart.title,
+        datatype: data.chart.subtitle,
+        dataset: data.description?.highlights?.[0]?.split(': ')[1],
+        selectedChart: data.chart.type,
+        chartData: data.chart.data,
+        chartOptions: data.chart.options,
+        subject_label: data.chart.title,
+        dataset_label: data.description?.highlights?.[0]?.split(': ')[1],
+        subtitle: data.chart.subtitle
+      };
+
+      localStorage.setItem(`block-${blockId}`, JSON.stringify(customData));
 
       Modal.success({
         title: 'Success',
-        content: 'Widget has been generated successfully',
+        content: 'Chart has been generated successfully',
         onOk: () => {
-          window.removeEventListener('beforeunload', () => {});
           navigate('/');
         }
       });
@@ -567,6 +563,11 @@ const Preview = ({ isCollapsed }) => {
           <StyledCol span={6}>{renderColumnContent("Right")}</StyledCol>
         </StyledRow>
       </WrapperDiv>
+      <ButtonContainer>
+        <StyledButton type="primary" onClick={handleGenerate}>
+          Generate
+        </StyledButton>
+      </ButtonContainer>
     </Container>
   );
 };
@@ -840,29 +841,28 @@ const ButtonContainer = styled.div`
   }
 `;
 
-const GenerateButton = styled.button`
-  background: var(--button-color);
+const StyledButton = styled(Button)`
+  min-width: 100px;
+  height: 35px;
+  background: var(--button-color) !important;
   border: none;
   border-radius: 4px;
-  padding: 9px 14px;
+  padding: 5px 10px !important;
   font-size: 14px;
   color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
 
   &:hover {
-    background: var(--button-hover-color);
+    background: var(--button-hover-color) !important;
   }
 
   &:active {
     transform: scale(0.98);
   }
-
+  
   &:focus {
     outline: none;
     box-shadow: 0 0 0 2px var(--text-color);
   }
+  }
 `;
+

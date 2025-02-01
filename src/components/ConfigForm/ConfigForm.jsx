@@ -64,6 +64,17 @@ const ConfigForm = ({ isCollapsed }) => {
     setOriginalSubjectData(subjectData);
     const loadInitialData = async () => {
       if (blockId) {
+        
+        const editData = localStorage.getItem(`edit-data-${blockId}`);
+        if (editData) {
+          const config = JSON.parse(editData);
+          setDefaultContent(config);
+          setSavedDefaultContent(config);
+  
+          localStorage.removeItem(`edit-data-${blockId}`);
+          return;
+        }
+
         const savedConfig = localStorage.getItem(`block-config-${blockId}`);
         if (savedConfig) {
           const config = JSON.parse(savedConfig);
@@ -522,13 +533,19 @@ const ConfigForm = ({ isCollapsed }) => {
         });
         return;
       }
+
+      const currentDataset = subjectData[subject1]?.[datatype1]?.find(
+        d => d.dataset === dataset1
+      );
+      const datasetLabel = currentDataset?.dataset_label || dataset1;
+
       previewData = {
         type: "chart-with-description",
         selectedButton: "custom",
         chart: {
           type: selectedChart,
           title: subject1,
-          subtitle: datatype1,
+          subtitle: datasetLabel,
           data: chartData,
           options: chartOptions || defaultChartOptions
         },
@@ -536,7 +553,7 @@ const ConfigForm = ({ isCollapsed }) => {
           title: "Custom Analysis",
           content: `Analysis of ${subject1} data for ${datatype1}`,
           highlights: [
-            `Dataset: ${dataset1}`,
+            `Dataset: ${datasetLabel}`,
             `Type: ${selectedChart}`
           ]
         }
@@ -660,6 +677,10 @@ const ConfigForm = ({ isCollapsed }) => {
       const response = await import(`../defaultdata/${defaultContent.subject}/${value}/${value}.json`);
       const defaultData = response.default;
       
+      const shortenedDatatype = value.includes(' ') ? 
+        value.split(' ').pop() :
+        value;
+      
       const updatedContent = {
         ...defaultContent,
         datatype: value,
@@ -668,6 +689,7 @@ const ConfigForm = ({ isCollapsed }) => {
         charts: defaultData.charts || [],
         items: defaultData.items || [],
         styles: defaultData.styles || {},
+        domain: `${defaultContent.subject} - ${shortenedDatatype}`
       };
       
       setDefaultContent(updatedContent);
@@ -801,6 +823,30 @@ const ConfigForm = ({ isCollapsed }) => {
       setChartData(newChartData);
     }
   };
+
+  useEffect(() => {
+    const loadDataFromUrl = () => {
+      try {
+     
+        const urlParams = new URLSearchParams(window.location.search);
+        const blockId = urlParams.get('block');
+        const encodedData = urlParams.get('data');
+        
+        if (encodedData) {
+       
+          const decodedData = JSON.parse(decodeURIComponent(encodedData));
+          localStorage.setItem(`edit-data-${blockId}`, JSON.stringify(decodedData));
+   
+          const newUrl = `${window.location.pathname}?block=${blockId}`;
+          window.history.replaceState({}, '', newUrl);
+        }
+      } catch (error) {
+        console.error('Error processing URL data:', error);
+      }
+    };
+
+    loadDataFromUrl();
+  }, []); 
 
   return (
     <Container isCollapsed={isCollapsed}>

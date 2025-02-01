@@ -74,7 +74,7 @@
     "type": "multi-chart",
     "layout": "horizontal",
     "subject": "device",
-    "datatype": "status",
+    "datatype": "Status",
     "charts": [
       {
         "type": "bar chart",
@@ -212,7 +212,7 @@
   "Right-MiddleTopRight": {
     "layout": "horizontal",
     "subject": "incident",
-    "datatype": "incident_type",
+    "datatype": "Incident Type",
     "charts": [
       {
         "id": "chart1",
@@ -297,7 +297,7 @@
   "Left-MiddleBottomLeft": {
     "layout": "horizontal",
     "subject": "incident",
-    "datatype": "severity",
+    "datatype": "Severity",
     "charts": [
       {
         "id": "chart1",
@@ -494,7 +494,7 @@
     "type": "multi-chart",
     "layout": "horizontal",
     "subject": "device",
-    "datatype": "status",
+    "datatype": "Status",
     "charts": [
       {
         "id": "chart1",
@@ -547,7 +547,7 @@
     "type": "multi-chart",
     "layout": "horizontal",
     "subject": "device",
-    "datatype": "offline_status",
+    "datatype": "Offline Status",
     "charts": [
       {
         "id": "chart1",
@@ -665,7 +665,7 @@
   "BottomCenter-Right": {
     "layout": "horizontal",
     "subject": "energy",
-    "datatype": "efficiency",
+    "datatype": "Efficiency",
     "charts": [
       {
         "id": "chart1",
@@ -775,7 +775,7 @@
     "BottomCenter-Left": {
       "layout": "horizontal",
       "subject": "energy",
-      "datatype": "consumption",
+      "datatype": "Consumption",
       "charts": [
         {
           "id": "chart1",
