@@ -1,12 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { BiEditAlt } from "react-icons/bi";
 import { GoArrowSwitch } from "react-icons/go";
 import { RiResetLeftFill } from "react-icons/ri";
 import { MdPublic } from "react-icons/md";
 import { Button as AntButton, Modal, message } from "antd";
+import defaultBlockContents from '../defaultdata/block_default_content.json';
 
 const Header = ({ toggleSidebar, isCollapsed, hasData, onEditToggle, isEditing, isSwitching, onSwitchToggle }) => {
+  const [hasChanges, setHasChanges] = useState(false);
+
+  useEffect(() => {
+    const checkChanges = () => {
+      const blocks = Object.keys(defaultBlockContents);
+      let changed = false;
+
+      for (const blockId of blocks) {
+        const blockConfig = localStorage.getItem(`block-${blockId}`);
+        if (blockConfig) {
+          const config = JSON.parse(blockConfig);
+          if (config.dataset || JSON.stringify(config) !== JSON.stringify(defaultBlockContents[blockId])) {
+            changed = true;
+            break;
+          }
+        }
+      }
+      setHasChanges(changed);
+    };
+
+    checkChanges();
+    
+    window.addEventListener('storage', checkChanges);
+    return () => window.removeEventListener('storage', checkChanges);
+  }, []);
+
   const handleResetDefault = () => {
     Modal.confirm({
       title: 'Reset All Blocks',
@@ -94,7 +121,7 @@ const Header = ({ toggleSidebar, isCollapsed, hasData, onEditToggle, isEditing, 
         </StyledButton>
         <StyledButton 
           onClick={handleResetDefault}
-          disabled={isEditing || isSwitching}
+          disabled={isEditing || isSwitching || !hasChanges}
         >
           <RiResetLeftFill className="icon-reset" />
           Reset Default

@@ -213,7 +213,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
     if (!config) return null;
 
     if (config.selectedChart) {
-      // Custom mode
+    
       const ChartComponent = {
         'bar chart': Bar,
         'line chart': Line,
@@ -222,7 +222,7 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
 
       if (!ChartComponent) return null;
 
-      // หา subject_label จาก subjectData
+     
       const currentSubject = subjectData[config.subject]?.[Object.keys(subjectData[config.subject])[0]]?.[0];
       const subjectLabel = currentSubject?.subject_label || config.subject;
 
