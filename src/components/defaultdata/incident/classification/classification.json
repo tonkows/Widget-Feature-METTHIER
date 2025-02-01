@@ -4,7 +4,7 @@
   "charts": [
     {
       "id": "chart1",
-      "type": "bar chart",
+      "type": "doughnut chart",
       "title": "Incident Classification Status",
       "subtitle": "2024",
       "data": {
@@ -38,26 +38,13 @@
             "display": true,
             "position": "top"
           }
-        },
-        "scales": {
-          "x": {
-            "title": {
-              "display": true,
-              "text": "Classification"
-            }
-          },
-          "y": {
-            "title": {
-              "display": true,
-              "text": "Number of Cases"
-            }
-          }
+        
         }
       }
     },
     {
       "id": "chart2",
-      "type": "bar chart",
+      "type": "line chart",
       "title": "Classification Distribution",
       "subtitle": "2024",
       "data": {

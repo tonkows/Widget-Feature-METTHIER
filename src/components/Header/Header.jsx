@@ -4,7 +4,7 @@ import { BiEditAlt } from "react-icons/bi";
 import { GoArrowSwitch } from "react-icons/go";
 import { RiResetLeftFill } from "react-icons/ri";
 import { MdPublic } from "react-icons/md";
-import { Button as AntButton, Modal } from "antd";
+import { Button as AntButton, Modal, message } from "antd";
 
 const Header = ({ toggleSidebar, isCollapsed, hasData, onEditToggle, isEditing, isSwitching, onSwitchToggle }) => {
   const handleResetDefault = () => {
@@ -16,14 +16,51 @@ const Header = ({ toggleSidebar, isCollapsed, hasData, onEditToggle, isEditing, 
         danger: true,
       },
       onOk: () => {
-      
-      Object.keys(localStorage).forEach(key => {
-        if (key !== 'sidebarCollapsed' && key !== 'theme') {
-          localStorage.removeItem(key);
-        }
-      });
+        Object.keys(localStorage).forEach(key => {
+          if (key !== 'sidebarCollapsed' && key !== 'theme') {
+            localStorage.removeItem(key);
+          }
+        });
 
-      window.location.reload();
+        window.location.reload();
+
+        window.addEventListener('load', () => {
+          message.success({
+            content: 'Reset Default Success',
+            duration: 2,
+            style: {
+              marginTop: '48px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            },
+            className: 'custom-message'
+          });
+        });
+      }
+    });
+  };
+
+  const handlePublish = () => {
+    Modal.confirm({
+      title: 'Publish your widget?',
+      okText: 'Publish',
+      cancelText: 'Cancel',
+      centered: true,
+      okButtonProps: {
+        style: {
+          background: 'var(--button-color)',
+          borderColor: 'var(--button-color)'
+        }
+      },
+      onOk: () => {
+        message.success({
+          content: 'Published Successfully',
+          duration: 2,
+          style: {
+            marginTop: '48px'
+          }
+        });
       }
     });
   };
@@ -49,6 +86,7 @@ const Header = ({ toggleSidebar, isCollapsed, hasData, onEditToggle, isEditing, 
           {isSwitching ? "Cancel Switch" : "Switch"}
         </StyledButton>
         <StyledButton
+          onClick={handlePublish}
           disabled={isEditing || isSwitching}
         >
           <MdPublic className="icon-public" />

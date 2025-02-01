@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Button, Modal } from "antd";
+import { Row, Col, Button, Modal, message } from "antd";
 import styled from "styled-components";
 import { BiArrowBack, BiCamera as CameraIcon, BiCameraOff as CameraOffIcon } from "react-icons/bi";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Bar, Line, Doughnut } from "react-chartjs-2";
 import defaultBlockContents from '../defaultdata/block_default_content.json';
+import subjectData from '../data/subject_data.json';
 
 
 const Preview = ({ isCollapsed }) => {
@@ -151,6 +152,9 @@ const Preview = ({ isCollapsed }) => {
 
         if (!ChartComponent) return null;
 
+        const currentSubject = subjectData[config.chart.title]?.[Object.keys(subjectData[config.chart.title])[0]]?.[0];
+        const subjectLabel = currentSubject?.subject_label || config.chart.title;
+
         return (
           <Block>
             <ChartContainer>
@@ -159,15 +163,13 @@ const Preview = ({ isCollapsed }) => {
                   data={config.chart.data}
                   options={{
                     ...config.chart.options,
-                    maintainAspectRatio: false,
-                    responsive: true,
                     plugins: {
-                      ...config.chart.options?.plugins,
+                      ...config.chart.options.plugins,
                       title: {
                         display: true,
-                        text: [config.chart.title, config.chart.subtitle],
+                        text: [subjectLabel, config.chart.subtitle],
                         position: 'top',
-                        align: 'start',
+                        align: 'center',
                         font: { size: 12, weight: 'bold' }
                       }
                     }
@@ -503,9 +505,15 @@ const Preview = ({ isCollapsed }) => {
         layout: data.layout,
         charts: data.charts
       }));
+      message.success({
+        content: 'Chart has been generated successfully',
+        duration: 2,
+        style: {
+          marginTop: '48px'
+        }
+      });
       navigate('/');
     } else {
-
       const customData = {
         subject: data.chart.title,
         datatype: data.chart.subtitle,
@@ -519,14 +527,15 @@ const Preview = ({ isCollapsed }) => {
       };
 
       localStorage.setItem(`block-${blockId}`, JSON.stringify(customData));
-
-      Modal.success({
-        title: 'Success',
+      
+      message.success({
         content: 'Chart has been generated successfully',
-        onOk: () => {
-          navigate('/');
+        duration: 2,
+        style: {
+          marginTop: '48px'
         }
       });
+      navigate('/');
     }
   };
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Select, Button, Radio, DatePicker, Modal, Breadcrumb } from "antd";
+import { Select, Button, Radio, DatePicker, Modal, Breadcrumb, message } from "antd";
 import { Link, useSearchParams, useNavigate, Prompt } from "react-router-dom";
 import styled from "styled-components";
 import moment from "moment";
@@ -599,6 +599,13 @@ const ConfigForm = ({ isCollapsed }) => {
   const handleGenerate = () => {
     if (selectedButton === "default") {
       localStorage.setItem(`block-${blockId}`, JSON.stringify(defaultContent));
+      message.success({
+        content: 'Generated Successfully',
+        duration: 2,
+        style: {
+          marginTop: '48px'
+        }
+      });
       navigate('/');
     } else {
       if (!selectedChart || !chartData) {
@@ -609,6 +616,11 @@ const ConfigForm = ({ isCollapsed }) => {
         return;
       }
 
+      const currentDataset = subjectData[subject1]?.[datatype1]?.find(
+        d => d.dataset === dataset1
+      );
+      const datasetLabel = currentDataset?.dataset_label || dataset1;
+
       const customData = {
         subject: subject1,
         datatype: datatype1,
@@ -618,21 +630,21 @@ const ConfigForm = ({ isCollapsed }) => {
         chartData: chartData,
         chartOptions: chartOptions || defaultChartOptions,
         subject_label: subject1,
-        dataset_label: dataset1,
-        subtitle: datatype1
+        dataset_label: datasetLabel,
+        subtitle: datasetLabel
       };
 
       localStorage.setItem(`block-${blockId}`, JSON.stringify(customData));
       localStorage.setItem(`block-${blockId}-last-default`, JSON.stringify(defaultContent));
 
-      Modal.success({
-        title: 'Success',
-        content: 'Chart has been generated successfully',
-        onOk: () => {
-          window.removeEventListener('beforeunload', () => {});
-          navigate('/');
+      message.success({
+        content: 'Generated Successfully',
+        duration: 2,
+        style: {
+          marginTop: '48px'
         }
       });
+      navigate('/');
     }
   };
 
@@ -862,7 +874,7 @@ const ConfigForm = ({ isCollapsed }) => {
           type={selectedButton === "custom" ? "primary" : "default"}
           onClick={() => handleButtonClick("custom")}
         >
-          Custom
+          Customize
         </StyledButton>
       </ButtonWrapper>
 
@@ -890,10 +902,10 @@ const ConfigForm = ({ isCollapsed }) => {
           </a>
         </Breadcrumb.Item>
         <Breadcrumb.Item>
-          {selectedButton === "default" ? "Default" : "Custom"}
+          {selectedButton === "default" ? "Default" : "Customize"}
         </Breadcrumb.Item>
       </Breadcrumb>
-          <Label>Custom Content</Label>
+          <Label>Customize Content</Label>
           <Label>
             Select Subject <Required>*</Required>
           </Label>
@@ -936,13 +948,13 @@ const ConfigForm = ({ isCollapsed }) => {
           <StyledSelect
             placeholder="Select Dataset"
             onChange={handleDatasetChange1}
-            value={dataset1 ? dataset1.dataset : null}
+            value={dataset1}
             disabled={!datatype1}
           >
             {datatype1 &&
-              subjectData[subject1][datatype1].map((d) => (
-                <Option key={d.dataset} value={d.dataset}>
-                  {d.dataset_label}
+              subjectData[subject1]?.[datatype1]?.map((item) => (
+                <Option key={item.dataset} value={item.dataset}>
+                  {item.dataset_label}
                 </Option>
               ))}
           </StyledSelect>

@@ -17,6 +17,7 @@ import {
   Legend,
 } from "chart.js";
 import defaultBlockContents from '../defaultdata/block_default_content.json';
+import subjectData from '../data/subject_data.json';
 import { Modal } from "antd";
 
 ChartJS.register(
@@ -210,6 +211,55 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
     }
 
     if (!config) return null;
+
+    if (config.selectedChart) {
+      // Custom mode
+      const ChartComponent = {
+        'bar chart': Bar,
+        'line chart': Line,
+        'doughnut chart': Doughnut
+      }[config.selectedChart];
+
+      if (!ChartComponent) return null;
+
+      // หา subject_label จาก subjectData
+      const currentSubject = subjectData[config.subject]?.[Object.keys(subjectData[config.subject])[0]]?.[0];
+      const subjectLabel = currentSubject?.subject_label || config.subject;
+
+      return (
+        <Block>
+          <SubjectLabel>{subjectLabel}</SubjectLabel>
+          <ChartWrapper>
+            <ChartComponent
+              data={config.chartData}
+              options={{
+                ...config.chartOptions,
+                maintainAspectRatio: false,
+                responsive: true,
+                plugins: {
+                  legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                      boxWidth: 10,
+                      padding: 5,
+                      font: { size: 8 }
+                    }
+                  },
+                  title: {
+                    display: true,
+                    text: [subjectLabel, config.subtitle],
+                    position: 'top',
+                    align: 'center',
+                    font: { size: 12, weight: 'bold' }
+                  }
+                }
+              }}
+            />
+          </ChartWrapper>
+        </Block>
+      );
+    }
 
     if (config.type === "combined-display") {
       return (
