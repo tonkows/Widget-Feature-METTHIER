@@ -48,9 +48,7 @@ const Preview = ({ isCollapsed }) => {
                         width: '100%'
                       }}
                     >
-                      <InfoIcon status={item.status}>
-                        {item.icon === 'camera' ? <CameraIcon /> : <InfoIcon />}
-                      </InfoIcon>
+                    
                       <InfoContent>
                         <InfoTitle>
                           {item.title}
@@ -95,7 +93,7 @@ const Preview = ({ isCollapsed }) => {
                             },
                             title: {
                               display: true,
-                              text: [chart.title, chart.subtitle],
+                              text: [chart.title || chart.title, chart.subtitle],
                               font: { size: 10, weight: 'bold' },
                               padding: { top: 5, bottom: 5 }
                             }
@@ -222,7 +220,7 @@ const Preview = ({ isCollapsed }) => {
                               },
                               title: {
                                 display: true,
-                                text: [chart.title, chart.subtitle],
+                                text: [chart.title|| chart.title, chart.subtitle],
                                 font: { size: 10, weight: 'bold' },
                                 padding: { top: 5, bottom: 5 }
                               }
@@ -343,7 +341,7 @@ const Preview = ({ isCollapsed }) => {
                           },
                           title: {
                             display: true,
-                            text: [config.subject_label, config.subtitle],
+                            text: [config.subject_label|| chart.title,  config.subtitle],
                             font: { size: 10, weight: 'bold' },
                             padding: { top: 5, bottom: 5 }
                           }
