@@ -423,8 +423,8 @@ const ConfigForm = ({ isCollapsed }) => {
     const data = datasetData.dataByRange[range];
   
     if (range === "date" && selectedRanges[1]) {
-      const selectedStartDate = selectedRanges[1][0]?.toDate();
-      const selectedEndDate = selectedRanges[1][1]?.toDate();
+      const selectedStartDate = moment(selectedRanges[1][0]).toDate();
+      const selectedEndDate = moment(selectedRanges[1][1]).toDate();
   
       data.labels.forEach((label, index) => {
         const date = moment(label, "D/M/YYYY").toDate();
@@ -507,10 +507,10 @@ const ConfigForm = ({ isCollapsed }) => {
       datatype1,
       dataset1,
       selectedRanges: selectedRanges[0] === 'date' ? 
-        ['date', [
-          selectedRanges[1][0].format('YYYY-MM-DD'),
-          selectedRanges[1][1].format('YYYY-MM-DD')
-        ]] : 
+        ['date', selectedRanges[1] ? [
+          moment(selectedRanges[1][0]).format('YYYY-MM-DD'),
+          moment(selectedRanges[1][1]).format('YYYY-MM-DD')
+        ] : null] : 
         selectedRanges,
       selectedChart,
       chartData,
@@ -874,7 +874,7 @@ const ConfigForm = ({ isCollapsed }) => {
           type={selectedButton === "custom" ? "primary" : "default"}
           onClick={() => handleButtonClick("custom")}
         >
-          Customize
+          Custom
         </StyledButton>
       </ButtonWrapper>
 
@@ -902,10 +902,10 @@ const ConfigForm = ({ isCollapsed }) => {
           </a>
         </Breadcrumb.Item>
         <Breadcrumb.Item>
-          {selectedButton === "default" ? "Default" : "Customize"}
+          {selectedButton === "default" ? "Default" : "Custom"}
         </Breadcrumb.Item>
       </Breadcrumb>
-          <Label>Customize Content</Label>
+          <Label>Custom Content</Label>
           <Label>
             Select Subject <Required>*</Required>
           </Label>
