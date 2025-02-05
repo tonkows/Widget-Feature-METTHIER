@@ -423,27 +423,32 @@ const ConfigForm = ({ isCollapsed }) => {
     const data = datasetData.dataByRange[range];
   
     if (range === "date" && selectedRanges[1]) {
-      const selectedStartDate = moment(selectedRanges[1][0]).toDate();
-      const selectedEndDate = moment(selectedRanges[1][1]).toDate();
+      try {
+        const startDate = new Date(selectedRanges[1][0]);
+        const endDate = new Date(selectedRanges[1][1]);
   
-      data.labels.forEach((label, index) => {
-        const date = moment(label, "D/M/YYYY").toDate();
-        if (date >= selectedStartDate && date <= selectedEndDate) {
-          chartData.labels.push(label);
-          data.datasets.forEach((ds, dsIndex) => {
-            if (!chartData.datasets[dsIndex]) {
-              chartData.datasets[dsIndex] = {
-                label: ds.label,
-                data: [],
-                backgroundColor: ds.backgroundColor,
-                borderColor: ds.borderColor,
-                borderWidth: ds.borderWidth
-              };
-            }
-            chartData.datasets[dsIndex].data.push(ds.data[index]);
-          });
-        }
-      });
+        data.labels.forEach((label, index) => {
+          const currentDate = new Date(moment(label, "D/M/YYYY"));
+          if (currentDate >= startDate && currentDate <= endDate) {
+            chartData.labels.push(label);
+            data.datasets.forEach((ds, dsIndex) => {
+              if (!chartData.datasets[dsIndex]) {
+                chartData.datasets[dsIndex] = {
+                  label: ds.label,
+                  data: [],
+                  backgroundColor: ds.backgroundColor,
+                  borderColor: ds.borderColor,
+                  borderWidth: ds.borderWidth
+                };
+              }
+              chartData.datasets[dsIndex].data.push(ds.data[index]);
+            });
+          }
+        });
+      } catch (error) {
+        console.error("Error processing dates:", error);
+        return chartData;
+      }
     } else {
       chartData.labels = data.labels;
       chartData.datasets = data.datasets.map((ds) => ({
@@ -507,10 +512,10 @@ const ConfigForm = ({ isCollapsed }) => {
       datatype1,
       dataset1,
       selectedRanges: selectedRanges[0] === 'date' ? 
-        ['date', selectedRanges[1] ? [
-          moment(selectedRanges[1][0]).format('YYYY-MM-DD'),
-          moment(selectedRanges[1][1]).format('YYYY-MM-DD')
-        ] : null] : 
+        ['date', [
+          selectedRanges[1][0].format('YYYY-MM-DD'),
+          selectedRanges[1][1].format('YYYY-MM-DD')
+        ]] : 
         selectedRanges,
       selectedChart,
       chartData,
@@ -807,28 +812,8 @@ const ConfigForm = ({ isCollapsed }) => {
       return;
     }
 
-   
-    const formattedDates = [
-      moment(dates[0]).format('YYYY-MM-DD'),
-      moment(dates[1]).format('YYYY-MM-DD')
-    ];
-    
- 
     setSelectedRanges(['date', dates]);
-
-
-    const currentConfig = {
-      selectedButton,
-      subject1,
-      datatype1,
-      dataset1,
-      selectedRanges: ['date', formattedDates],
-      selectedChart,
-      chartData,
-      chartOptions
-    };
-    localStorage.setItem(`config-temp-${blockId}`, JSON.stringify(currentConfig));
-
+    setDateVisible(true);
 
     if (dataset1 && datasetData) {
       const newChartData = generateChartData(dataset1, 'date');
@@ -874,7 +859,7 @@ const ConfigForm = ({ isCollapsed }) => {
           type={selectedButton === "custom" ? "primary" : "default"}
           onClick={() => handleButtonClick("custom")}
         >
-          Custom
+          Customize
         </StyledButton>
       </ButtonWrapper>
 
@@ -902,10 +887,10 @@ const ConfigForm = ({ isCollapsed }) => {
           </a>
         </Breadcrumb.Item>
         <Breadcrumb.Item>
-          {selectedButton === "default" ? "Default" : "Custom"}
+          {selectedButton === "default" ? "Default" : "Customize"}
         </Breadcrumb.Item>
       </Breadcrumb>
-          <Label>Custom Content</Label>
+          <Label>Customize Content</Label>
           <Label>
             Select Subject <Required>*</Required>
           </Label>
