@@ -149,6 +149,12 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
           return newBlocks;
         });
 
+        // เพิ่มการบันทึกสถานะการสลับบล็อก
+        localStorage.setItem('switched-blocks', 'true');
+        
+        // trigger storage event เพื่อให้ Header component รับรู้การเปลี่ยนแปลง
+        window.dispatchEvent(new Event('storage'));
+
         setSelectedBlock(null);
       } else {
         message.error({
@@ -521,6 +527,9 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
         setBlockContents(defaultContents);
         setModifiedPositions({});
         setSelectedBlock(null);
+
+        // เพิ่มการล้างสถานะเมื่อ reset
+        localStorage.removeItem('switched-blocks');
 
         window.location.reload();
  

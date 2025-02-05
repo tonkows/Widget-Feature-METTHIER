@@ -15,6 +15,12 @@ const Header = ({ toggleSidebar, isCollapsed, hasData, onEditToggle, isEditing, 
       const blocks = Object.keys(defaultBlockContents);
       let changed = false;
 
+      const switchedBlocks = localStorage.getItem('switched-blocks');
+      if (switchedBlocks) {
+        changed = true;
+        return setHasChanges(true);
+      }
+
       for (const blockId of blocks) {
         const blockConfig = localStorage.getItem(`block-${blockId}`);
         if (blockConfig) {
