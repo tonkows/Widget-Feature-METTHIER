@@ -572,11 +572,7 @@ const Preview = ({ isCollapsed }) => {
           <StyledCol span={6}>{renderColumnContent("Right")}</StyledCol>
         </StyledRow>
       </WrapperDiv>
-      <ButtonContainer>
-        <StyledButton type="primary" onClick={handleGenerate}>
-          Generate
-        </StyledButton>
-      </ButtonContainer>
+      
     </Container>
   );
 };
@@ -833,45 +829,7 @@ const ChartSection = styled.div`
   order: 1;
 `;
 
-const ButtonContainer = styled.div`
-  position: absolute;
-  top: 10px;
-  right: 20px;
-  display: flex;
-  gap: 10px;
-  transition: all 0.3s ease;
 
-  &.isCollapsed {
-    right: 20px;
-  }
 
-  &.notCollapsed {
-    right: 20px;
-  }
-`;
 
-const StyledButton = styled(Button)`
-  min-width: 100px;
-  height: 35px;
-  background: var(--button-color) !important;
-  border: none;
-  border-radius: 4px;
-  padding: 5px 10px !important;
-  font-size: 14px;
-  color: white;
-
-  &:hover {
-    background: var(--button-hover-color) !important;
-  }
-
-  &:active {
-    transform: scale(0.98);
-  }
-  
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px var(--text-color);
-  }
-  }
-`;
 
