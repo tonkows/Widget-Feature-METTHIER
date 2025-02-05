@@ -10,6 +10,7 @@ import Preview from './components/Preview/Preview';
 
 const App = () => {
   // ดึงสถานะ sidebar จาก localStorage
+   console.log("version 1.0.0");
   const [isCollapsed, setIsCollapsed] = useState(() => {
     const savedSidebarState = localStorage.getItem('sidebarCollapsed');
     return savedSidebarState ? JSON.parse(savedSidebarState) : false;
