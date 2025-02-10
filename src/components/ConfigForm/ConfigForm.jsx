@@ -505,17 +505,32 @@ const ConfigForm = ({ isCollapsed }) => {
   const handlePreview = () => {
     if (!blockId) return;
   
+    let isDateCase = selectedRanges[0] === 'date' ? true : false;
+    let startDate = null;
+    let endDate = null; 
+
+    if(isDateCase){
+      try{
+        startDate = new Date(selectedRanges[1][0]);
+      }catch(ex){
+      }
+
+      try{
+        endDate = new Date(selectedRanges[1][1]);
+      }catch(ex){
+      }
+    }
     
     const currentConfig = {
       selectedButton,
       subject1,
       datatype1,
       dataset1,
-      selectedRanges: selectedRanges[0] === 'date' ? 
-        ['date', [
-          selectedRanges[1][0].format('YYYY-MM-DD'),
-          selectedRanges[1][1].format('YYYY-MM-DD')
-        ]] : 
+      selectedRanges: isDateCase ?
+      ['date', [
+        startDate,
+        endDate
+      ]] :
         selectedRanges,
       selectedChart,
       chartData,
