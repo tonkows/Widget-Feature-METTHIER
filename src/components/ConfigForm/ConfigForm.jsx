@@ -55,6 +55,7 @@ const ConfigForm = ({ isCollapsed }) => {
   const [defaultContent, setDefaultContent] = useState(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [savedDefaultContent, setSavedDefaultContent] = useState(null);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   useEffect(() => {
     console.log("Set selected chart " + selectedChart);
@@ -64,94 +65,95 @@ const ConfigForm = ({ isCollapsed }) => {
     setOriginalSubjectData(subjectData);
     const loadInitialData = async () => {
       if (blockId) {
-        
         const editData = localStorage.getItem(`edit-data-${blockId}`);
         if (editData) {
-          const config = JSON.parse(editData);
-          setDefaultContent(config);
-          setSavedDefaultContent(config);
-  
-          localStorage.removeItem(`edit-data-${blockId}`);
-          return;
-        }
-
-        const savedConfig = localStorage.getItem(`block-config-${blockId}`);
-        if (savedConfig) {
-          const config = JSON.parse(savedConfig);
-          
-          setSelectedButton(config.selectedButton || "default");
-          
-          if (config.selectedButton === "default") {
-            if (config.subject) {
-              try {
-                const defaultConfig = defaultBlockContents[blockId];
-                const updatedContent = {
-                  ...defaultConfig,
-                  subject: config.subject,
-                  datatype: config.datatype
-                };
-
-                if (config.datatype) {
-                  const response = await import(`../defaultdata/${config.subject}/${config.datatype}/${config.datatype}.json`);
-                  const chartData = response.default;
-                  updatedContent.charts = chartData.charts;
-                  updatedContent.layout = chartData.layout;
-                  updatedContent.type = chartData.type;
+          try {
+            const config = JSON.parse(editData);
+            
+            if (config.dataset) {
+              setSelectedButton("custom");
+              setSubject1(config.subject);
+              setDatatype1(config.datatype);
+              setDataset1(config.dataset);
+              
+              if (config.ranges && config.ranges[0] === 'date') {
+                setDateVisible(true);
+                if (config.ranges[1] && Array.isArray(config.ranges[1])) {
+                  const dates = [
+                    moment(config.ranges[1][0]),
+                    moment(config.ranges[1][1])
+                  ];
+                  setSelectedRanges(['date', dates]);
                 }
-
-                setDefaultContent(updatedContent);
-              } catch (error) {
-                console.error("Error loading default content:", error);
+              } else {
+                setSelectedRanges(config.ranges || []);
               }
-            }
-          } else {
-            setSubject1(config.subject);
-            setDatatype1(config.datatype);
-            setDataset1(config.dataset);
-            setSelectedRanges(config.ranges || []);
-            setSelectedChart(config.selectedChart);
-            setChartData(config.chartData);
-            setChartOptions(config.chartOptions);
 
-            if (config.subject && config.datatype && config.dataset) {
-              try {
-                const response = await import(`../data/${config.subject}/${config.datatype}/${config.dataset}.json`);
-                setDatasetData(response.default);
-              } catch (error) {
-                console.error("Error loading dataset:", error);
+              setSelectedChart(config.selectedChart);
+              setChartData(config.chartData);
+              setChartOptions(config.chartOptions);
+
+              if (config.subject && config.datatype && config.dataset) {
+                try {
+                  const response = await import(`../data/${config.subject}/${config.datatype}/${config.dataset}.json`);
+                  setDatasetData(response.default);
+                } catch (error) {
+                  console.error("Error loading dataset:", error);
+                }
               }
+            } else {
+              setDefaultContent(config);
+              setSavedDefaultContent(config);
             }
+
+            localStorage.removeItem(`edit-data-${blockId}`);
+            return;
+          } catch (error) {
+            console.error("Error loading edit data:", error);
           }
-
-          localStorage.removeItem(`block-config-${blockId}`);
-          return;
         }
 
         const blockConfig = localStorage.getItem(`block-${blockId}`);
         if (blockConfig) {
-          const config = JSON.parse(blockConfig);
-          
-          if (config.dataset) {
-            setSelectedButton("custom");
-          } else {
-            setSelectedButton("default");
-          }
-          
-          setSubject1(config.subject);
-          setDatatype1(config.datatype);
-          setDataset1(config.dataset);
-          setSelectedRanges(config.ranges || []);
-          setSelectedChart(config.selectedChart);
-          setChartData(config.chartData);
-          setChartOptions(config.chartOptions);
+          try {
+            const config = JSON.parse(blockConfig);
+            
+            if (config.dataset) {
+              setSelectedButton("custom");
+              setSubject1(config.subject);
+              setDatatype1(config.datatype);
+              setDataset1(config.dataset);
+              
+              if (config.ranges && config.ranges[0] === 'date') {
+                setDateVisible(true);
+                if (config.ranges[1] && Array.isArray(config.ranges[1])) {
+                  const dates = [
+                    moment(config.ranges[1][0]),
+                    moment(config.ranges[1][1])
+                  ];
+                  setSelectedRanges(['date', dates]);
+                }
+              } else {
+                setSelectedRanges(config.ranges || []);
+              }
 
-          if (config.subject && config.datatype && config.dataset) {
-            try {
-              const response = await import(`../data/${config.subject}/${config.datatype}/${config.dataset}.json`);
-              setDatasetData(response.default);
-            } catch (error) {
-              console.error("Error loading dataset:", error);
+              setSelectedChart(config.selectedChart);
+              setChartData(config.chartData);
+              setChartOptions(config.chartOptions);
+
+              if (config.subject && config.datatype && config.dataset) {
+                try {
+                  const response = await import(`../data/${config.subject}/${config.datatype}/${config.dataset}.json`);
+                  setDatasetData(response.default);
+                } catch (error) {
+                  console.error("Error loading dataset:", error);
+                }
+              }
+            } else {
+              setSelectedButton("default");
             }
+          } catch (error) {
+            console.error("Error loading block config:", error);
           }
         }
       }
@@ -505,38 +507,18 @@ const ConfigForm = ({ isCollapsed }) => {
   const handlePreview = () => {
     if (!blockId) return;
   
-    let isDateCase = selectedRanges[0] === 'date' ? true : false;
-    let startDate = null;
-    let endDate = null; 
-
-    if(isDateCase){
-      try{
-        startDate = new Date(selectedRanges[1][0]);
-      }catch(ex){
-      }
-
-      try{
-        endDate = new Date(selectedRanges[1][1]);
-      }catch(ex){
-      }
-    }
-    
-    const currentConfig = {
+    let previewConfig = {
       selectedButton,
       subject1,
       datatype1,
       dataset1,
-      selectedRanges: isDateCase ?
-      ['date', [
-        startDate,
-        endDate
-      ]] :
-        selectedRanges,
+      selectedRanges,
       selectedChart,
       chartData,
       chartOptions
     };
-    localStorage.setItem(`config-temp-${blockId}`, JSON.stringify(currentConfig));
+  
+    localStorage.setItem(`config-temp-${blockId}`, JSON.stringify(previewConfig));
   
     Object.keys(localStorage).forEach(key => {
       if (key.startsWith('preview-')) {
@@ -611,7 +593,6 @@ const ConfigForm = ({ isCollapsed }) => {
     }
 
     localStorage.setItem(`preview-${blockId}`, JSON.stringify(previewData));
-    window.removeEventListener('beforeunload', () => {});
     navigate(`/preview?block=${blockId}`);
   };
   
@@ -781,39 +762,45 @@ const ConfigForm = ({ isCollapsed }) => {
     const loadSavedConfig = async () => {
       const savedConfig = localStorage.getItem(`config-temp-${blockId}`);
       if (savedConfig) {
-        const config = JSON.parse(savedConfig);
-        
-        setSelectedButton(config.selectedButton);
-        setSubject1(config.subject1);
-        setDatatype1(config.datatype1);
-        setDataset1(config.dataset1);
-        
-     
-        if (config.selectedRanges[0] === 'date' && config.selectedRanges[1]) {
-          const dates = [
-            moment(config.selectedRanges[1][0], 'YYYY-MM-DD'),
-            moment(config.selectedRanges[1][1], 'YYYY-MM-DD')
-          ];
-          setSelectedRanges(['date', dates]);
-        } else {
-          setSelectedRanges(config.selectedRanges);
-        }
-
-        setSelectedChart(config.selectedChart);
-        setChartData(config.chartData);
-        setChartOptions(config.chartOptions);
-
-     
-        if (config.subject1 && config.datatype1 && config.dataset1) {
-          try {
-            const response = await import(`../data/${config.subject1}/${config.datatype1}/${config.dataset1}.json`);
-            setDatasetData(response.default);
-          } catch (error) {
-            console.error("Error loading dataset:", error);
+        try {
+          const config = JSON.parse(savedConfig);
+          
+          setSelectedButton(config.selectedButton);
+          setSubject1(config.subject1);
+          setDatatype1(config.datatype1);
+          setDataset1(config.dataset1);
+          
+          if (config.selectedRanges && config.selectedRanges[0] === 'date') {
+            setDateVisible(true);
+            if (config.selectedRanges[1] && Array.isArray(config.selectedRanges[1])) {
+              const dates = [
+                moment(config.selectedRanges[1][0]),
+                moment(config.selectedRanges[1][1])
+              ];
+              setSelectedRanges(['date', dates]);
+            }
+          } else {
+            setSelectedRanges(config.selectedRanges || []);
           }
-        }
 
-        localStorage.removeItem(`config-temp-${blockId}`);
+          setSelectedChart(config.selectedChart);
+          setChartData(config.chartData);
+          setChartOptions(config.chartOptions);
+
+          if (config.subject1 && config.datatype1 && config.dataset1) {
+            try {
+              const response = await import(`../data/${config.subject1}/${config.datatype1}/${config.dataset1}.json`);
+              setDatasetData(response.default);
+            } catch (error) {
+              console.error("Error loading dataset:", error);
+            }
+          }
+
+          localStorage.removeItem(`config-temp-${blockId}`);
+        } catch (error) {
+          console.error("Error restoring configuration:", error);
+          message.error('Failed to restore previous configuration');
+        }
       }
     };
 
@@ -839,26 +826,27 @@ const ConfigForm = ({ isCollapsed }) => {
   useEffect(() => {
     const loadDataFromUrl = () => {
       try {
-     
         const urlParams = new URLSearchParams(window.location.search);
         const blockId = urlParams.get('block');
         const encodedData = urlParams.get('data');
-        
+
         if (encodedData) {
-       
           const decodedData = JSON.parse(decodeURIComponent(encodedData));
           localStorage.setItem(`edit-data-${blockId}`, JSON.stringify(decodedData));
-   
+
           const newUrl = `${window.location.pathname}?block=${blockId}`;
           window.history.replaceState({}, '', newUrl);
         }
+
+        setIsDataLoaded(true);
       } catch (error) {
         console.error('Error processing URL data:', error);
+        setIsDataLoaded(true); 
       }
     };
 
     loadDataFromUrl();
-  }, []); 
+  }, []);
 
   return (
     <Container isCollapsed={isCollapsed}>

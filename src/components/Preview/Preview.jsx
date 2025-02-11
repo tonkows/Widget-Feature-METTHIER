@@ -476,7 +476,9 @@ const Preview = ({ isCollapsed }) => {
             ranges: previewData.description?.highlights?.[0]?.split(': ')[1]?.split(', '),
             selectedChart: previewData.chart.type,
             chartData: previewData.chart.data,
-            chartOptions: previewData.chart.options
+            chartOptions: previewData.chart.options,
+            startDate: previewData.startDate || null,  
+            endDate: previewData.endDate || null  
           };
           localStorage.setItem(`block-config-${blockId}`, JSON.stringify(savedConfig));
         }
