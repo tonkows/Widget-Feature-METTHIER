@@ -515,7 +515,17 @@ const ConfigForm = ({ isCollapsed }) => {
       selectedRanges,
       selectedChart,
       chartData,
-      chartOptions
+      chartOptions,
+      defaultContent: selectedButton === "default" ? {
+        ...defaultContent,
+        subject: defaultContent.subject,
+        datatype: defaultContent.datatype,
+        type: defaultContent.type,
+        layout: defaultContent.layout,
+        charts: defaultContent.charts,
+        items: defaultContent.items,
+        styles: defaultContent.styles
+      } : null
     };
   
     localStorage.setItem(`config-temp-${blockId}`, JSON.stringify(previewConfig));
@@ -766,33 +776,56 @@ const ConfigForm = ({ isCollapsed }) => {
           const config = JSON.parse(savedConfig);
           
           setSelectedButton(config.selectedButton);
-          setSubject1(config.subject1);
-          setDatatype1(config.datatype1);
-          setDataset1(config.dataset1);
           
-          if (config.selectedRanges && config.selectedRanges[0] === 'date') {
-            setDateVisible(true);
-            if (config.selectedRanges[1] && Array.isArray(config.selectedRanges[1])) {
-              const dates = [
-                moment(config.selectedRanges[1][0]),
-                moment(config.selectedRanges[1][1])
-              ];
-              setSelectedRanges(['date', dates]);
+          if (config.selectedButton === "default" && config.defaultContent) {
+            setDefaultContent(config.defaultContent);
+            setSavedDefaultContent(config.defaultContent);
+            
+            if (config.defaultContent.subject && config.defaultContent.datatype) {
+              try {
+                const response = await import(
+                  `../defaultdata/${config.defaultContent.subject}/${config.defaultContent.datatype}/${config.defaultContent.datatype}.json`
+                );
+                const chartData = response.default;
+                setDefaultContent(prev => ({
+                  ...prev,
+                  charts: chartData.charts || [],
+                  layout: chartData.layout || "horizontal",
+                  type: chartData.type || "multi-chart"
+                }));
+              } catch (error) {
+                console.error("Error loading default chart data:", error);
+              }
             }
           } else {
-            setSelectedRanges(config.selectedRanges || []);
-          }
+            setSubject1(config.subject1);
+            setDatatype1(config.datatype1);
+            setDataset1(config.dataset1);
+            
+            if (config.selectedRanges && config.selectedRanges[0] === 'date') {
+              setDateVisible(true);
+              if (config.selectedRanges[1] && Array.isArray(config.selectedRanges[1])) {
+                const dates = [
+                  moment(config.selectedRanges[1][0]),
+                  moment(config.selectedRanges[1][1])
+                ];
+                setSelectedRanges(['date', dates]);
+              }
+            } else {
+              setSelectedRanges(config.selectedRanges || []);
+            }
 
-          setSelectedChart(config.selectedChart);
-          setChartData(config.chartData);
-          setChartOptions(config.chartOptions);
+            setSelectedChart(config.selectedChart);
+            setChartData(config.chartData);
+            setChartOptions(config.chartOptions);
 
-          if (config.subject1 && config.datatype1 && config.dataset1) {
-            try {
-              const response = await import(`../data/${config.subject1}/${config.datatype1}/${config.dataset1}.json`);
-              setDatasetData(response.default);
-            } catch (error) {
-              console.error("Error loading dataset:", error);
+            if (config.subject1 && config.datatype1 && config.dataset1) {
+              try {
+                const response = await import(`../data/${config.subject1}/${config.datatype1}/${config.dataset1}.json`);
+                setDatasetData(response.default);
+              } catch (error) {
+                console.error("Error loading dataset:", error);
+              }
             }
           }
 
