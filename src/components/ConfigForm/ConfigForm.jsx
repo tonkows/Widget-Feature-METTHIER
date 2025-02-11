@@ -363,17 +363,26 @@ const ConfigForm = ({ isCollapsed }) => {
   }; 
 
   const handleRangeChange = (value) => {
-    setSelectedRanges([value]);
-    setDateVisible(value === "date");
+    if (value === "date") {
+      setSelectedRanges(['date', null]);
+      setDateVisible(true);
+    } else {
+      setSelectedRanges([value]);
+      setDateVisible(false);
+      const configData = {
+        subject: subject1,
+        datatype: datatype1,
+        dataset: dataset1,
+        ranges: [value],
+        selectedChart: selectedChart
+      };
+      localStorage.setItem('configFormData', JSON.stringify(configData));
+    }
 
-    const configData = {
-      subject: subject1,
-      datatype: datatype1,
-      dataset: dataset1,
-      ranges: [value],
-      selectedChart: selectedChart
-    };
-    localStorage.setItem('configFormData', JSON.stringify(configData));
+    if (dataset1 && datasetData) {
+      const newChartData = generateChartData(dataset1, value);
+      setChartData(newChartData);
+    }
   };
 
   const defaultChartOptions = {
@@ -512,7 +521,9 @@ const ConfigForm = ({ isCollapsed }) => {
       subject1,
       datatype1,
       dataset1,
-      selectedRanges,
+      selectedRanges: selectedRanges[0] === 'date' ? 
+        selectedRanges : 
+        [selectedRanges[0]],
       selectedChart,
       chartData,
       chartOptions,
@@ -802,17 +813,22 @@ const ConfigForm = ({ isCollapsed }) => {
             setDatatype1(config.datatype1);
             setDataset1(config.dataset1);
             
-            if (config.selectedRanges && config.selectedRanges[0] === 'date') {
-              setDateVisible(true);
-              if (config.selectedRanges[1] && Array.isArray(config.selectedRanges[1])) {
-                const dates = [
-                  moment(config.selectedRanges[1][0]),
-                  moment(config.selectedRanges[1][1])
-                ];
-                setSelectedRanges(['date', dates]);
+            if (config.selectedRanges) {
+              if (config.selectedRanges[0] === 'date') {
+                setDateVisible(true);
+                if (config.selectedRanges[1] && Array.isArray(config.selectedRanges[1])) {
+                  const dates = [
+                    moment(config.selectedRanges[1][0]),
+                    moment(config.selectedRanges[1][1])
+                  ];
+                  setSelectedRanges(['date', dates]);
+                }
+              } else {
+                setDateVisible(false);
+                setSelectedRanges([config.selectedRanges[0]]);
               }
             } else {
-              setSelectedRanges(config.selectedRanges || []);
+              setSelectedRanges([]);
             }
 
             setSelectedChart(config.selectedChart);
