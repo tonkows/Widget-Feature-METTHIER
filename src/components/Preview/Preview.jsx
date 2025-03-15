@@ -549,6 +549,9 @@ const Preview = ({ isCollapsed }) => {
       >
         <BiArrowBack /> Back
       </BackButton>
+      <GenerateButton onClick={handleGenerate}>
+        Generate
+      </GenerateButton>
       <WrapperDiv>
         <StyledRow gutter={[8, 8]}>
           <StyledCol span={6}>{renderColumnContent("Left")}</StyledCol>
@@ -678,6 +681,33 @@ const BackButton = styled.button`
   svg {
     font-size: 16px;
   }
+
+  &:hover {
+    background: var(--button-hover-color);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--text-color);
+  }
+`;
+
+const GenerateButton = styled(Button)`
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  background: var(--button-color);
+  border: none;
+  border-radius: 4px;
+  padding: 9px 14px;
+  font-size: 14px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
 
   &:hover {
     background: var(--button-hover-color);

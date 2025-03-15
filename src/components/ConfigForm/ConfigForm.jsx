@@ -1411,7 +1411,7 @@ const ConfigForm = ({ isCollapsed }) => {
             <StyledButton 
               onClick={handlePreview}
               style={{ width: "120px", marginRight: "10px" }}
-              disabled={!defaultContent.subject || !defaultContent.datatype || !defaultContent.charts || defaultContent.charts.length === 0}
+              disabled={!hasUnsavedChanges || !defaultContent.subject || !defaultContent.datatype || !defaultContent.charts || defaultContent.charts.length === 0}
             >
               Preview
             </StyledButton>
@@ -1422,7 +1422,7 @@ const ConfigForm = ({ isCollapsed }) => {
                 }
               }}
               style={{ width: "120px", marginLeft: "10px" }}
-              disabled={!defaultContent.subject || !defaultContent.datatype || !defaultContent.charts || defaultContent.charts.length === 0}
+              disabled={!hasUnsavedChanges || !defaultContent.subject || !defaultContent.datatype || !defaultContent.charts || defaultContent.charts.length === 0}
             >
               Generate
             </StyledButton>
