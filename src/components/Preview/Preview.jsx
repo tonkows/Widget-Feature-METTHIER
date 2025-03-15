@@ -6,6 +6,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Bar, Line, Doughnut } from "react-chartjs-2";
 import defaultBlockContents from '../defaultdata/block_default_content.json';
 import subjectData from '../data/subject_data.json';
+import MettrIQ from "./MettrIQ.jpg";
 
 
 const Preview = ({ isCollapsed }) => {
@@ -558,7 +559,9 @@ const Preview = ({ isCollapsed }) => {
           <StyledCol span={12}>
             <SpacedRow style={{ height: "70%" }}>
               <Col span={24}>
-                <Block>Preview</Block>
+                <Block>
+                <img src={MettrIQ} alt="MettrIQ" style={{ width: "100%", height: "100%", borderRadius: "4px" }} />
+                  </Block>
               </Col>
             </SpacedRow>
             <SpacedRow style={{ height: "30%" }} gutter={[6, 0]}>

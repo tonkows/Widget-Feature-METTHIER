@@ -4,6 +4,8 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { BiEditAlt, BiCamera as CameraIcon, BiCameraOff as CameraOffIcon } from "react-icons/bi";
 import { Bar, Line, Doughnut } from "react-chartjs-2";
+import MettrIQ from "./MettrIQ.jpg";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -550,7 +552,9 @@ const MainContent = ({ isCollapsed, isEditing, isSwitching }) => {
           <StyledCol span={12}>
             <SpacedRow style={{ height: "70%" }}>
               <Col span={24}>
-                <Block>3D Model</Block>
+              <Block>
+              <img src={MettrIQ} alt="MettrIQ" style={{ width: "100%", height: "100%", borderRadius: "4px" }} />
+              </Block>
               </Col>
             </SpacedRow>
             <SpacedRow style={{ height: "30%" }} gutter={[6, 0]}>
