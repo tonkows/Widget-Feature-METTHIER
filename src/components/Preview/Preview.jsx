@@ -509,7 +509,7 @@ const Preview = ({ isCollapsed }) => {
         charts: data.charts
       }));
       message.success({
-        content: 'Chart has been generated successfully',
+        content: 'Generated successfully',
         duration: 2,
         style: {
           marginTop: '48px'
@@ -532,7 +532,7 @@ const Preview = ({ isCollapsed }) => {
       localStorage.setItem(`block-${blockId}`, JSON.stringify(customData));
       
       message.success({
-        content: 'Chart has been generated successfully',
+        content: 'Generated successfully',
         duration: 2,
         style: {
           marginTop: '48px'

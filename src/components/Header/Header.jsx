@@ -118,13 +118,13 @@ const Header = ({ toggleSidebar, isCollapsed, hasData, onEditToggle, isEditing, 
           <GoArrowSwitch className="icon-switch" />
           {isSwitching ? "Cancel Switch" : "Switch"}
         </StyledButton>
-        <StyledButton
+        {/* <StyledButton
           onClick={handlePublish}
           disabled={isEditing || isSwitching}
         >
           <MdPublic className="icon-public" />
           Publish
-        </StyledButton>
+        </StyledButton> */}
         <StyledButton 
           onClick={handleResetDefault}
           disabled={isEditing || isSwitching || !hasChanges}

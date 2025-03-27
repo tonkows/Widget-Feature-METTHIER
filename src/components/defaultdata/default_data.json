@@ -1,28 +1,17 @@
 {
   "incident": {
     "classification": {
-      "title": "Classification",
-      "description": "Incident classification analysis"
+      
     }
   },
   "device": {
-    "device_type": [
-      {
-        "dataset": "Device Type",
-        "dataset_label": "Device Availability Status",
-        "subject": "device",
-        "subject_label": "Device",
-        "datatype": "status",
-        "datatype_label": "Device Status",
-        "datarange": ["date", "week", "month", "year"],
-        "widget": ["number", "pie chart", "bar chart", "time dependence", "time independence"]
-      }
-    ]
+    "device_type": {
+
+    }
   },
   "asset": {
     "asset_type": {
-      "title": "Asset Type",
-      "description": "Asset type distribution"
+     
     }
   }
 }
